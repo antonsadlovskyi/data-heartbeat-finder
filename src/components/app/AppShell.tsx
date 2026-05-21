@@ -7,7 +7,14 @@ import { PlatformSwitcher } from "./PlatformSwitcher";
 import { Logo } from "@/components/brand/Logo";
 import { cn } from "@/lib/utils";
 
-const nav = [
+type NavItem = {
+  to: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  exact?: boolean;
+};
+
+const nav: NavItem[] = [
   { to: "/app", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/app/competitors", label: "Competitor Radar", icon: Users },
   { to: "/app/insights", label: "Insights", icon: Lightbulb },
@@ -18,7 +25,7 @@ const nav = [
   { to: "/app/trends", label: "Trends", icon: TrendingUp },
   { to: "/app/setup", label: "Setup", icon: Wand2 },
   { to: "/app/settings", label: "Settings", icon: Settings },
-] as const;
+];
 
 export function AppShell() {
   const location = useLocation();
@@ -36,7 +43,7 @@ export function AppShell() {
             return (
               <Link
                 key={item.to}
-                to={item.to}
+                to={item.to as any}
                 className={cn(
                   "flex items-center gap-2.5 h-9 px-3 rounded-lg text-sm transition",
                   active
