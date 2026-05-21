@@ -14,8 +14,13 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppTrendsRouteImport } from './routes/app.trends'
+import { Route as AppTodosRouteImport } from './routes/app.todos'
+import { Route as AppSetupRouteImport } from './routes/app.setup'
+import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as AppPerformanceRouteImport } from './routes/app.performance'
 import { Route as AppInsightsRouteImport } from './routes/app.insights'
+import { Route as AppIdeasRouteImport } from './routes/app.ideas'
+import { Route as AppFormatsRouteImport } from './routes/app.formats'
 import { Route as AppCompetitorsRouteImport } from './routes/app.competitors'
 
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -43,6 +48,21 @@ const AppTrendsRoute = AppTrendsRouteImport.update({
   path: '/trends',
   getParentRoute: () => AppRoute,
 } as any)
+const AppTodosRoute = AppTodosRouteImport.update({
+  id: '/todos',
+  path: '/todos',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSetupRoute = AppSetupRouteImport.update({
+  id: '/setup',
+  path: '/setup',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppPerformanceRoute = AppPerformanceRouteImport.update({
   id: '/performance',
   path: '/performance',
@@ -51,6 +71,16 @@ const AppPerformanceRoute = AppPerformanceRouteImport.update({
 const AppInsightsRoute = AppInsightsRouteImport.update({
   id: '/insights',
   path: '/insights',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppIdeasRoute = AppIdeasRouteImport.update({
+  id: '/ideas',
+  path: '/ideas',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFormatsRoute = AppFormatsRouteImport.update({
+  id: '/formats',
+  path: '/formats',
   getParentRoute: () => AppRoute,
 } as any)
 const AppCompetitorsRoute = AppCompetitorsRouteImport.update({
@@ -64,8 +94,13 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteWithChildren
   '/onboarding': typeof OnboardingRoute
   '/app/competitors': typeof AppCompetitorsRoute
+  '/app/formats': typeof AppFormatsRoute
+  '/app/ideas': typeof AppIdeasRoute
   '/app/insights': typeof AppInsightsRoute
   '/app/performance': typeof AppPerformanceRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/setup': typeof AppSetupRoute
+  '/app/todos': typeof AppTodosRoute
   '/app/trends': typeof AppTrendsRoute
   '/app/': typeof AppIndexRoute
 }
@@ -73,8 +108,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
   '/app/competitors': typeof AppCompetitorsRoute
+  '/app/formats': typeof AppFormatsRoute
+  '/app/ideas': typeof AppIdeasRoute
   '/app/insights': typeof AppInsightsRoute
   '/app/performance': typeof AppPerformanceRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/setup': typeof AppSetupRoute
+  '/app/todos': typeof AppTodosRoute
   '/app/trends': typeof AppTrendsRoute
   '/app': typeof AppIndexRoute
 }
@@ -84,8 +124,13 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/onboarding': typeof OnboardingRoute
   '/app/competitors': typeof AppCompetitorsRoute
+  '/app/formats': typeof AppFormatsRoute
+  '/app/ideas': typeof AppIdeasRoute
   '/app/insights': typeof AppInsightsRoute
   '/app/performance': typeof AppPerformanceRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/setup': typeof AppSetupRoute
+  '/app/todos': typeof AppTodosRoute
   '/app/trends': typeof AppTrendsRoute
   '/app/': typeof AppIndexRoute
 }
@@ -96,8 +141,13 @@ export interface FileRouteTypes {
     | '/app'
     | '/onboarding'
     | '/app/competitors'
+    | '/app/formats'
+    | '/app/ideas'
     | '/app/insights'
     | '/app/performance'
+    | '/app/settings'
+    | '/app/setup'
+    | '/app/todos'
     | '/app/trends'
     | '/app/'
   fileRoutesByTo: FileRoutesByTo
@@ -105,8 +155,13 @@ export interface FileRouteTypes {
     | '/'
     | '/onboarding'
     | '/app/competitors'
+    | '/app/formats'
+    | '/app/ideas'
     | '/app/insights'
     | '/app/performance'
+    | '/app/settings'
+    | '/app/setup'
+    | '/app/todos'
     | '/app/trends'
     | '/app'
   id:
@@ -115,8 +170,13 @@ export interface FileRouteTypes {
     | '/app'
     | '/onboarding'
     | '/app/competitors'
+    | '/app/formats'
+    | '/app/ideas'
     | '/app/insights'
     | '/app/performance'
+    | '/app/settings'
+    | '/app/setup'
+    | '/app/todos'
     | '/app/trends'
     | '/app/'
   fileRoutesById: FileRoutesById
@@ -164,6 +224,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTrendsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/todos': {
+      id: '/app/todos'
+      path: '/todos'
+      fullPath: '/app/todos'
+      preLoaderRoute: typeof AppTodosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/setup': {
+      id: '/app/setup'
+      path: '/setup'
+      fullPath: '/app/setup'
+      preLoaderRoute: typeof AppSetupRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/settings': {
+      id: '/app/settings'
+      path: '/settings'
+      fullPath: '/app/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/performance': {
       id: '/app/performance'
       path: '/performance'
@@ -178,6 +259,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppInsightsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/ideas': {
+      id: '/app/ideas'
+      path: '/ideas'
+      fullPath: '/app/ideas'
+      preLoaderRoute: typeof AppIdeasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/formats': {
+      id: '/app/formats'
+      path: '/formats'
+      fullPath: '/app/formats'
+      preLoaderRoute: typeof AppFormatsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/competitors': {
       id: '/app/competitors'
       path: '/competitors'
@@ -190,16 +285,26 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppCompetitorsRoute: typeof AppCompetitorsRoute
+  AppFormatsRoute: typeof AppFormatsRoute
+  AppIdeasRoute: typeof AppIdeasRoute
   AppInsightsRoute: typeof AppInsightsRoute
   AppPerformanceRoute: typeof AppPerformanceRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppSetupRoute: typeof AppSetupRoute
+  AppTodosRoute: typeof AppTodosRoute
   AppTrendsRoute: typeof AppTrendsRoute
   AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppCompetitorsRoute: AppCompetitorsRoute,
+  AppFormatsRoute: AppFormatsRoute,
+  AppIdeasRoute: AppIdeasRoute,
   AppInsightsRoute: AppInsightsRoute,
   AppPerformanceRoute: AppPerformanceRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppSetupRoute: AppSetupRoute,
+  AppTodosRoute: AppTodosRoute,
   AppTrendsRoute: AppTrendsRoute,
   AppIndexRoute: AppIndexRoute,
 }
@@ -214,3 +319,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
