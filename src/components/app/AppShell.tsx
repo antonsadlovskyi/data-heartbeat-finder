@@ -1,7 +1,7 @@
 import { Link, Outlet, useLocation } from "@tanstack/react-router";
 import {
   LayoutDashboard, Users, Lightbulb, ListChecks, Sparkles,
-  Layers, BarChart3, TrendingUp, Settings, Wand2,
+  Layers, BarChart3, TrendingUp, Settings, Wand2, Database, FileSearch,
 } from "lucide-react";
 import { PlatformSwitcher } from "./PlatformSwitcher";
 import { Logo } from "@/components/brand/Logo";
@@ -16,7 +16,9 @@ type NavItem = {
 
 const nav: NavItem[] = [
   { to: "/app", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { to: "/app/database", label: "Database", icon: Database },
   { to: "/app/competitors", label: "Competitor Radar", icon: Users },
+  { to: "/app/analyses", label: "Account Analyses", icon: FileSearch },
   { to: "/app/insights", label: "Insights", icon: Lightbulb },
   { to: "/app/todos", label: "To Dos", icon: ListChecks },
   { to: "/app/ideas", label: "Ideas", icon: Sparkles },
