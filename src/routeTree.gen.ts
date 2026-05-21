@@ -22,6 +22,7 @@ import { Route as AppInsightsRouteImport } from './routes/app.insights'
 import { Route as AppIdeasRouteImport } from './routes/app.ideas'
 import { Route as AppFormatsRouteImport } from './routes/app.formats'
 import { Route as AppCompetitorsRouteImport } from './routes/app.competitors'
+import { Route as AppAnalysesRouteImport } from './routes/app.analyses'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
@@ -88,11 +89,17 @@ const AppCompetitorsRoute = AppCompetitorsRouteImport.update({
   path: '/competitors',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAnalysesRoute = AppAnalysesRouteImport.update({
+  id: '/analyses',
+  path: '/analyses',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/onboarding': typeof OnboardingRoute
+  '/app/analyses': typeof AppAnalysesRoute
   '/app/competitors': typeof AppCompetitorsRoute
   '/app/formats': typeof AppFormatsRoute
   '/app/ideas': typeof AppIdeasRoute
@@ -107,6 +114,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
+  '/app/analyses': typeof AppAnalysesRoute
   '/app/competitors': typeof AppCompetitorsRoute
   '/app/formats': typeof AppFormatsRoute
   '/app/ideas': typeof AppIdeasRoute
@@ -123,6 +131,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/onboarding': typeof OnboardingRoute
+  '/app/analyses': typeof AppAnalysesRoute
   '/app/competitors': typeof AppCompetitorsRoute
   '/app/formats': typeof AppFormatsRoute
   '/app/ideas': typeof AppIdeasRoute
@@ -140,6 +149,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/onboarding'
+    | '/app/analyses'
     | '/app/competitors'
     | '/app/formats'
     | '/app/ideas'
@@ -154,6 +164,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/onboarding'
+    | '/app/analyses'
     | '/app/competitors'
     | '/app/formats'
     | '/app/ideas'
@@ -169,6 +180,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/onboarding'
+    | '/app/analyses'
     | '/app/competitors'
     | '/app/formats'
     | '/app/ideas'
@@ -280,10 +292,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCompetitorsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/analyses': {
+      id: '/app/analyses'
+      path: '/analyses'
+      fullPath: '/app/analyses'
+      preLoaderRoute: typeof AppAnalysesRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
+  AppAnalysesRoute: typeof AppAnalysesRoute
   AppCompetitorsRoute: typeof AppCompetitorsRoute
   AppFormatsRoute: typeof AppFormatsRoute
   AppIdeasRoute: typeof AppIdeasRoute
@@ -297,6 +317,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAnalysesRoute: AppAnalysesRoute,
   AppCompetitorsRoute: AppCompetitorsRoute,
   AppFormatsRoute: AppFormatsRoute,
   AppIdeasRoute: AppIdeasRoute,
@@ -319,3 +340,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
