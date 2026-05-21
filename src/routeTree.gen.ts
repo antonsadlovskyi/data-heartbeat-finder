@@ -21,6 +21,7 @@ import { Route as AppPerformanceRouteImport } from './routes/app.performance'
 import { Route as AppInsightsRouteImport } from './routes/app.insights'
 import { Route as AppIdeasRouteImport } from './routes/app.ideas'
 import { Route as AppFormatsRouteImport } from './routes/app.formats'
+import { Route as AppDatabaseRouteImport } from './routes/app.database'
 import { Route as AppCompetitorsRouteImport } from './routes/app.competitors'
 import { Route as AppAnalysesRouteImport } from './routes/app.analyses'
 
@@ -84,6 +85,11 @@ const AppFormatsRoute = AppFormatsRouteImport.update({
   path: '/formats',
   getParentRoute: () => AppRoute,
 } as any)
+const AppDatabaseRoute = AppDatabaseRouteImport.update({
+  id: '/database',
+  path: '/database',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppCompetitorsRoute = AppCompetitorsRouteImport.update({
   id: '/competitors',
   path: '/competitors',
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute
   '/app/analyses': typeof AppAnalysesRoute
   '/app/competitors': typeof AppCompetitorsRoute
+  '/app/database': typeof AppDatabaseRoute
   '/app/formats': typeof AppFormatsRoute
   '/app/ideas': typeof AppIdeasRoute
   '/app/insights': typeof AppInsightsRoute
@@ -116,6 +123,7 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
   '/app/analyses': typeof AppAnalysesRoute
   '/app/competitors': typeof AppCompetitorsRoute
+  '/app/database': typeof AppDatabaseRoute
   '/app/formats': typeof AppFormatsRoute
   '/app/ideas': typeof AppIdeasRoute
   '/app/insights': typeof AppInsightsRoute
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRoute
   '/app/analyses': typeof AppAnalysesRoute
   '/app/competitors': typeof AppCompetitorsRoute
+  '/app/database': typeof AppDatabaseRoute
   '/app/formats': typeof AppFormatsRoute
   '/app/ideas': typeof AppIdeasRoute
   '/app/insights': typeof AppInsightsRoute
@@ -151,6 +160,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/app/analyses'
     | '/app/competitors'
+    | '/app/database'
     | '/app/formats'
     | '/app/ideas'
     | '/app/insights'
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/app/analyses'
     | '/app/competitors'
+    | '/app/database'
     | '/app/formats'
     | '/app/ideas'
     | '/app/insights'
@@ -182,6 +193,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/app/analyses'
     | '/app/competitors'
+    | '/app/database'
     | '/app/formats'
     | '/app/ideas'
     | '/app/insights'
@@ -285,6 +297,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppFormatsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/database': {
+      id: '/app/database'
+      path: '/database'
+      fullPath: '/app/database'
+      preLoaderRoute: typeof AppDatabaseRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/competitors': {
       id: '/app/competitors'
       path: '/competitors'
@@ -305,6 +324,7 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppAnalysesRoute: typeof AppAnalysesRoute
   AppCompetitorsRoute: typeof AppCompetitorsRoute
+  AppDatabaseRoute: typeof AppDatabaseRoute
   AppFormatsRoute: typeof AppFormatsRoute
   AppIdeasRoute: typeof AppIdeasRoute
   AppInsightsRoute: typeof AppInsightsRoute
@@ -319,6 +339,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppAnalysesRoute: AppAnalysesRoute,
   AppCompetitorsRoute: AppCompetitorsRoute,
+  AppDatabaseRoute: AppDatabaseRoute,
   AppFormatsRoute: AppFormatsRoute,
   AppIdeasRoute: AppIdeasRoute,
   AppInsightsRoute: AppInsightsRoute,
