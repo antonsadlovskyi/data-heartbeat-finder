@@ -3,7 +3,6 @@ import { useFlyHigh } from "@/lib/store";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import { Bell, Globe, Send, Mail, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Language } from "@/lib/data/types";
@@ -129,5 +128,3 @@ function SettingsPage() {
     </div>
   );
 }
-
-function Label2() { return <Label /> }
