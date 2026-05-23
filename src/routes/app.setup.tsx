@@ -10,7 +10,19 @@ import { Wand2, Plus, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/app/setup")({
   component: SetupPage,
-  head: () => ({ meta: [{ title: "Navio · Setup" }] }),
+  head: () => ({
+    meta: [
+      { title: "Setup — Navio" },
+      { name: "description", content: "Configure your Navio workspace, competitors, and connected platforms." },
+      { property: "og:title", content: "Setup — Navio" },
+      { property: "og:description", content: "Configure your Navio workspace, competitors, and connected platforms." },
+      { property: "og:url", content: "https://data-heartbeat-finder.lovable.app/app/setup" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://data-heartbeat-finder.lovable.app/app/setup" },
+    ],
+  }),
 });
 
 function SetupPage() {

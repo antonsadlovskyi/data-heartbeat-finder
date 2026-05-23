@@ -9,7 +9,19 @@ import type { IdeaSuggestion } from "@/lib/data/types";
 
 export const Route = createFileRoute("/app/ideas")({
   component: IdeasPage,
-  head: () => ({ meta: [{ title: "Navio · Ideas" }] }),
+  head: () => ({
+    meta: [
+      { title: "Ideas — Navio" },
+      { name: "description", content: "AI-suggested content ideas tailored to your niche and audience." },
+      { property: "og:title", content: "Ideas — Navio" },
+      { property: "og:description", content: "AI-suggested content ideas tailored to your niche and audience." },
+      { property: "og:url", content: "https://data-heartbeat-finder.lovable.app/app/ideas" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://data-heartbeat-finder.lovable.app/app/ideas" },
+    ],
+  }),
 });
 
 function IdeasPage() {

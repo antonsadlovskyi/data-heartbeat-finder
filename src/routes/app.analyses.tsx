@@ -9,7 +9,19 @@ import analyses from "@/lib/data/account-analyses.json";
 
 export const Route = createFileRoute("/app/analyses")({
   component: Analyses,
-  head: () => ({ meta: [{ title: "Navio · Account Analyses" }] }),
+  head: () => ({
+    meta: [
+      { title: "Account Analyses — Navio" },
+      { name: "description", content: "Deep AI-powered breakdowns of competitor accounts: positioning, hooks, SWOT." },
+      { property: "og:title", content: "Account Analyses — Navio" },
+      { property: "og:description", content: "Deep AI-powered breakdowns of competitor accounts: positioning, hooks, SWOT." },
+      { property: "og:url", content: "https://data-heartbeat-finder.lovable.app/app/analyses" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://data-heartbeat-finder.lovable.app/app/analyses" },
+    ],
+  }),
 });
 
 type Analysis = (typeof analyses)[number];

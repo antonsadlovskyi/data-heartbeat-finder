@@ -9,7 +9,19 @@ import type { Language } from "@/lib/data/types";
 
 export const Route = createFileRoute("/app/settings")({
   component: SettingsPage,
-  head: () => ({ meta: [{ title: "Navio · Settings" }] }),
+  head: () => ({
+    meta: [
+      { title: "Settings — Navio" },
+      { name: "description", content: "Manage your Navio account, notifications, and language preferences." },
+      { property: "og:title", content: "Settings — Navio" },
+      { property: "og:description", content: "Manage your Navio account, notifications, and language preferences." },
+      { property: "og:url", content: "https://data-heartbeat-finder.lovable.app/app/settings" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://data-heartbeat-finder.lovable.app/app/settings" },
+    ],
+  }),
 });
 
 const LANGS: { id: Language; label: string }[] = [

@@ -3,7 +3,22 @@ import { Lightbulb, ArrowRight, Bookmark, Check, X, Sparkles } from "lucide-reac
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute("/app/insights")({ component: Insights });
+export const Route = createFileRoute("/app/insights")({ 
+  head: () => ({
+    meta: [
+      { title: "Insights — Navio" },
+      { name: "description", content: "What is working and what is not in your niche — with concrete next actions." },
+      { property: "og:title", content: "Insights — Navio" },
+      { property: "og:description", content: "What is working and what is not in your niche — with concrete next actions." },
+      { property: "og:url", content: "https://data-heartbeat-finder.lovable.app/app/insights" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://data-heartbeat-finder.lovable.app/app/insights" },
+    ],
+  }),
+  component: Insights,
+});
 
 const works = [
   { title: "Behind-the-scenes Reels are crushing it", body: "Posts with BTS video format get 3.2× more engagement at your competitors over 84 posts in 30 days.", action: "Film one barista shift and post a 20s Reel by Friday.", evidence: "6 competitors · 84 posts · 95% confidence" },

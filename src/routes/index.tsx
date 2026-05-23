@@ -15,6 +15,35 @@ export const Route = createFileRoute("/")({
     meta: [
       { title: "Navio — Marketing intelligence for local business" },
       { name: "description", content: "Spy on competitors, ride trends, ship better posts. Built for local cafés, gyms and studios." },
+      { property: "og:title", content: "Navio — Marketing intelligence for local business" },
+      { property: "og:description", content: "Spy on competitors, ride trends, ship better posts. Built for local cafés, gyms and studios." },
+      { property: "og:url", content: "https://data-heartbeat-finder.lovable.app/" },
+      { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/J9EKSLIs6aZdQcDruUmiLUpCs0t1/social-images/social-1778165235727-navio-og-1200x630.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/J9EKSLIs6aZdQcDruUmiLUpCs0t1/social-images/social-1778165235727-navio-og-1200x630.webp" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://data-heartbeat-finder.lovable.app/" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              name: "Navio",
+              url: "https://data-heartbeat-finder.lovable.app/",
+            },
+            {
+              "@type": "WebSite",
+              name: "Navio",
+              url: "https://data-heartbeat-finder.lovable.app/",
+            },
+          ],
+        }),
+      },
     ],
   }),
 });
@@ -34,6 +63,7 @@ function Landing() {
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans">
+      <main>
       {/* HERO — cosmic */}
       <section className="relative h-screen overflow-hidden">
         <div className="absolute inset-0 starfield" />
@@ -190,6 +220,7 @@ function Landing() {
         </div>
       </section>
 
+      </main>
       <footer className="border-t border-border/40 py-8">
         <div className="max-w-6xl mx-auto px-6 flex flex-wrap items-center justify-between gap-4 text-xs uppercase tracking-widest text-muted-foreground">
           <span>© 2026 Navio — Prototype</span>

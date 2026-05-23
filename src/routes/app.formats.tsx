@@ -6,7 +6,19 @@ import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/app/formats")({
   component: FormatsPage,
-  head: () => ({ meta: [{ title: "Navio · Formats" }] }),
+  head: () => ({
+    meta: [
+      { title: "Content Formats — Navio" },
+      { name: "description", content: "The post formats moving the needle in your niche, ranked by performance." },
+      { property: "og:title", content: "Content Formats — Navio" },
+      { property: "og:description", content: "The post formats moving the needle in your niche, ranked by performance." },
+      { property: "og:url", content: "https://data-heartbeat-finder.lovable.app/app/formats" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://data-heartbeat-finder.lovable.app/app/formats" },
+    ],
+  }),
 });
 
 function FormatsPage() {

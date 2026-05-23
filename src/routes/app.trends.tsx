@@ -3,7 +3,22 @@ import { TrendingUp, Music, Hash, Calendar, Play, ArrowRight } from "lucide-reac
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute("/app/trends")({ component: Trends });
+export const Route = createFileRoute("/app/trends")({ 
+  head: () => ({
+    meta: [
+      { title: "Trends — Navio" },
+      { name: "description", content: "Local audios, hashtags, and formats bubbling up before they peak." },
+      { property: "og:title", content: "Trends — Navio" },
+      { property: "og:description", content: "Local audios, hashtags, and formats bubbling up before they peak." },
+      { property: "og:url", content: "https://data-heartbeat-finder.lovable.app/app/trends" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://data-heartbeat-finder.lovable.app/app/trends" },
+    ],
+  }),
+  component: Trends,
+});
 
 const audios = [
   { title: "Aesthetic morning vibes", uses: "12.4k", growth: "+280%", duration: "0:18" },
