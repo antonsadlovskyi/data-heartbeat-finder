@@ -220,13 +220,13 @@ function Landing() {
         </div>
       </section>
 
+      </main>
       <footer className="border-t border-border/40 py-8">
         <div className="max-w-6xl mx-auto px-6 flex flex-wrap items-center justify-between gap-4 text-xs uppercase tracking-widest text-muted-foreground">
           <span>© 2026 Navio — Prototype</span>
           <span>Apify · n8n · Claude</span>
         </div>
       </footer>
-      </main>
     </div>
   );
 }
