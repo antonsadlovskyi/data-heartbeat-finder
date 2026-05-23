@@ -15,6 +15,35 @@ export const Route = createFileRoute("/")({
     meta: [
       { title: "Navio — Marketing intelligence for local business" },
       { name: "description", content: "Spy on competitors, ride trends, ship better posts. Built for local cafés, gyms and studios." },
+      { property: "og:title", content: "Navio — Marketing intelligence for local business" },
+      { property: "og:description", content: "Spy on competitors, ride trends, ship better posts. Built for local cafés, gyms and studios." },
+      { property: "og:url", content: "https://data-heartbeat-finder.lovable.app/" },
+      { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/J9EKSLIs6aZdQcDruUmiLUpCs0t1/social-images/social-1778165235727-navio-og-1200x630.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/J9EKSLIs6aZdQcDruUmiLUpCs0t1/social-images/social-1778165235727-navio-og-1200x630.webp" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://data-heartbeat-finder.lovable.app/" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              name: "Navio",
+              url: "https://data-heartbeat-finder.lovable.app/",
+            },
+            {
+              "@type": "WebSite",
+              name: "Navio",
+              url: "https://data-heartbeat-finder.lovable.app/",
+            },
+          ],
+        }),
+      },
     ],
   }),
 });
