@@ -72,18 +72,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Fly High | Marketing Intelligence" },
+      { title: "Navio | Marketing Intelligence" },
       { name: "description", content: "See what your competitors are doing right and what to post tonight. Playful marketing intelligence for restaurants, gyms and local businesses." },
       { name: "author", content: "Lumora" },
-      { property: "og:title", content: "Fly High | Marketing Intelligence" },
+      { property: "og:title", content: "Navio | Marketing Intelligence" },
       { property: "og:description", content: "See what your competitors are doing right and what to post tonight. Playful marketing intelligence for restaurants, gyms and local businesses." },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "Navio" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lumora" },
-      { name: "twitter:title", content: "Fly High | Marketing Intelligence" },
+      { name: "twitter:title", content: "Navio | Marketing Intelligence" },
       { name: "twitter:description", content: "See what your competitors are doing right and what to post tonight. Playful marketing intelligence for restaurants, gyms and local businesses." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/J9EKSLIs6aZdQcDruUmiLUpCs0t1/social-images/social-1778165235727-navio-og-1200x630.webp" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/J9EKSLIs6aZdQcDruUmiLUpCs0t1/social-images/social-1778165235727-navio-og-1200x630.webp" },
     ],
     links: [
       {
