@@ -63,6 +63,7 @@ function Landing() {
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans">
+      <main>
       {/* HERO — cosmic */}
       <section className="relative h-screen overflow-hidden">
         <div className="absolute inset-0 starfield" />
@@ -225,6 +226,7 @@ function Landing() {
           <span>Apify · n8n · Claude</span>
         </div>
       </footer>
+      </main>
     </div>
   );
 }
