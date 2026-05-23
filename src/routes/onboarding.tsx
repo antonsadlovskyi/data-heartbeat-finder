@@ -12,7 +12,19 @@ import { Progress } from "@/components/ui/progress";
 
 export const Route = createFileRoute("/onboarding")({
   component: Onboarding,
-  head: () => ({ meta: [{ title: "Set up Navio" }] }),
+  head: () => ({
+    meta: [
+      { title: "Get started — Navio" },
+      { name: "description", content: "Set up your Navio workspace in under 2 minutes." },
+      { property: "og:title", content: "Get started — Navio" },
+      { property: "og:description", content: "Set up your Navio workspace in under 2 minutes." },
+      { property: "og:url", content: "https://data-heartbeat-finder.lovable.app/onboarding" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://data-heartbeat-finder.lovable.app/onboarding" },
+    ],
+  }),
 });
 
 const niches = [

@@ -4,7 +4,22 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BarChart, Bar, ResponsiveContainer, XAxis, Tooltip } from "recharts";
 
-export const Route = createFileRoute("/app/competitors")({ component: Competitors });
+export const Route = createFileRoute("/app/competitors")({ 
+  head: () => ({
+    meta: [
+      { title: "Competitor Radar — Navio" },
+      { name: "description", content: "Track up to 10 local rivals across Instagram, Facebook, TikTok and Google Maps." },
+      { property: "og:title", content: "Competitor Radar — Navio" },
+      { property: "og:description", content: "Track up to 10 local rivals across Instagram, Facebook, TikTok and Google Maps." },
+      { property: "og:url", content: "https://data-heartbeat-finder.lovable.app/app/competitors" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://data-heartbeat-finder.lovable.app/app/competitors" },
+    ],
+  }),
+  component: Competitors,
+});
 
 const competitors = [
   { handle: "@latte.art.lv", name: "Latte Art Lab", emoji: "🎨", followers: "15.1k", er: 7.2, posts7d: 9, reach: 48000, trend: "up", reviews: 4.8, grad: "bg-gradient-to-br from-primary/30 via-primary/15 to-violet/30 border border-primary/40" },

@@ -6,6 +6,20 @@ import { Button } from "@/components/ui/button";
 import { LineChart, Line, ResponsiveContainer, Tooltip, AreaChart, Area } from "recharts";
 
 export const Route = createFileRoute("/app/")({
+  
+  head: () => ({
+    meta: [
+      { title: "Dashboard — Navio" },
+      { name: "description", content: "Your daily marketing intelligence snapshot: reach, engagement, and what to post next." },
+      { property: "og:title", content: "Dashboard — Navio" },
+      { property: "og:description", content: "Your daily marketing intelligence snapshot: reach, engagement, and what to post next." },
+      { property: "og:url", content: "https://data-heartbeat-finder.lovable.app/app" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://data-heartbeat-finder.lovable.app/app" },
+    ],
+  }),
   component: Dashboard,
 });
 

@@ -15,7 +15,19 @@ import data from "@/lib/data/apify-dataset.json";
 
 export const Route = createFileRoute("/app/database")({
   component: DatabasePage,
-  head: () => ({ meta: [{ title: "Navio · Database Dashboard" }] }),
+  head: () => ({
+    meta: [
+      { title: "Database — Navio" },
+      { name: "description", content: "Browse the raw marketing intelligence dataset powering your Navio workspace." },
+      { property: "og:title", content: "Database — Navio" },
+      { property: "og:description", content: "Browse the raw marketing intelligence dataset powering your Navio workspace." },
+      { property: "og:url", content: "https://data-heartbeat-finder.lovable.app/app/database" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://data-heartbeat-finder.lovable.app/app/database" },
+    ],
+  }),
 });
 
 const ds = data as Record<string, any[]>;

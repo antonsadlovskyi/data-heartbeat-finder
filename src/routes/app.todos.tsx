@@ -11,7 +11,19 @@ import type { TodoStatus } from "@/lib/data/types";
 
 export const Route = createFileRoute("/app/todos")({
   component: TodosPage,
-  head: () => ({ meta: [{ title: "Navio · To Dos" }] }),
+  head: () => ({
+    meta: [
+      { title: "To Dos — Navio" },
+      { name: "description", content: "Your actionable marketing tasks generated from competitor and trend analysis." },
+      { property: "og:title", content: "To Dos — Navio" },
+      { property: "og:description", content: "Your actionable marketing tasks generated from competitor and trend analysis." },
+      { property: "og:url", content: "https://data-heartbeat-finder.lovable.app/app/todos" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://data-heartbeat-finder.lovable.app/app/todos" },
+    ],
+  }),
 });
 
 const STATUS_TABS: { id: TodoStatus | "all"; label: string }[] = [

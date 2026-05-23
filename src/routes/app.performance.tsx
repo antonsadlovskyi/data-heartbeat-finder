@@ -4,7 +4,22 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid, ScatterChart, Scatter, ZAxis } from "recharts";
 
-export const Route = createFileRoute("/app/performance")({ component: Performance });
+export const Route = createFileRoute("/app/performance")({ 
+  head: () => ({
+    meta: [
+      { title: "My Performance — Navio" },
+      { name: "description", content: "Correlate what you post with how it performs across all connected accounts." },
+      { property: "og:title", content: "My Performance — Navio" },
+      { property: "og:description", content: "Correlate what you post with how it performs across all connected accounts." },
+      { property: "og:url", content: "https://data-heartbeat-finder.lovable.app/app/performance" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://data-heartbeat-finder.lovable.app/app/performance" },
+    ],
+  }),
+  component: Performance,
+});
 
 const reach = Array.from({ length: 30 }, (_, i) => ({
   day: i + 1,
