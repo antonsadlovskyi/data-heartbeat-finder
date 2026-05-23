@@ -12,7 +12,7 @@ import { Progress } from "@/components/ui/progress";
 
 export const Route = createFileRoute("/onboarding")({
   component: Onboarding,
-  head: () => ({ meta: [{ title: "Set up FlyHigh" }] }),
+  head: () => ({ meta: [{ title: "Set up Navio" }] }),
 });
 
 const niches = [
@@ -89,7 +89,7 @@ function Onboarding() {
           <div className="size-9 rounded-2xl bg-gradient-violet shadow-pop grid place-items-center">
             <Sparkles className="size-5 text-primary-foreground" />
           </div>
-          <span className="font-display text-xl font-bold">FlyHigh</span>
+          <span className="font-display text-xl font-bold">Navio</span>
         </Link>
         <span className="text-sm text-muted-foreground">Step {step} of 3</span>
       </header>

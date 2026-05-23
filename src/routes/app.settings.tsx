@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useFlyHigh } from "@/lib/store";
+import { useNavio } from "@/lib/store";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -9,7 +9,7 @@ import type { Language } from "@/lib/data/types";
 
 export const Route = createFileRoute("/app/settings")({
   component: SettingsPage,
-  head: () => ({ meta: [{ title: "FlyHigh · Settings" }] }),
+  head: () => ({ meta: [{ title: "Navio · Settings" }] }),
 });
 
 const LANGS: { id: Language; label: string }[] = [
@@ -19,16 +19,16 @@ const LANGS: { id: Language; label: string }[] = [
 ];
 
 function SettingsPage() {
-  const language = useFlyHigh((s) => s.language);
-  const setLanguage = useFlyHigh((s) => s.setLanguage);
-  const notifications = useFlyHigh((s) => s.notifications);
-  const upsertNotification = useFlyHigh((s) => s.upsertNotification);
+  const language = useNavio((s) => s.language);
+  const setLanguage = useNavio((s) => s.setLanguage);
+  const notifications = useNavio((s) => s.notifications);
+  const upsertNotification = useNavio((s) => s.upsertNotification);
 
   return (
     <div className="space-y-8 max-w-4xl">
       <header>
         <h1 className="font-display text-4xl font-bold tracking-tight">Settings</h1>
-        <p className="text-muted-foreground mt-1">Language, notifications, and how FlyHigh reaches you.</p>
+        <p className="text-muted-foreground mt-1">Language, notifications, and how Navio reaches you.</p>
       </header>
 
       {/* Language */}

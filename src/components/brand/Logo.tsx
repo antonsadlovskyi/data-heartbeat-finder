@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Minimalist FlyHigh constellation mark — three sparkles connected by a faint
+ * Minimalist Navio constellation mark — three sparkles connected by a faint
  * line forming an upward-rising arc, plus the wordmark.
  */
 export function LogoMark({ className }: { className?: string }) {
@@ -47,7 +47,7 @@ export function Logo({ className, markClassName }: { className?: string; markCla
     <div className={cn("flex items-center gap-2.5", className)}>
       <LogoMark className={markClassName} />
       <span className="font-display text-xl font-light tracking-tight text-foreground">
-        Fly<span className="text-primary text-glow">High</span>
+        Nav<span className="text-primary text-glow">io</span>
       </span>
     </div>
   );

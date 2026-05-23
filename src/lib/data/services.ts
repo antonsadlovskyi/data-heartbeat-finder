@@ -2,7 +2,7 @@
 // function's body with a real DB query (Supabase / API) without touching
 // consumers.
 
-import { useFlyHigh } from "../store";
+import { useNavio } from "../store";
 import type {
   CompetitorProfile,
   CompetitorScorecard,
@@ -27,50 +27,50 @@ function filterByPlatform<T extends { platform: string }>(items: T[], platform: 
 // --- Reads -----------------------------------------------------------------
 
 export async function getDashboardCards(platform: PlatformFilter = "all"): Promise<DashboardCard[]> {
-  const cards = useFlyHigh.getState().dashboardCards.filter((c) => c.active);
+  const cards = useNavio.getState().dashboardCards.filter((c) => c.active);
   // dashboard cards aren't platform-scoped today, but keep API ready
   void platform;
   return cards.sort((a, b) => b.priority - a.priority);
 }
 
 export async function getCompetitors(platform: PlatformFilter = "all"): Promise<CompetitorProfile[]> {
-  const items = useFlyHigh.getState().competitors.filter((c) => c.active);
+  const items = useNavio.getState().competitors.filter((c) => c.active);
   return filterByPlatform(items, platform);
 }
 
 export async function getCompetitorScorecards(
   platform: PlatformFilter = "all"
 ): Promise<CompetitorScorecard[]> {
-  return filterByPlatform(useFlyHigh.getState().scorecards, platform).sort(
+  return filterByPlatform(useNavio.getState().scorecards, platform).sort(
     (a, b) => b.overall_score - a.overall_score
   );
 }
 
 export async function getInsights(platform: PlatformFilter = "all"): Promise<Insight[]> {
-  return filterByPlatform(useFlyHigh.getState().insights, platform).sort(
+  return filterByPlatform(useNavio.getState().insights, platform).sort(
     (a, b) => b.priority - a.priority
   );
 }
 
 export async function getTodos(): Promise<TodoItem[]> {
-  return useFlyHigh.getState().todos;
+  return useNavio.getState().todos;
 }
 
 export async function getIdeaSuggestions(platform: PlatformFilter = "all"): Promise<IdeaSuggestion[]> {
-  return filterByPlatform(useFlyHigh.getState().ideas, platform);
+  return filterByPlatform(useNavio.getState().ideas, platform);
 }
 
 export async function getTrendItems(platform: PlatformFilter = "all"): Promise<TrendItem[]> {
-  return filterByPlatform(useFlyHigh.getState().trends, platform);
+  return filterByPlatform(useNavio.getState().trends, platform);
 }
 
 export async function getFormats(platform: PlatformFilter = "all"): Promise<ContentFormatAnalysis[]> {
-  const items = useFlyHigh.getState().formats;
+  const items = useNavio.getState().formats;
   return platform === "all" ? items : items.filter((f) => f.platform === platform);
 }
 
 export async function getOwnProfiles(): Promise<OwnSocialProfile[]> {
-  return useFlyHigh.getState().ownProfiles;
+  return useNavio.getState().ownProfiles;
 }
 
 export async function getOwnPerformance(): Promise<{
@@ -80,7 +80,7 @@ export async function getOwnPerformance(): Promise<{
   best_format: string;
   weakest_format: string;
 }> {
-  const own = useFlyHigh.getState().ownProfiles;
+  const own = useNavio.getState().ownProfiles;
   const totalFollowers = own.reduce((s, p) => s + p.followers, 0);
   const avgEr = own.length ? own.reduce((s, p) => s + p.avg_engagement_rate, 0) / own.length : 0;
   return {
@@ -93,7 +93,7 @@ export async function getOwnPerformance(): Promise<{
 }
 
 export async function getTopCompetitorPosts(): Promise<Array<{ post: Post; metrics?: PostMetrics; competitor?: CompetitorProfile }>> {
-  const { posts, metrics, competitors } = useFlyHigh.getState();
+  const { posts, metrics, competitors } = useNavio.getState();
   return posts
     .filter((p) => p.profile_type === "competitor")
     .map((post) => ({
@@ -147,24 +147,24 @@ export async function applyInsightToTodo(
     result_status: "running",
   };
 
-  useFlyHigh.getState().upsertTodo(todo);
-  useFlyHigh.getState().upsertExperiment(experiment);
-  useFlyHigh.getState().setInsightStatus(insight.id, "applied");
+  useNavio.getState().upsertTodo(todo);
+  useNavio.getState().upsertExperiment(experiment);
+  useNavio.getState().setInsightStatus(insight.id, "applied");
   return { todo, experiment };
 }
 
 export async function startTrackingTodo(todoId: string) {
-  useFlyHigh.getState().setTodoStatus(todoId, "tracking");
+  useNavio.getState().setTodoStatus(todoId, "tracking");
 }
 export async function pauseTodo(todoId: string) {
-  useFlyHigh.getState().setTodoStatus(todoId, "paused");
+  useNavio.getState().setTodoStatus(todoId, "paused");
 }
 export async function postponeTodo(todoId: string) {
-  useFlyHigh.getState().setTodoStatus(todoId, "postponed");
+  useNavio.getState().setTodoStatus(todoId, "postponed");
 }
 export async function completeTodo(todoId: string) {
-  useFlyHigh.getState().setTodoStatus(todoId, "completed");
+  useNavio.getState().setTodoStatus(todoId, "completed");
 }
 export async function startTodo(todoId: string) {
-  useFlyHigh.getState().setTodoStatus(todoId, "in_progress");
+  useNavio.getState().setTodoStatus(todoId, "in_progress");
 }

@@ -29,7 +29,7 @@ function Performance() {
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
           <h1 className="font-display text-4xl font-bold tracking-tight">My Performance</h1>
-          <p className="text-muted-foreground mt-1">Connected accounts and how FlyHigh insights moved your numbers.</p>
+          <p className="text-muted-foreground mt-1">Connected accounts and how Navio insights moved your numbers.</p>
         </div>
         <Button className="rounded-full bg-primary text-primary-foreground shadow-glow hover:opacity-90"><Plug className="size-4 mr-1.5" /> Connect another</Button>
       </div>

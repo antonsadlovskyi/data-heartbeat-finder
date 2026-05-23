@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
-import { useFlyHigh } from "@/lib/store";
+import { useNavio } from "@/lib/store";
 import { TodoCard, TrackingExperimentCard, EmptyState } from "@/components/app/cards";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import type { TodoStatus } from "@/lib/data/types";
 
 export const Route = createFileRoute("/app/todos")({
   component: TodosPage,
-  head: () => ({ meta: [{ title: "FlyHigh · To Dos" }] }),
+  head: () => ({ meta: [{ title: "Navio · To Dos" }] }),
 });
 
 const STATUS_TABS: { id: TodoStatus | "all"; label: string }[] = [
@@ -23,9 +23,9 @@ const STATUS_TABS: { id: TodoStatus | "all"; label: string }[] = [
 ];
 
 function TodosPage() {
-  const platform = useFlyHigh((s) => s.platform);
-  const todos = useFlyHigh((s) => s.todos);
-  const experiments = useFlyHigh((s) => s.experiments);
+  const platform = useNavio((s) => s.platform);
+  const todos = useNavio((s) => s.todos);
+  const experiments = useNavio((s) => s.experiments);
 
   const filterTab = "all"; // visual tabs only for v1; keep simple
 

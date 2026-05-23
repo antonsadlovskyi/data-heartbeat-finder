@@ -1,17 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
-import { useFlyHigh } from "@/lib/store";
+import { useNavio } from "@/lib/store";
 import { FormatCard, EmptyState } from "@/components/app/cards";
 import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/app/formats")({
   component: FormatsPage,
-  head: () => ({ meta: [{ title: "FlyHigh · Formats" }] }),
+  head: () => ({ meta: [{ title: "Navio · Formats" }] }),
 });
 
 function FormatsPage() {
-  const platform = useFlyHigh((s) => s.platform);
-  const formats = useFlyHigh((s) => s.formats);
+  const platform = useNavio((s) => s.platform);
+  const formats = useNavio((s) => s.formats);
 
   const filtered = useMemo(
     () =>

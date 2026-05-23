@@ -1,5 +1,5 @@
 import { Instagram, Music2, Facebook, MapPin, Layers } from "lucide-react";
-import { useFlyHigh } from "@/lib/store";
+import { useNavio } from "@/lib/store";
 import type { PlatformFilter } from "@/lib/data/types";
 import { cn } from "@/lib/utils";
 
@@ -12,8 +12,8 @@ const options: { id: PlatformFilter; label: string; icon: React.ComponentType<{ 
 ];
 
 export function PlatformSwitcher({ compact = false }: { compact?: boolean }) {
-  const platform = useFlyHigh((s) => s.platform);
-  const setPlatform = useFlyHigh((s) => s.setPlatform);
+  const platform = useNavio((s) => s.platform);
+  const setPlatform = useNavio((s) => s.setPlatform);
 
   return (
     <div className="inline-flex items-center rounded-full border border-border/60 bg-card/70 backdrop-blur-xl p-1 gap-0.5">

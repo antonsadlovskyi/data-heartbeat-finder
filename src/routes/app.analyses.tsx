@@ -9,7 +9,7 @@ import analyses from "@/lib/data/account-analyses.json";
 
 export const Route = createFileRoute("/app/analyses")({
   component: Analyses,
-  head: () => ({ meta: [{ title: "FlyHigh · Account Analyses" }] }),
+  head: () => ({ meta: [{ title: "Navio · Account Analyses" }] }),
 });
 
 type Analysis = (typeof analyses)[number];
