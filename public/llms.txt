@@ -1,0 +1,8 @@
+# Navio
+
+> Marketing intelligence for local businesses — track competitors, ride trends, and ship better posts across Instagram, Facebook, TikTok and Google Maps.
+
+## Pages
+
+- [Home](/): Product overview, features, pricing.
+- [Get started](/onboarding): Set up a Navio workspace in under 2 minutes.
