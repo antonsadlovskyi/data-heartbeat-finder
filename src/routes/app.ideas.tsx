@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
-import { useFlyHigh } from "@/lib/store";
+import { useNavio } from "@/lib/store";
 import { IdeaCard, EmptyState } from "@/components/app/cards";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,13 +9,13 @@ import type { IdeaSuggestion } from "@/lib/data/types";
 
 export const Route = createFileRoute("/app/ideas")({
   component: IdeasPage,
-  head: () => ({ meta: [{ title: "FlyHigh · Ideas" }] }),
+  head: () => ({ meta: [{ title: "Navio · Ideas" }] }),
 });
 
 function IdeasPage() {
-  const platform = useFlyHigh((s) => s.platform);
-  const ideas = useFlyHigh((s) => s.ideas);
-  const setIdeaStatus = useFlyHigh((s) => s.setIdeaStatus);
+  const platform = useNavio((s) => s.platform);
+  const ideas = useNavio((s) => s.ideas);
+  const setIdeaStatus = useNavio((s) => s.setIdeaStatus);
 
   const filtered = useMemo(
     () => ideas.filter((i) => platform === "all" || i.platform === platform || i.platform === "all"),

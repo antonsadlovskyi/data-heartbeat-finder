@@ -1,4 +1,4 @@
-// FlyHigh — backend-ready type definitions.
+// Navio — backend-ready type definitions.
 // These mirror the future database tables. n8n/Apify writes to these shapes,
 // the frontend reads them through service functions in `./services.ts`.
 

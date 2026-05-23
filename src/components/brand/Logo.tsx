@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Minimalist FlyHigh constellation mark — three sparkles connected by a faint
+ * Minimalist Navio constellation mark — three sparkles connected by a faint
  * line forming an upward-rising arc, plus the wordmark.
  */
 export function LogoMark({ className }: { className?: string }) {

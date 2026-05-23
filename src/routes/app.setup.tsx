@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useFlyHigh } from "@/lib/store";
+import { useNavio } from "@/lib/store";
 import { ProfileDiagnosisCard, EmptyState } from "@/components/app/cards";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,16 +10,16 @@ import { Wand2, Plus, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/app/setup")({
   component: SetupPage,
-  head: () => ({ meta: [{ title: "FlyHigh · Setup" }] }),
+  head: () => ({ meta: [{ title: "Navio · Setup" }] }),
 });
 
 function SetupPage() {
-  const workspace = useFlyHigh((s) => s.workspace);
-  const updateWorkspace = useFlyHigh((s) => s.updateWorkspace);
-  const ownProfiles = useFlyHigh((s) => s.ownProfiles);
-  const updateOwnProfileDiagnosis = useFlyHigh((s) => s.updateOwnProfileDiagnosis);
-  const competitors = useFlyHigh((s) => s.competitors);
-  const removeCompetitor = useFlyHigh((s) => s.removeCompetitor);
+  const workspace = useNavio((s) => s.workspace);
+  const updateWorkspace = useNavio((s) => s.updateWorkspace);
+  const ownProfiles = useNavio((s) => s.ownProfiles);
+  const updateOwnProfileDiagnosis = useNavio((s) => s.updateOwnProfileDiagnosis);
+  const competitors = useNavio((s) => s.competitors);
+  const removeCompetitor = useNavio((s) => s.removeCompetitor);
 
   return (
     <div className="space-y-8 max-w-5xl">
@@ -27,7 +27,7 @@ function SetupPage() {
         <div>
           <h1 className="font-display text-4xl font-bold tracking-tight">Setup</h1>
           <p className="text-muted-foreground mt-1">
-            Tell FlyHigh who you are. The sharper the brief, the sharper the insights.
+            Tell Navio who you are. The sharper the brief, the sharper the insights.
           </p>
         </div>
         <Badge variant="outline" className="rounded-full gap-1.5">

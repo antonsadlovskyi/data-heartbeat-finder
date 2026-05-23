@@ -13,7 +13,7 @@ export const Route = createFileRoute("/")({
   component: Landing,
   head: () => ({
     meta: [
-      { title: "FlyHigh — Marketing intelligence for local business" },
+      { title: "Navio — Marketing intelligence for local business" },
       { name: "description", content: "Spy on competitors, ride trends, ship better posts. Built for local cafés, gyms and studios." },
     ],
   }),
@@ -70,7 +70,7 @@ function Landing() {
             className="text-center"
           >
             <h1 className="font-display font-light tracking-tight text-glow text-[clamp(4rem,16vw,12rem)] leading-[1.15] pb-4 bg-gradient-to-r from-lime via-sky to-violet bg-clip-text text-transparent">
-              FlyHigh
+              Navio
             </h1>
             <div className="mt-8 flex justify-center">
               <LogoMark className="size-14 opacity-80" />
@@ -135,7 +135,7 @@ function Landing() {
           <div className="grid md:grid-cols-3 gap-5">
             <OrbitCard icon={<Eye className="size-6" />} title="Competitor Radar" body="Track up to 10 rivals across IG, FB, TikTok and Maps. Cadence, hashtags, top posts, sentiment — side by side." />
             <OrbitCard icon={<TrendingUp className="size-6" />} title="Trend Tracker" body="Audios, hashtags, formats and seasonal hooks bubbling up locally — before they peak." />
-            <OrbitCard icon={<BarChart3 className="size-6" />} title="My Performance" body="Connect your accounts. FlyHigh correlates what you post with how it performs." />
+            <OrbitCard icon={<BarChart3 className="size-6" />} title="My Performance" body="Connect your accounts. Navio correlates what you post with how it performs." />
           </div>
         </div>
       </section>
@@ -192,7 +192,7 @@ function Landing() {
 
       <footer className="border-t border-border/40 py-8">
         <div className="max-w-6xl mx-auto px-6 flex flex-wrap items-center justify-between gap-4 text-xs uppercase tracking-widest text-muted-foreground">
-          <span>© 2026 FlyHigh — Prototype</span>
+          <span>© 2026 Navio — Prototype</span>
           <span>Apify · n8n · Claude</span>
         </div>
       </footer>

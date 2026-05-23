@@ -35,7 +35,7 @@ import {
   mockNotifications,
 } from "./data/mock";
 
-interface FlyHighState {
+interface NavioState {
   // UI
   platform: PlatformFilter;
   language: Language;
@@ -71,7 +71,7 @@ interface FlyHighState {
   upsertNotification: (n: NotificationSubscription) => void;
 }
 
-export const useFlyHigh = create<FlyHighState>()(
+export const useNavio = create<NavioState>()(
   persist(
     (set) => ({
       platform: "all",
@@ -138,7 +138,7 @@ export const useFlyHigh = create<FlyHighState>()(
         }),
     }),
     {
-      name: "flyhigh-state-v1",
+      name: "navio-state-v1",
       // Only persist user-facing UI prefs + corrections-ish state; mock data
       // resets on schema change.
       partialize: (s) => ({

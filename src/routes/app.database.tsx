@@ -15,7 +15,7 @@ import data from "@/lib/data/apify-dataset.json";
 
 export const Route = createFileRoute("/app/database")({
   component: DatabasePage,
-  head: () => ({ meta: [{ title: "FlyHigh · Database Dashboard" }] }),
+  head: () => ({ meta: [{ title: "Navio · Database Dashboard" }] }),
 });
 
 const ds = data as Record<string, any[]>;
