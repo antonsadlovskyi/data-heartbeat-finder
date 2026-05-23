@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://data-heartbeat-finder.lovable.app/sitemap.xml
