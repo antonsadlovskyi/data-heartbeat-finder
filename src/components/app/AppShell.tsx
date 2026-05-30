@@ -4,6 +4,7 @@ import {
   Layers, BarChart3, TrendingUp, Settings, Wand2, Database, FileSearch,
 } from "lucide-react";
 import { PlatformSwitcher } from "./PlatformSwitcher";
+import { RoleSwitcher } from "./RoleSwitcher";
 import { Logo } from "@/components/brand/Logo";
 import { cn } from "@/lib/utils";
 
@@ -62,10 +63,11 @@ export function AppShell() {
       </aside>
       <div className="flex-1 flex flex-col min-w-0">
         <header className="h-16 flex items-center justify-between px-6 border-b border-border/60 bg-card/30 backdrop-blur-xl">
-          <div className="text-sm text-muted-foreground">
-            <span className="text-foreground font-medium">Café Svitlo</span>
-            <span className="mx-2">·</span>
-            <span>Last scan 12 min ago</span>
+          <div className="flex items-center gap-3">
+            <RoleSwitcher />
+            <span className="hidden lg:inline text-xs text-muted-foreground">
+              View tailored for the selected role
+            </span>
           </div>
           <PlatformSwitcher />
         </header>
