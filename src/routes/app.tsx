@@ -1,4 +1,4 @@
-import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/app/AppShell";
 import { useAuth } from "@/lib/auth-context";
 
@@ -19,6 +19,3 @@ function AppGate() {
   if (!user) return <Navigate to="/login" replace />;
   return <AppShell />;
 }
-
-// AppShell renders <Outlet /> via its main element; keep Outlet usage explicit for type safety.
-export { Outlet };
