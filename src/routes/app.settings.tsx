@@ -6,6 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { Bell, Globe, Send, Mail, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Language } from "@/lib/data/types";
+import { N8nPanel } from "@/components/app/N8nPanel";
 
 export const Route = createFileRoute("/app/settings")({
   component: SettingsPage,
@@ -42,6 +43,8 @@ function SettingsPage() {
         <h1 className="font-display text-4xl font-bold tracking-tight">Settings</h1>
         <p className="text-muted-foreground mt-1">Language, notifications, and how Navio reaches you.</p>
       </header>
+
+      <N8nPanel />
 
       {/* Language */}
       <section className="rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 p-6 shadow-pop">
