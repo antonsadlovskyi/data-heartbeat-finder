@@ -58,7 +58,7 @@ export const updateWorkspaceSettings = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
     const ws = await ensureWorkspace(supabase, userId);
-    const patch: Record<string, unknown> = {};
+    const patch: Record<string, any> = {};
     for (const k of [
       "project_name",
       "niche",
@@ -87,7 +87,7 @@ export const updateUserProfile = createServerFn({ method: "POST" })
   .inputValidator((i: { display_name?: string; avatar_url?: string }) => i)
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
-    const patch: Record<string, unknown> = {};
+    const patch: Record<string, any> = {};
     if (data.display_name !== undefined) patch.display_name = data.display_name;
     if (data.avatar_url !== undefined) patch.avatar_url = data.avatar_url;
     const { data: existing } = await supabase
