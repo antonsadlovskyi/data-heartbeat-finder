@@ -1,74 +1,102 @@
-## FlyHigh: Upgrade prototype into full AI marketing intelligence app
 
-### Scope
-Transform the existing 5-page prototype (Landing, Dashboard, Competitor Radar, Insights, Trends, Performance, Onboarding) into a 10-page dashboard app with a backend-ready data layer, mock data matching the proposed DB schema, and i18n-ready text constants.
+## Goal
 
-### Architecture
-- **Data layer** at `src/lib/data/` with:
-  - `types.ts` — all TypeScript interfaces matching the DB tables (users, workspaces, own_social_profiles, competitor_profiles, profile_snapshots, posts, post_metrics, competitor_scorecards, insights, todo_items, tracking_experiments, idea_suggestions, trend_items, content_format_analysis, dashboard_cards, notification_subscriptions, adjacent_industries)
-  - `mock.ts` — rich mock data for a sample café workspace
-  - `services.ts` — typed async service functions (`getDashboardCards`, `getCompetitors`, `getCompetitorScorecards`, `getInsights`, `getTodos`, `applyInsightToTodo`, `startTrackingTodo`, etc.) backed by in-memory state via a Zustand store, ready to swap for DB queries.
-- **State**: a single Zustand store `src/lib/store.ts` holds mutable mock state (todos, experiments, profile corrections, applied insights) so actions persist across navigation.
-- **i18n**: `src/lib/i18n/` with `en.ts`, `uk.ts`, `de.ts` dictionaries + `useT()` hook reading language from store. All UI labels go through `t("key")`.
+Move three pages off the local JSON mocks (`apify-dataset.json`, `account-analyses.json`) onto a real Supabase backend that **n8n writes into directly**. Each user only sees rows belonging to workspaces they own (auth + RLS). The schema mirrors the existing mock 1:1 so the current dashboards keep rendering.
 
-### Routing (TanStack flat file routing)
-Keep landing at `/`, app under `/app/*`:
-- `/app` → Dashboard (replaces current app.index)
-- `/app/competitors` → Competitor Radar (rebuild)
-- `/app/insights` → Insights Feed (rebuild)
-- `/app/todos` → To Dos & Action Tracking (new)
-- `/app/ideas` → Idea Suggestions (new)
-- `/app/formats` → Content Format Analysis (new)
-- `/app/performance` → My Performance (rebuild)
-- `/app/trends` → Trend Tracker (keep, light update)
-- `/app/setup` → Profile Setup / Strategy Profile (upgrade onboarding)
-- `/app/settings` → Settings & Notifications (new)
+## 1. Enable Lovable Cloud
 
-### Reusable components (`src/components/app/`)
-`PlatformSwitcher`, `ScoreCard`, `InsightCard`, `CompetitorRankCard`, `EmbeddedPostCard`, `TodoCard`, `TrackingExperimentCard`, `IdeaCard`, `TrendCard`, `ProfileDiagnosisCard`, `MetricComparisonChart`, `PageHeader`, `ActionButton`, `EmptyState`.
+Provision the backend (Postgres + Auth + Storage). After this we have `VITE_SUPABASE_*` for the browser and `SUPABASE_SERVICE_ROLE_KEY` for n8n.
 
-### AppShell updates
-- Sidebar gets 10 nav items grouped: Workspace (Dashboard, Competitor Radar, Insights, To Dos, Ideas, Formats, Performance, Trends) + Account (Setup, Settings)
-- Header gets global `PlatformSwitcher` (workspace store) + last-scan timestamp + business name
-- Sidebar collapsible on small screens
+## 2. Database schema (mirrors `apify-dataset.json`)
 
-### Page content (high-level)
-Each page wired to service functions, shows real mock data, every card has action buttons that mutate store state. Empty states reference "n8n / Apify will populate this".
+One migration creates these tables in `public`. Every table carries `workspace_id uuid` (FK → `workspaces.id`) so RLS can scope by ownership. Each gets explicit `GRANT`s + RLS enabled.
 
-**Dashboard**: position-today scorecards, top-3 actions, competitors-moved feed, active tracking experiments with before/after, best-competitor-outcomes grid.
+```text
+workspaces            (id, owner_id→auth.users, project_name, niche, main_goal, ...)
+social_accounts       (account_id pk, workspace_id, platform, username, followers_count, ...)
+account_snapshots     (snapshot_id pk, account_id, workspace_id, engagement_rate, captured_at, ...)
+social_posts          (post_id pk, account_id, workspace_id, post_type, caption, likes_count,
+                       engagement_rate, content_pillar, performance_level, post_url, ...)
+post_assets           (asset_id pk, post_id, workspace_id, asset_type, url, ...)
+post_comments         (comment_id pk, post_id, workspace_id, author, text, sentiment, ...)
+competitor_radar      (radar_id pk, workspace_id, account_id, account_name, overall_score,
+                       positioning_strength ... product_differentiation, key_strength,
+                       key_weakness, main_reason)
+best_outcomes         (outcome_id pk, workspace_id, account_id, metric, value, ...)
+competitor_comparison (comparison_id pk, workspace_id, competitor_account_id, area, own_score,
+                       competitor_score, gap, who_is_stronger, priority, recommended_action)
+workspace_report      (report_id pk, workspace_id, period_start, period_end, executive_summary,
+                       own_profile_strengths, own_profile_weaknesses, best_opportunities,
+                       main_threats)
+action_plan           (action_id pk, workspace_id, action_type, what_to_do, based_on_insight,
+                       content_format, priority, deadline)
+account_analyses      (analysis_id pk, workspace_id, account_id, ...)   ← mirrors account-analyses.json
+```
 
-**Competitor Radar**: ranking table sorted by overall score, "What makes the winners win" summary, per-competitor detail drawer, best-outcomes panel, filters.
+### Roles & RLS
 
-**Insights Feed**: card feed with type/priority/difficulty badges, "Apply" opens a modal (metric, baseline, period, target) → creates Todo + tracking experiment via service fn.
+- `profiles` table (id → `auth.users`, display_name) created on signup via trigger.
+- `workspace_members(workspace_id, user_id, role)` for shared workspaces.
+- Security-definer helper `public.is_workspace_member(_ws uuid)`.
+- Per-table policies: `SELECT/INSERT/UPDATE/DELETE` only when `is_workspace_member(workspace_id)`.
+- `service_role` granted ALL on every table (this is what n8n uses).
+- No `anon` grants — everything is auth-gated.
 
-**To Dos**: 5-column kanban (Open / In progress / Tracking / Paused / Completed) + Results tab.
+## 3. Auth
 
-**Ideas**: grouped idea cards (content, campaign, offer, visual, community, collab).
+- Email/password + Google sign-in via the Lovable broker.
+- `_authenticated` layout route gates the `/app/*` subtree.
+- `/login`, `/signup`, `/reset-password` public routes.
+- Root `onAuthStateChange` listener invalidates router + query cache.
+- `attachSupabaseAuth` middleware confirmed in `src/start.ts`.
 
-**Content Formats**: per-format scorecards with usage count, avg score, best example, content-gap section.
+## 4. Server functions (live data layer)
 
-**My Performance**: own profile overview, vs-competitor chart, profile diagnosis with inline edit, action results.
+Thin `*.functions.ts` files in `src/lib/data/` — each protected by `requireSupabaseAuth`, queries scoped via RLS:
 
-**Trend Tracker**: minimal — trend cards by category + seasonal calendar list.
+- `getWorkspace()` — current user's active workspace + report.
+- `getDatabaseDashboard()` — accounts, snapshots, posts (top), assets count, comments count, radar, comparisons, action_plan, workspace_report. One round-trip used by `/app/database`.
+- `getCompetitorRadar()` — radar rows + comparisons for `/app/competitors`.
+- `getAccountAnalyses()` — full per-account analyses for `/app/analyses`.
 
-**Setup**: multi-step wizard with progress indicator, AI-detected sections with "correct if needed".
+All return plain serializable DTOs. Loaders use `ensureQueryData` + `useSuspenseQuery` (canonical Query pattern). Each route gets `errorComponent` + `notFoundComponent`.
 
-**Settings**: language selector, connected profiles, competitor management, notifications (Telegram/Email/freq), scan frequency, export placeholders.
+## 5. Page wiring (this round)
 
-### MVP scope guardrails
-- Mock data only; no real Apify/n8n/DB calls.
-- All Zustand mutations are local; service functions are async-shaped to ease later DB swap.
-- Focus polish on: AppShell, Dashboard, Competitor Radar, Insights Feed, To Dos, My Performance. Lighter polish on Ideas, Formats, Trends, Setup, Settings.
-- Keep current cosmic dark visual style + design tokens in `src/styles.css`. No new color tokens needed beyond what exists.
+Replace mock imports with server-fn data:
 
-### Technical notes
-- Add deps: `zustand` (state), keep existing `recharts`, `lucide-react`, `framer-motion` if present.
-- All new routes are children of existing `/app` layout — `AppShell` is the parent `Outlet`.
-- Update `src/routeTree.gen.ts` is auto-managed; just create files.
-- Landing page keeps current style, ensure prominent "Open Dashboard" CTA links to `/app`.
+| Route | Source today | Source after |
+|---|---|---|
+| `/app/database` | `apify-dataset.json` | `getDatabaseDashboard()` |
+| `/app/competitors` | mock | `getCompetitorRadar()` |
+| `/app/analyses` | `account-analyses.json` | `getAccountAnalyses()` |
 
-### Out of scope (this edit)
-- Real auth, real backend, real Apify/n8n integration.
-- PDF/CSV export functionality (UI buttons only).
-- Adjacent industries page (data model only, no page).
-- Generate-content-draft AI calls (button stubs).
+Visual layouts stay (KPIs, SWOT tiles, BarChart + RadarChart, top posts, gap table, action list). Empty/loading/error states added — when n8n hasn't pushed anything yet, each section shows a friendly "Waiting for n8n run" placeholder with a copy-paste hint.
+
+Other pages (`insights`, `todos`, `ideas`, `formats`, `performance`, `trends`, `setup`, `settings`) continue using mock data until a later round.
+
+## 6. n8n integration guide (in `/app/settings`)
+
+A new "n8n connection" panel shows:
+
+- The user's `workspace_id` (copy button).
+- Supabase project URL (`VITE_SUPABASE_URL`).
+- Instructions: in n8n add a **Supabase** credential using `SUPABASE_SERVICE_ROLE_KEY` (we generate a one-click "Reveal & copy" gated by a confirm dialog — value is fetched through a `requireSupabaseAuth`'d server fn that checks the user owns the workspace).
+- Table cheatsheet: which JSON keys map to which columns + required `workspace_id` on every insert.
+
+## 7. Seed
+
+Optional one-time seed server fn `seedFromMock()` that inserts the existing `apify-dataset.json` rows under the current user's workspace, so the UI is non-empty before the first n8n run. Triggered from a button in `/app/settings`.
+
+## Technical notes
+
+- New files: `supabase/migrations/<ts>_init_schema.sql`, `src/lib/data/{dashboard,radar,analyses}.functions.ts`, `src/routes/_authenticated.tsx`, `src/routes/login.tsx`, `src/routes/signup.tsx`, `src/routes/reset-password.tsx`, `src/components/app/N8nPanel.tsx`.
+- Edits: `src/router.tsx` (auth context), `src/routes/__root.tsx` (auth listener), `src/start.ts` (verify `attachSupabaseAuth`), `src/routes/app.*.tsx` move under `_authenticated`, `app.database.tsx` / `app.competitors.tsx` / `app.analyses.tsx` swap data source.
+- All schema changes via timestamped migrations; data inserts via insert tool, not migrations.
+- Each `public.*` table migration includes the canonical GRANT block (authenticated + service_role; no anon).
+
+## Out of scope (next round)
+
+- Wiring the remaining `/app/*` pages to live data.
+- Realtime subscriptions (Supabase Realtime) for live n8n updates — easy add-on once tables exist.
+- Webhook ingestion path (not needed since you chose the direct Supabase node).
