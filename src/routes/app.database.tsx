@@ -314,7 +314,8 @@ const TONE: Record<string, string> = {
   destructive: "bg-destructive/10 text-destructive border-destructive/30",
 };
 
-function Tile({ icon, title, text, tone }: { icon: React.ReactNode; title: string; text: string; tone: keyof typeof TONE }) {
+function Tile({ icon, title, text, tone }: { icon: React.ReactNode; title: string; text?: string | null; tone: keyof typeof TONE }) {
+  if (!text) return null;
   return (
     <div className={cn("rounded-2xl border p-4", TONE[tone])}>
       <div className="flex items-center gap-2 text-xs uppercase tracking-wide font-semibold mb-1.5">{icon} {title}</div>
