@@ -256,7 +256,8 @@ function PerfPill({ level }: { level?: string }) {
   return <Badge className={cn("rounded-full border text-[10px]", map[level ?? "low"] ?? map.low)}>{level ?? "—"}</Badge>;
 }
 
-function GapTable({ rows, accountLabel }: { rows: any[]; accountLabel: (id: string) => string }) {
+function GapTable({ rows, accountLabel }: { rows: any[]; accountLabel?: (id: string) => string }) {
+  const labelFor = accountLabel ?? ((id: string) => id);
   return (
     <div className="overflow-hidden rounded-2xl border border-border/60">
       <table className="w-full text-sm">
@@ -274,7 +275,7 @@ function GapTable({ rows, accountLabel }: { rows: any[]; accountLabel: (id: stri
           {rows.map((r) => (
             <tr key={r.comparison_id} className="border-t border-border/60 hover:bg-white/[0.02]">
               <td className="p-3 font-semibold capitalize">{r.area}</td>
-              <td className="p-3 text-muted-foreground">@{accountLabel(r.competitor_account_id)}</td>
+              <td className="p-3 text-muted-foreground">@{labelFor(r.competitor_account_id)}</td>
               <td className="p-3 text-right">{num(r.own_score).toFixed(0)}</td>
               <td className="p-3 text-right">{num(r.competitor_score).toFixed(0)}</td>
               <td className={cn("p-3 text-right font-semibold", r.who_is_stronger === "competitor" ? "text-warning" : "text-success")}>
