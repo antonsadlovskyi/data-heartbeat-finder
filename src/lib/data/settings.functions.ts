@@ -74,7 +74,7 @@ export const updateWorkspaceSettings = createServerFn({ method: "POST" })
     if (Object.keys(patch).length === 0) return ws;
     const { data: updated, error } = await supabase
       .from("workspaces")
-      .update(patch)
+      .update(patch as never)
       .eq("id", ws.id)
       .select()
       .single();
@@ -98,7 +98,7 @@ export const updateUserProfile = createServerFn({ method: "POST" })
     if (!existing) {
       const { data: created, error } = await supabase
         .from("profiles")
-        .insert({ id: userId, ...patch })
+        .insert({ id: userId, ...patch } as never)
         .select()
         .single();
       if (error) throw new Error(error.message);
@@ -106,7 +106,7 @@ export const updateUserProfile = createServerFn({ method: "POST" })
     }
     const { data: updated, error } = await supabase
       .from("profiles")
-      .update(patch)
+      .update(patch as never)
       .eq("id", userId)
       .select()
       .single();
