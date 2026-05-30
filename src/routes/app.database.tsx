@@ -1,5 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
+import { getDashboardData } from "@/lib/data/dashboard.functions";
 import {
   Users, FileText, MessageSquare, Image as ImageIcon, Trophy, Target,
   TrendingUp, Sparkles, AlertTriangle, CheckCircle2, ArrowUpRight, Flame,
@@ -30,33 +33,43 @@ export const Route = createFileRoute("/app/database")({
   }),
 });
 
-const ds = data as Record<string, any[]>;
-const workspace = ds["02_workspaces"][0];
-const report = ds["14_workspace_report"][0];
-const accounts = ds["03_social_accounts"];
-const snapshots = ds["04_account_snapshots"];
-const posts = ds["05_social_posts"];
-const assets = ds["06_post_assets"];
-const comments = ds["07_post_comments"];
-const radar = ds["11_competitor_radar"];
-const outcomes = ds["12_best_outcomes"];
-const comparisons = ds["13_competitor_comparison"];
-const actions = ds["15_action_plan"];
-
 const num = (v: any) => (typeof v === "number" ? v : parseFloat(v) || 0);
 const fmtK = (n: number) => (n >= 1000 ? `${(n / 1000).toFixed(1)}k` : `${n}`);
-const accountLabel = (id: string) => accounts.find((a) => a.account_id === id)?.username ?? id;
 
 function DatabasePage() {
+  const fetcher = useServerFn(getDashboardData);
+  const { data: live, isLoading, error } = useQuery({
+    queryKey: ["dashboard"],
+    queryFn: () => fetcher(),
+  });
+
+  if (isLoading) {
+    return <div className="text-sm text-muted-foreground p-6">Loading workspace…</div>;
+  }
+  if (error) {
+    return <div className="text-sm text-destructive p-6">Couldn't load: {(error as Error).message}</div>;
+  }
+
+  const workspace = live?.workspace ?? { project_name: "My Workspace", niche: "—", main_goal: "" };
+  const report = live?.report ?? null;
+  const accounts = live?.accounts ?? [];
+  const snapshots = live?.snapshots ?? [];
+  const posts = live?.posts ?? [];
+  const radar = live?.radar ?? [];
+  const comparisons = live?.comparisons ?? [];
+  const actions = live?.actions ?? [];
+  const assetCount = live?.assetCount ?? 0;
+  const commentCount = live?.commentCount ?? 0;
+
+  const accountLabel = (id: string) => accounts.find((a: any) => a.account_id === id)?.username ?? id;
+
   const totalAccounts = accounts.length;
-  const totalFollowers = accounts.reduce((s, a) => s + num(a.followers_count), 0);
+  const totalFollowers = accounts.reduce((s: number, a: any) => s + num(a.followers_count), 0);
   const totalPosts = posts.length;
-  const totalComments = comments.length;
-  const avgER =
-    snapshots.reduce((s, x) => s + num(x.engagement_rate), 0) / snapshots.length || 0;
+  const totalComments = commentCount;
 
   const radarData = radar
-    .map((r) => ({
+    .map((r: any) => ({
       name: r.account_name,
       overall: num(r.overall_score),
       account_id: r.account_id,
@@ -64,12 +77,13 @@ function DatabasePage() {
       key_weakness: r.key_weakness,
       main_reason: r.main_reason,
     }))
-    .sort((a, b) => b.overall - a.overall);
+    .sort((a: any, b: any) => b.overall - a.overall);
 
   const topRadar = radarData.slice(0, 1)[0];
+  const ownAccountId = accounts.find((a: any) => a.account_type === "own")?.account_id;
   const radarShape = radar
-    .filter((r) => ["acc_001", topRadar?.account_id].includes(r.account_id))
-    .map((r) => ({
+    .filter((r: any) => [ownAccountId, topRadar?.account_id].includes(r.account_id))
+    .map((r: any) => ({
       account: r.account_name,
       positioning: num(r.positioning_strength),
       consistency: num(r.content_consistency),
@@ -91,18 +105,33 @@ function DatabasePage() {
   ];
   const radarChartData = radarAxes.map((axis) => {
     const row: any = { axis };
-    radarShape.forEach((r) => (row[r.account] = (r as any)[axis]));
+    radarShape.forEach((r: any) => (row[r.account] = (r as any)[axis]));
     return row;
   });
 
   const topPosts = useMemo(
     () =>
       [...posts]
-        .map((p) => ({ ...p, _likes: num(p.likes_count), _er: num(p.engagement_rate) }))
-        .sort((a, b) => b._likes - a._likes)
+        .map((p: any) => ({ ...p, _likes: num(p.likes_count), _er: num(p.engagement_rate) }))
+        .sort((a: any, b: any) => b._likes - a._likes)
         .slice(0, 6),
-    []
+    [posts]
   );
+
+  if (accounts.length === 0) {
+    return (
+      <div className="max-w-3xl mx-auto mt-12 rounded-3xl border border-dashed border-border/60 bg-card/40 p-10 text-center space-y-3">
+        <h2 className="font-display text-2xl font-bold">Waiting for your first n8n run</h2>
+        <p className="text-sm text-muted-foreground max-w-md mx-auto">
+          No data in this workspace yet. Connect your n8n workflow to Lovable Cloud and trigger a scan,
+          or load demo data from Settings to preview the dashboard.
+        </p>
+        <a href="/app/settings" className="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-4 py-2 text-sm font-medium">
+          Go to Settings
+        </a>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 max-w-7xl">
@@ -112,18 +141,22 @@ function DatabasePage() {
             <Badge variant="outline" className="rounded-full text-[11px]">
               {workspace.project_name}
             </Badge>
-            <Badge variant="outline" className="rounded-full text-[11px]">
-              {workspace.niche}
-            </Badge>
+            {workspace.niche && (
+              <Badge variant="outline" className="rounded-full text-[11px]">
+                {workspace.niche}
+              </Badge>
+            )}
           </div>
           <h1 className="font-display text-4xl font-bold tracking-tight mt-2">
             Database Dashboard
           </h1>
           <p className="text-muted-foreground mt-1 max-w-2xl">{workspace.main_goal}</p>
         </div>
+        {report && (
         <div className="text-xs text-muted-foreground">
-          Report {report.period_start.slice(0, 10)} → {report.period_end.slice(0, 10)}
+          Report {String(report.period_start).slice(0, 10)} → {String(report.period_end).slice(0, 10)}
         </div>
+        )}
       </header>
 
       {/* KPI strip */}
@@ -131,11 +164,12 @@ function DatabasePage() {
         <KpiCard icon={<Users className="size-4" />} label="Accounts tracked" value={totalAccounts} />
         <KpiCard icon={<TrendingUp className="size-4" />} label="Total followers" value={fmtK(totalFollowers)} />
         <KpiCard icon={<FileText className="size-4" />} label="Posts analyzed" value={totalPosts} />
-        <KpiCard icon={<ImageIcon className="size-4" />} label="Assets parsed" value={assets.length} />
+        <KpiCard icon={<ImageIcon className="size-4" />} label="Assets parsed" value={assetCount} />
         <KpiCard icon={<MessageSquare className="size-4" />} label="Comments mined" value={totalComments} />
       </section>
 
       {/* Executive summary */}
+      {report && (
       <Section icon={<Sparkles className="size-4" />} title="Executive summary" subtitle="From workspace report">
         <p className="text-sm leading-relaxed">{report.executive_summary}</p>
         <div className="grid md:grid-cols-2 gap-3 mt-4">
@@ -145,6 +179,7 @@ function DatabasePage() {
           <Tile tone="destructive" icon={<AlertTriangle className="size-4" />} title="Main threats" text={report.main_threats} />
         </div>
       </Section>
+      )}
 
       {/* Competitor radar */}
       <Section icon={<Target className="size-4" />} title="Competitor radar" subtitle={`${radar.length} accounts scored across 12 dimensions`}>
@@ -193,7 +228,7 @@ function DatabasePage() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-3 mt-4">
-          {radarData.slice(0, 4).map((r) => (
+          {radarData.slice(0, 4).map((r: any) => (
             <div key={r.account_id} className="rounded-2xl border border-border/60 bg-background/40 p-4">
               <div className="flex items-center justify-between mb-1">
                 <div className="font-display font-bold">@{r.name}</div>
@@ -210,7 +245,7 @@ function DatabasePage() {
       {/* Top posts */}
       <Section icon={<Trophy className="size-4" />} title="Best performing posts" subtitle="Top 6 by likes across all tracked accounts">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {topPosts.map((p) => (
+          {topPosts.map((p: any) => (
             <a key={p.post_id} href={p.post_url} target="_blank" rel="noreferrer" className="rounded-2xl border border-border/60 bg-background/40 p-4 hover:border-primary/40 hover:bg-primary/[0.04] transition group">
               <div className="flex items-center justify-between text-[11px] mb-2">
                 <Badge variant="outline" className="rounded-full">{p.post_type}</Badge>
@@ -233,8 +268,8 @@ function DatabasePage() {
       </Section>
 
       {/* Gap analysis */}
-      <Section icon={<TrendingUp className="size-4" />} title="Gap analysis" subtitle={`${comparisons.length} pairwise comparisons across ${new Set(comparisons.map(c => c.area)).size} areas`}>
-        <GapTable rows={comparisons.filter((c) => c.priority === "high").slice(0, 8)} />
+      <Section icon={<TrendingUp className="size-4" />} title="Gap analysis" subtitle={`${comparisons.length} pairwise comparisons across ${new Set(comparisons.map((c: any) => c.area)).size} areas`}>
+        <GapTable rows={comparisons.filter((c: any) => c.priority === "high").slice(0, 8)} accountLabel={accountLabel} />
       </Section>
 
       {/* Action plan */}
@@ -297,7 +332,7 @@ function PerfPill({ level }: { level?: string }) {
   return <Badge className={cn("rounded-full border text-[10px]", map[level ?? "low"] ?? map.low)}>{level ?? "—"}</Badge>;
 }
 
-function GapTable({ rows }: { rows: any[] }) {
+function GapTable({ rows, accountLabel }: { rows: any[]; accountLabel: (id: string) => string }) {
   return (
     <div className="overflow-hidden rounded-2xl border border-border/60">
       <table className="w-full text-sm">
