@@ -24,11 +24,10 @@ export function PageObjectEmpty({
           Analysis pending for the {roleLabel} view
         </h2>
         <p className="text-sm text-muted-foreground max-w-md mx-auto mt-2">
-          n8n hasn't written a payload yet for{" "}
-          <code className="text-foreground/80">{pageKey}</code> /{" "}
-          <code className="text-foreground/80">{roleKey}</code>. Once the
-          workflow completes the page-object build, this view will fill in
-          automatically.
+          We're still preparing the{" "}
+          <code className="text-foreground/80">{pageKey}</code> view for the{" "}
+          <code className="text-foreground/80">{roleKey}</code> role. It will
+          fill in automatically once the latest analysis pass completes.
         </p>
         {generatedAt && (
           <p className="text-[11px] text-muted-foreground mt-2">
