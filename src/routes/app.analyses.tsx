@@ -1,13 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
-import { useQuery } from "@tanstack/react-query";
-import { getDashboardData } from "@/lib/data/dashboard.functions";
 import { Search, Calendar, Sparkles, ChevronDown, Target, Layers, Megaphone, ShieldCheck, AlertTriangle, Lightbulb, Ban } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { usePageObject } from "@/lib/use-page-object";
+import { PageObjectEmpty } from "@/components/app/PageObjectEmpty";
 
 export const Route = createFileRoute("/app/analyses")({
   component: Analyses,
@@ -28,22 +27,19 @@ export const Route = createFileRoute("/app/analyses")({
 
 type Analysis = any;
 
-const splitList = (s?: string | null) =>
-  (s ?? "").split(/;|\u2022|\n/).map((x) => x.trim()).filter(Boolean);
+const toList = (v: any): string[] => {
+  if (Array.isArray(v)) return v.map((x) => String(x).trim()).filter(Boolean);
+  if (typeof v === "string") return v.split(/;|\u2022|\n/).map((x) => x.trim()).filter(Boolean);
+  return [];
+};
 
 function Analyses() {
-  const fetcher = useServerFn(getDashboardData);
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["dashboard"],
-    queryFn: () => fetcher(),
-  });
+  const { payload, isLoading, role, generatedAt } = usePageObject<any>("analyses");
 
   const [q, setQ] = useState("");
   const [openId, setOpenId] = useState<string | null>(null);
 
-  const analyses: Analysis[] = data?.analyses ?? [];
-  const accounts = data?.accounts ?? [];
-  const accountName = (id: string) => accounts.find((a: any) => a.account_id === id)?.username ?? id;
+  const analyses: Analysis[] = payload?.analyses ?? [];
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -54,18 +50,7 @@ function Analyses() {
   }, [q, analyses]);
 
   if (isLoading) return <div className="text-sm text-muted-foreground p-6">Loading analyses…</div>;
-  if (error) return <div className="text-sm text-destructive p-6">Couldn't load: {(error as Error).message}</div>;
-
-  if (analyses.length === 0) {
-    return (
-      <div className="max-w-3xl mx-auto mt-12 rounded-3xl border border-dashed border-border/60 bg-card/40 p-10 text-center space-y-3">
-        <h2 className="font-display text-2xl font-bold">No deep-dive analyses yet</h2>
-        <p className="text-sm text-muted-foreground max-w-md mx-auto">
-          Your n8n workflow hasn't written any account analyses to this workspace. Load demo data from Settings to preview.
-        </p>
-      </div>
-    );
-  }
+  if (!payload) return <PageObjectEmpty pageKey="analyses" roleKey={role} generatedAt={generatedAt} />;
 
   return (
     <div className="space-y-6 max-w-7xl">
@@ -89,25 +74,29 @@ function Analyses() {
 
       <div className="space-y-3">
         {filtered.map((a) => {
-          const open = openId === a.account_analysis_id;
+          const id = a.id ?? a.account_analysis_id;
+          const open = openId === id;
+          const name = a.account_name ?? a.account_id ?? id;
           return (
             <div
-              key={a.account_analysis_id}
+              key={id}
               className="rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 shadow-pop overflow-hidden"
             >
               <button
-                onClick={() => setOpenId(open ? null : a.account_analysis_id)}
+                onClick={() => setOpenId(open ? null : id)}
                 className="w-full text-left p-5 flex items-center gap-4 hover:bg-white/[0.02] transition"
               >
                 <div className="size-12 rounded-2xl bg-primary/15 border border-primary/30 grid place-items-center text-primary font-display font-bold shadow-pop">
-                  {accountName(a.account_id).slice(0, 1)}
+                  {String(name).slice(0, 1)}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <div className="font-display text-lg font-bold">{accountName(a.account_id)}</div>
-                    <Badge variant="outline" className="rounded-full text-[11px]">
-                      {a.account_analysis_id}
-                    </Badge>
+                    <div className="font-display text-lg font-bold">{name}</div>
+                    {a.score_overall != null && (
+                      <Badge variant="outline" className="rounded-full text-[11px]">
+                        Score {Number(a.score_overall).toFixed(1)}
+                      </Badge>
+                    )}
                   </div>
                   <p className="text-sm text-muted-foreground line-clamp-2 mt-0.5">
                     {a.positioning_summary}
@@ -131,10 +120,10 @@ function Analyses() {
                   </Block>
 
                   <div className="grid md:grid-cols-2 gap-4">
-                    <Chips icon={<Layers className="size-4" />} label="Content pillars" items={splitList(a.main_content_pillars)} tone="primary" />
-                    <Chips icon={<Sparkles className="size-4" />} label="Strongest formats" items={splitList(a.strongest_formats)} tone="success" />
-                    <Chips icon={<Ban className="size-4" />} label="Weakest formats" items={splitList(a.weakest_formats)} tone="warning" />
-                    <Chips icon={<Megaphone className="size-4" />} label="Main hooks" items={splitList(a.main_hooks)} tone="primary" />
+                    <Chips icon={<Layers className="size-4" />} label="Content pillars" items={toList(a.main_content_pillars)} tone="primary" />
+                    <Chips icon={<Sparkles className="size-4" />} label="Strongest formats" items={toList(a.strongest_formats)} tone="success" />
+                    <Chips icon={<Ban className="size-4" />} label="Weakest formats" items={toList(a.weakest_formats)} tone="warning" />
+                    <Chips icon={<Megaphone className="size-4" />} label="Main hooks" items={toList(a.main_hooks)} tone="primary" />
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4">

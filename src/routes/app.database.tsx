@@ -1,8 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
-import { useQuery } from "@tanstack/react-query";
-import { getDashboardData } from "@/lib/data/dashboard.functions";
 import {
   Users, FileText, MessageSquare, Image as ImageIcon, Trophy, Target,
   TrendingUp, Sparkles, AlertTriangle, CheckCircle2, ArrowUpRight, Flame,
@@ -14,7 +11,8 @@ import {
   RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar as RadarShape, Legend,
 } from "recharts";
 import { cn } from "@/lib/utils";
-import data from "@/lib/data/apify-dataset.json";
+import { usePageObject } from "@/lib/use-page-object";
+import { PageObjectEmpty } from "@/components/app/PageObjectEmpty";
 
 export const Route = createFileRoute("/app/database")({
   component: DatabasePage,
@@ -34,104 +32,30 @@ export const Route = createFileRoute("/app/database")({
 });
 
 const num = (v: any) => (typeof v === "number" ? v : parseFloat(v) || 0);
-const fmtK = (n: number) => (n >= 1000 ? `${(n / 1000).toFixed(1)}k` : `${n}`);
 
 function DatabasePage() {
-  const fetcher = useServerFn(getDashboardData);
-  const { data: live, isLoading, error } = useQuery({
-    queryKey: ["dashboard"],
-    queryFn: () => fetcher(),
-  });
+  const { payload, isLoading, role, generatedAt, workspace } = usePageObject<any>("database");
 
   if (isLoading) {
     return <div className="text-sm text-muted-foreground p-6">Loading workspace…</div>;
   }
-  if (error) {
-    return <div className="text-sm text-destructive p-6">Couldn't load: {(error as Error).message}</div>;
+  if (!payload) {
+    return <PageObjectEmpty pageKey="database" roleKey={role} generatedAt={generatedAt} />;
   }
 
-  const workspace = live?.workspace ?? { project_name: "My Workspace", niche: "—", main_goal: "" };
-  const report = live?.report ?? null;
-  const accounts = live?.accounts ?? [];
-  const snapshots = live?.snapshots ?? [];
-  const posts = live?.posts ?? [];
-  const radar = live?.radar ?? [];
-  const comparisons = live?.comparisons ?? [];
-  const actions = live?.actions ?? [];
-  const assetCount = live?.assetCount ?? 0;
-  const commentCount = live?.commentCount ?? 0;
-
-  const accountLabel = (id: string) => accounts.find((a: any) => a.account_id === id)?.username ?? id;
-
-  const totalAccounts = accounts.length;
-  const totalFollowers = accounts.reduce((s: number, a: any) => s + num(a.followers_count), 0);
-  const totalPosts = posts.length;
-  const totalComments = commentCount;
-
-  const radarData = radar
-    .map((r: any) => ({
-      name: r.account_name,
-      overall: num(r.overall_score),
-      account_id: r.account_id,
-      key_strength: r.key_strength,
-      key_weakness: r.key_weakness,
-      main_reason: r.main_reason,
-    }))
-    .sort((a: any, b: any) => b.overall - a.overall);
-
-  const topRadar = radarData.slice(0, 1)[0];
-  const ownAccountId = accounts.find((a: any) => a.account_type === "own")?.account_id;
-  const radarShape = radar
-    .filter((r: any) => [ownAccountId, topRadar?.account_id].includes(r.account_id))
-    .map((r: any) => ({
-      account: r.account_name,
-      positioning: num(r.positioning_strength),
-      consistency: num(r.content_consistency),
-      hook: num(r.hook_strength),
-      educational: num(r.educational_value),
-      emotional: num(r.emotional_connection),
-      visual: num(r.visual_identity),
-      sales: num(r.sales_clarity),
-      community: num(r.community_engagement),
-      trust: num(r.trust_signals),
-      formats: num(r.format_diversity),
-      trend: num(r.trend_usage),
-      differentiation: num(r.product_differentiation),
-    }));
-
-  const radarAxes = [
-    "positioning", "consistency", "hook", "educational", "emotional", "visual",
-    "sales", "community", "trust", "formats", "trend", "differentiation",
-  ];
-  const radarChartData = radarAxes.map((axis) => {
-    const row: any = { axis };
-    radarShape.forEach((r: any) => (row[r.account] = (r as any)[axis]));
-    return row;
-  });
-
-  const topPosts = useMemo(
-    () =>
-      [...posts]
-        .map((p: any) => ({ ...p, _likes: num(p.likes_count), _er: num(p.engagement_rate) }))
-        .sort((a: any, b: any) => b._likes - a._likes)
-        .slice(0, 6),
-    [posts]
-  );
-
-  if (accounts.length === 0) {
-    return (
-      <div className="max-w-3xl mx-auto mt-12 rounded-3xl border border-dashed border-border/60 bg-card/40 p-10 text-center space-y-3">
-        <h2 className="font-display text-2xl font-bold">Waiting for your first n8n run</h2>
-        <p className="text-sm text-muted-foreground max-w-md mx-auto">
-          No data in this workspace yet. Connect your n8n workflow to Lovable Cloud and trigger a scan,
-          or load demo data from Settings to preview the dashboard.
-        </p>
-        <a href="/app/settings" className="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-4 py-2 text-sm font-medium">
-          Go to Settings
-        </a>
-      </div>
-    );
-  }
+  const header = payload.header ?? {};
+  const kpis = (payload.kpis ?? []) as any[];
+  const summary = payload.executive_summary;
+  const radarBlock = payload.radar ?? {};
+  const radarRanking = (radarBlock.ranking ?? []) as any[];
+  const radarChartData = (radarBlock.you_vs_top?.axes ?? []).map((a: any) => ({
+    axis: a.axis,
+    [radarBlock.you_vs_top?.own_name ?? "You"]: num(a.you),
+    [radarBlock.you_vs_top?.top_name ?? "Top"]: num(a.top),
+  }));
+  const topPosts = (payload.top_posts ?? []) as any[];
+  const gap = (payload.gap ?? []) as any[];
+  const actions = (payload.actions ?? []) as any[];
 
   return (
     <div className="space-y-8 max-w-7xl">
@@ -139,50 +63,48 @@ function DatabasePage() {
         <div>
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="rounded-full text-[11px]">
-              {workspace.project_name}
+              {header.project_name ?? workspace?.project_name ?? "Workspace"}
             </Badge>
-            {workspace.niche && (
+            {(header.niche ?? workspace?.niche) && (
               <Badge variant="outline" className="rounded-full text-[11px]">
-                {workspace.niche}
+                {header.niche ?? workspace?.niche}
               </Badge>
             )}
           </div>
           <h1 className="font-display text-4xl font-bold tracking-tight mt-2">
-            Database Dashboard
+            {header.title ?? "Database Dashboard"}
           </h1>
-          <p className="text-muted-foreground mt-1 max-w-2xl">{workspace.main_goal}</p>
+          <p className="text-muted-foreground mt-1 max-w-2xl">{header.subtitle ?? header.main_goal ?? ""}</p>
         </div>
-        {report && (
-        <div className="text-xs text-muted-foreground">
-          Report {String(report.period_start).slice(0, 10)} → {String(report.period_end).slice(0, 10)}
-        </div>
+        {header.period && (
+          <div className="text-xs text-muted-foreground">{header.period}</div>
         )}
       </header>
 
       {/* KPI strip */}
+      {kpis.length > 0 && (
       <section className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        <KpiCard icon={<Users className="size-4" />} label="Accounts tracked" value={totalAccounts} />
-        <KpiCard icon={<TrendingUp className="size-4" />} label="Total followers" value={fmtK(totalFollowers)} />
-        <KpiCard icon={<FileText className="size-4" />} label="Posts analyzed" value={totalPosts} />
-        <KpiCard icon={<ImageIcon className="size-4" />} label="Assets parsed" value={assetCount} />
-        <KpiCard icon={<MessageSquare className="size-4" />} label="Comments mined" value={totalComments} />
+        {kpis.map((k, i) => (
+          <KpiCard key={i} icon={<Sparkles className="size-4" />} label={k.label} value={k.value} />
+        ))}
       </section>
+      )}
 
       {/* Executive summary */}
-      {report && (
+      {summary && (
       <Section icon={<Sparkles className="size-4" />} title="Executive summary" subtitle="From workspace report">
-        <p className="text-sm leading-relaxed">{report.executive_summary}</p>
+        <p className="text-sm leading-relaxed">{summary.text}</p>
         <div className="grid md:grid-cols-2 gap-3 mt-4">
-          <Tile tone="success" icon={<CheckCircle2 className="size-4" />} title="Own strengths" text={report.own_profile_strengths} />
-          <Tile tone="warning" icon={<AlertTriangle className="size-4" />} title="Own weaknesses" text={report.own_profile_weaknesses} />
-          <Tile tone="primary" icon={<Sparkles className="size-4" />} title="Best opportunities" text={report.best_opportunities} />
-          <Tile tone="destructive" icon={<AlertTriangle className="size-4" />} title="Main threats" text={report.main_threats} />
+          {(summary.tiles ?? []).map((t: any, i: number) => (
+            <Tile key={i} tone={t.tone ?? "primary"} icon={<Sparkles className="size-4" />} title={t.title} text={t.text} />
+          ))}
         </div>
       </Section>
       )}
 
       {/* Competitor radar */}
-      <Section icon={<Target className="size-4" />} title="Competitor radar" subtitle={`${radar.length} accounts scored across 12 dimensions`}>
+      {radarRanking.length > 0 && (
+      <Section icon={<Target className="size-4" />} title="Competitor radar" subtitle={`${radarRanking.length} accounts scored across 12 dimensions`}>
         <div className="grid lg:grid-cols-[1fr_1fr] gap-6">
           <div className="rounded-2xl border border-border/60 bg-background/40 p-4">
             <div className="text-xs uppercase tracking-wide text-muted-foreground mb-3 font-semibold">
@@ -190,7 +112,7 @@ function DatabasePage() {
             </div>
             <div className="h-72">
               <ResponsiveContainer>
-                <BarChart data={radarData} layout="vertical" margin={{ left: 8, right: 16 }}>
+                <BarChart data={radarRanking} layout="vertical" margin={{ left: 8, right: 16 }}>
                   <XAxis type="number" domain={[0, 10]} hide />
                   <YAxis type="category" dataKey="name" width={140} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
                   <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid var(--border)", background: "var(--card)" }} />
@@ -200,6 +122,7 @@ function DatabasePage() {
             </div>
           </div>
 
+          {radarChartData.length > 0 && (
           <div className="rounded-2xl border border-border/60 bg-background/40 p-4">
             <div className="text-xs uppercase tracking-wide text-muted-foreground mb-3 font-semibold">
               You vs top competitor
@@ -210,72 +133,72 @@ function DatabasePage() {
                   <PolarGrid stroke="var(--border)" />
                   <PolarAngleAxis dataKey="axis" tick={{ fontSize: 10 }} />
                   <PolarRadiusAxis domain={[0, 10]} tick={false} axisLine={false} />
-                  {radarShape.map((r, i) => (
-                    <RadarShape
-                      key={r.account}
-                      name={r.account}
-                      dataKey={r.account}
-                      stroke={i === 0 ? "oklch(0.78 0.13 220)" : "oklch(0.7 0.17 30)"}
-                      fill={i === 0 ? "oklch(0.78 0.13 220)" : "oklch(0.7 0.17 30)"}
-                      fillOpacity={0.25}
-                    />
-                  ))}
+                  <RadarShape name={radarBlock.you_vs_top?.own_name ?? "You"} dataKey={radarBlock.you_vs_top?.own_name ?? "You"} stroke="oklch(0.78 0.13 220)" fill="oklch(0.78 0.13 220)" fillOpacity={0.25} />
+                  <RadarShape name={radarBlock.you_vs_top?.top_name ?? "Top"} dataKey={radarBlock.you_vs_top?.top_name ?? "Top"} stroke="oklch(0.7 0.17 30)" fill="oklch(0.7 0.17 30)" fillOpacity={0.25} />
                   <Legend wrapperStyle={{ fontSize: 11 }} />
                 </RadarChart>
               </ResponsiveContainer>
             </div>
           </div>
+          )}
         </div>
 
         <div className="grid md:grid-cols-2 gap-3 mt-4">
-          {radarData.slice(0, 4).map((r: any) => (
-            <div key={r.account_id} className="rounded-2xl border border-border/60 bg-background/40 p-4">
+          {radarRanking.slice(0, 4).map((r: any, i: number) => (
+            <div key={i} className="rounded-2xl border border-border/60 bg-background/40 p-4">
               <div className="flex items-center justify-between mb-1">
-                <div className="font-display font-bold">@{r.name}</div>
-                <Badge className="rounded-full bg-primary/15 text-primary border-primary/30">{r.overall.toFixed(1)} / 10</Badge>
+                <div className="font-display font-bold">{r.name}</div>
+                <Badge className="rounded-full bg-primary/15 text-primary border-primary/30">{num(r.overall).toFixed(1)} / 10</Badge>
               </div>
               <p className="text-xs text-muted-foreground line-clamp-2 mb-2">{r.main_reason}</p>
-              <div className="text-[11px] text-success/90"><b>+</b> {r.key_strength}</div>
-              <div className="text-[11px] text-warning/90 mt-0.5"><b>−</b> {r.key_weakness}</div>
+              {r.key_strength && <div className="text-[11px] text-success/90"><b>+</b> {r.key_strength}</div>}
+              {r.key_weakness && <div className="text-[11px] text-warning/90 mt-0.5"><b>−</b> {r.key_weakness}</div>}
             </div>
           ))}
         </div>
       </Section>
+      )}
 
       {/* Top posts */}
+      {topPosts.length > 0 && (
       <Section icon={<Trophy className="size-4" />} title="Best performing posts" subtitle="Top 6 by likes across all tracked accounts">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {topPosts.map((p: any) => (
-            <a key={p.post_id} href={p.post_url} target="_blank" rel="noreferrer" className="rounded-2xl border border-border/60 bg-background/40 p-4 hover:border-primary/40 hover:bg-primary/[0.04] transition group">
+          {topPosts.slice(0, 6).map((p: any, i: number) => (
+            <a key={i} href={p.post_url ?? "#"} target="_blank" rel="noreferrer" className="rounded-2xl border border-border/60 bg-background/40 p-4 hover:border-primary/40 hover:bg-primary/[0.04] transition group">
               <div className="flex items-center justify-between text-[11px] mb-2">
                 <Badge variant="outline" className="rounded-full">{p.post_type}</Badge>
-                <PerfPill level={p.performance_level} />
+                <PerfPill level={p.perf ?? p.performance_level} />
               </div>
               <div className="text-sm font-semibold line-clamp-2 mb-1.5 group-hover:text-primary transition">
-                {p.caption || p.topic || p.post_id}
+                {p.caption ?? p.topic}
               </div>
               <div className="text-[11px] text-muted-foreground line-clamp-1 mb-3">
-                @{accountLabel(p.account_id)} · {p.content_pillar}
+                {p.account} · {p.pillar ?? p.content_pillar ?? ""}
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="flex items-center gap-1 text-foreground/80"><Flame className="size-3" /> {fmtK(p._likes)} likes</span>
-                <span className="text-muted-foreground">ER {(p._er * 100).toFixed(2)}%</span>
+                <span className="flex items-center gap-1 text-foreground/80"><Flame className="size-3" /> {p.likes} likes</span>
+                <span className="text-muted-foreground">ER {p.er}</span>
                 <ArrowUpRight className="size-3.5 text-muted-foreground group-hover:text-primary" />
               </div>
             </a>
           ))}
         </div>
       </Section>
+      )}
 
       {/* Gap analysis */}
-      <Section icon={<TrendingUp className="size-4" />} title="Gap analysis" subtitle={`${comparisons.length} pairwise comparisons across ${new Set(comparisons.map((c: any) => c.area)).size} areas`}>
-        <GapTable rows={comparisons.filter((c: any) => c.priority === "high").slice(0, 8)} accountLabel={accountLabel} />
+      {gap.length > 0 && (
+      <Section icon={<TrendingUp className="size-4" />} title="Gap analysis" subtitle={`${gap.length} pairwise comparisons`}>
+        <GapTable rows={gap} />
       </Section>
+      )}
 
       {/* Action plan */}
+      {actions.length > 0 && (
       <Section icon={<CheckCircle2 className="size-4" />} title="Recommended action plan" subtitle={`${actions.length} actions generated from this analysis`}>
         <ActionList rows={actions} />
       </Section>
+      )}
     </div>
   );
 }

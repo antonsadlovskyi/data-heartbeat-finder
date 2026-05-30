@@ -577,6 +577,33 @@ export type Database = {
         }
         Relationships: []
       }
+      page_objects: {
+        Row: {
+          generated_at: string
+          page_key: string
+          payload: Json
+          role_key: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          generated_at?: string
+          page_key: string
+          payload?: Json
+          role_key: string
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          generated_at?: string
+          page_key?: string
+          payload?: Json
+          role_key?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
       post_analyses: {
         Row: {
           analysis_date: string | null
