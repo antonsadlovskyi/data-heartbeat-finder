@@ -4,6 +4,10 @@ import { ArrowUpRight, ArrowDownRight, Sparkles, Heart, MessageCircle, Eye, Star
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LineChart, Line, ResponsiveContainer, Tooltip, AreaChart, Area } from "recharts";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
+import { getUserSettings } from "@/lib/data/settings.functions";
+import { useAuth } from "@/lib/auth-context";
 
 export const Route = createFileRoute("/app/")({
   
@@ -28,13 +32,27 @@ const reachData = Array.from({ length: 14 }, (_, i) => ({
 }));
 
 function Dashboard() {
+  const { user } = useAuth();
+  const fetchSettings = useServerFn(getUserSettings);
+  const { data } = useQuery({
+    queryKey: ["user-settings"],
+    queryFn: () => fetchSettings({ data: {} } as any),
+  });
+  const displayName =
+    (data?.profile as any)?.display_name ||
+    user?.user_metadata?.display_name ||
+    user?.email?.split("@")[0] ||
+    "there";
+  const projectName = (data?.workspace as any)?.project_name;
   return (
     <div className="space-y-6 max-w-7xl">
       {/* Greeting */}
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <h1 className="font-display text-4xl font-bold tracking-tight">Доброго ранку, Olena 👋</h1>
-          <p className="text-muted-foreground mt-1">3 new insights · 1 competitor went viral · 2 trends to ride this week.</p>
+          <h1 className="font-display text-4xl font-bold tracking-tight">Hey {displayName} 👋</h1>
+          <p className="text-muted-foreground mt-1">
+            {projectName ? `${projectName} · ` : ""}Your daily snapshot of reach, engagement and what to ship next.
+          </p>
         </div>
         <Button asChild className="rounded-full bg-primary text-primary-foreground shadow-glow hover:opacity-90">
           <Link to="/app/insights">View today's insights <ArrowRight className="ml-2 size-4" /></Link>

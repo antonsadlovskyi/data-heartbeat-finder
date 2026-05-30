@@ -1,12 +1,23 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useNavio } from "@/lib/store";
+import { useServerFn } from "@tanstack/react-start";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Bell, Globe, Send, Mail, Trash2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Bell, Globe, Send, Mail, Trash2, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Language } from "@/lib/data/types";
 import { N8nPanel } from "@/components/app/N8nPanel";
+import {
+  getUserSettings,
+  updateWorkspaceSettings,
+  updateUserProfile,
+  upsertNotification,
+  deleteNotification,
+} from "@/lib/data/settings.functions";
 
 export const Route = createFileRoute("/app/settings")({
   component: SettingsPage,
@@ -32,10 +43,42 @@ const LANGS: { id: Language; label: string }[] = [
 ];
 
 function SettingsPage() {
-  const language = useNavio((s) => s.language);
-  const setLanguage = useNavio((s) => s.setLanguage);
-  const notifications = useNavio((s) => s.notifications);
-  const upsertNotification = useNavio((s) => s.upsertNotification);
+  const fetchSettings = useServerFn(getUserSettings);
+  const updateWs = useServerFn(updateWorkspaceSettings);
+  const updateProfile = useServerFn(updateUserProfile);
+  const upsertNotif = useServerFn(upsertNotification);
+  const deleteNotif = useServerFn(deleteNotification);
+  const qc = useQueryClient();
+
+  const { data } = useQuery({
+    queryKey: ["user-settings"],
+    queryFn: () => fetchSettings({ data: {} } as any),
+  });
+  const invalidate = () => qc.invalidateQueries({ queryKey: ["user-settings"] });
+
+  const langMut = useMutation({
+    mutationFn: (language: Language) => updateWs({ data: { language } } as any),
+    onSuccess: invalidate,
+  });
+  const profileMut = useMutation({
+    mutationFn: (display_name: string) => updateProfile({ data: { display_name } } as any),
+    onSuccess: invalidate,
+  });
+  const notifMut = useMutation({
+    mutationFn: (n: any) => upsertNotif({ data: n } as any),
+    onSuccess: invalidate,
+  });
+  const deleteMut = useMutation({
+    mutationFn: (id: string) => deleteNotif({ data: { id } } as any),
+    onSuccess: invalidate,
+  });
+
+  const language = ((data?.workspace as any)?.language as Language) ?? "en";
+  const notifications: any[] = data?.notifications ?? [];
+  const displayName = (data?.profile as any)?.display_name ?? "";
+
+  const [draftChannel, setDraftChannel] = useState<"telegram" | "email">("email");
+  const [draftDest, setDraftDest] = useState("");
 
   return (
     <div className="space-y-8 max-w-4xl">
@@ -45,6 +88,34 @@ function SettingsPage() {
       </header>
 
       <N8nPanel />
+
+      {/* Profile */}
+      <section className="rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 p-6 shadow-pop">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="size-10 rounded-2xl bg-primary/10 border border-primary/30 grid place-items-center">
+            <User className="size-5 text-primary" />
+          </div>
+          <div>
+            <h2 className="font-display text-xl font-semibold">Your profile</h2>
+            <p className="text-xs text-muted-foreground">Saved to your account.</p>
+          </div>
+        </div>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+            <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Display name</Label>
+            <Input
+              key={displayName}
+              defaultValue={displayName}
+              placeholder="Your name"
+              className="rounded-xl bg-background/40"
+              onBlur={(e) => {
+                const v = e.target.value.trim();
+                if (v && v !== displayName) profileMut.mutate(v);
+              }}
+            />
+          </div>
+        </div>
+      </section>
 
       {/* Language */}
       <section className="rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 p-6 shadow-pop">
@@ -61,12 +132,12 @@ function SettingsPage() {
           {LANGS.map((l) => (
             <button
               key={l.id}
-              onClick={() => setLanguage(l.id)}
+              onClick={() => langMut.mutate(l.id)}
               className={cn(
                 "px-4 h-9 rounded-full text-sm font-medium border transition",
                 language === l.id
                   ? "bg-primary/20 text-primary border-primary/40"
-                  : "border-border/60 text-muted-foreground hover:text-foreground hover:bg-white/5"
+                  : "border-border/60 text-muted-foreground hover:text-foreground hover:bg-white/5",
               )}
             >
               {l.label}
@@ -95,12 +166,28 @@ function SettingsPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="font-medium capitalize truncate">{n.channel} · {n.destination}</div>
-                <div className="text-xs text-muted-foreground">{n.frequency.replace("_", " ")}</div>
+                <div className="text-xs text-muted-foreground">{String(n.frequency).replace("_", " ")}</div>
               </div>
               <Switch
-                checked={n.active}
-                onCheckedChange={(v) => upsertNotification({ ...n, active: v })}
+                checked={!!n.active}
+                onCheckedChange={(v) =>
+                  notifMut.mutate({
+                    id: n.id,
+                    channel: n.channel,
+                    destination: n.destination,
+                    frequency: n.frequency,
+                    active: v,
+                  })
+                }
               />
+              <Button
+                size="sm"
+                variant="ghost"
+                className="rounded-full text-muted-foreground hover:text-destructive"
+                onClick={() => deleteMut.mutate(n.id)}
+              >
+                <Trash2 className="size-3.5" />
+              </Button>
             </div>
           ))}
           {notifications.length === 0 && (
@@ -108,13 +195,41 @@ function SettingsPage() {
           )}
         </div>
 
-        <div className="flex gap-2 pt-2">
-          <Button size="sm" variant="outline" className="rounded-full"><Send className="size-3.5 mr-1.5" /> Connect Telegram</Button>
-          <Button size="sm" variant="outline" className="rounded-full"><Mail className="size-3.5 mr-1.5" /> Add email</Button>
+        <div className="flex flex-wrap gap-2 pt-2 items-center">
+          <select
+            value={draftChannel}
+            onChange={(e) => setDraftChannel(e.target.value as any)}
+            className="h-9 rounded-full bg-background/40 border border-border/60 px-3 text-sm"
+          >
+            <option value="email">Email</option>
+            <option value="telegram">Telegram</option>
+          </select>
+          <Input
+            value={draftDest}
+            onChange={(e) => setDraftDest(e.target.value)}
+            placeholder={draftChannel === "email" ? "you@example.com" : "@telegram_handle"}
+            className="h-9 rounded-full bg-background/40 max-w-xs"
+          />
+          <Button
+            size="sm"
+            className="rounded-full bg-primary text-primary-foreground"
+            disabled={!draftDest.trim() || notifMut.isPending}
+            onClick={() => {
+              notifMut.mutate({
+                channel: draftChannel,
+                destination: draftDest.trim(),
+                frequency: "weekly",
+                active: true,
+              });
+              setDraftDest("");
+            }}
+          >
+            Add channel
+          </Button>
         </div>
       </section>
 
-      {/* Plan + danger */}
+      {/* Plan */}
       <section className="rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 p-6 shadow-pop">
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div>
