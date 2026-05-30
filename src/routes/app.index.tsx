@@ -7,6 +7,7 @@ import { LineChart, Line, ResponsiveContainer, Tooltip, AreaChart, Area } from "
 import { useAuth } from "@/lib/auth-context";
 import { usePageObject } from "@/lib/use-page-object";
 import { PageObjectEmpty } from "@/components/app/PageObjectEmpty";
+import { useT } from "@/lib/i18n/useT";
 
 export const Route = createFileRoute("/app/")({
   
@@ -33,9 +34,10 @@ const fallbackTrend = Array.from({ length: 14 }, (_, i) => ({
 function Dashboard() {
   const { user } = useAuth();
   const { payload, isLoading, role, generatedAt, workspace } = usePageObject<any>("dashboard");
+  const t = useT();
 
   if (isLoading) {
-    return <div className="text-sm text-muted-foreground p-6">Loading dashboard…</div>;
+    return <div className="text-sm text-muted-foreground p-6">{t("dashboard.loading")}</div>;
   }
   if (!payload) {
     return <PageObjectEmpty pageKey="dashboard" roleKey={role} generatedAt={generatedAt} />;
@@ -47,7 +49,7 @@ function Dashboard() {
     user?.email?.split("@")[0] ||
     "there";
   const projectName = workspace?.project_name ?? payload.greeting?.project_name;
-  const subtitle = payload.greeting?.subtitle ?? "Your daily snapshot of reach, engagement and what to ship next.";
+  const subtitle = payload.greeting?.subtitle ?? t("dashboard.subtitle_fallback");
   const topInsight = payload.top_insight;
   const kpis = (payload.kpis ?? []) as any[];
   const trend = (payload.trend ?? fallbackTrend) as any[];
@@ -60,13 +62,13 @@ function Dashboard() {
       {/* Greeting */}
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <h1 className="font-display text-4xl font-bold tracking-tight">Hey {displayName} 👋</h1>
+          <h1 className="font-display text-4xl font-bold tracking-tight">{t("dashboard.greeting", { name: displayName })}</h1>
           <p className="text-muted-foreground mt-1">
             {projectName ? `${projectName} · ` : ""}{subtitle}
           </p>
         </div>
         <Button asChild className="rounded-full bg-primary text-primary-foreground shadow-glow hover:opacity-90">
-          <Link to="/app/insights">View today's insights <ArrowRight className="ml-2 size-4" /></Link>
+          <Link to="/app/insights">{t("dashboard.view_insights")} <ArrowRight className="ml-2 size-4" /></Link>
         </Button>
       </div>
 
@@ -81,7 +83,7 @@ function Dashboard() {
           </div>
           <div className="flex-1 min-w-[260px]">
             <Badge variant="outline" className="rounded-full bg-primary/20 border-primary/40 text-foreground mb-2">
-              {topInsight.badge ?? "⚡ Top insight today"}
+              {topInsight.badge ?? t("dashboard.top_insight_badge")}
             </Badge>
             <h3 className="font-display text-2xl font-bold">{topInsight.title}</h3>
             <p className="mt-1 text-foreground/80">{topInsight.body}</p>
@@ -114,12 +116,12 @@ function Dashboard() {
         <div className="lg:col-span-2 rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 p-6 shadow-pop">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-display text-xl font-semibold">{payload.trend_title ?? "You vs your niche"}</h3>
-              <p className="text-sm text-muted-foreground">{payload.trend_subtitle ?? "Estimated reach, last 14 days"}</p>
+              <h3 className="font-display text-xl font-semibold">{payload.trend_title ?? t("dashboard.trend_title")}</h3>
+              <p className="text-sm text-muted-foreground">{payload.trend_subtitle ?? t("dashboard.trend_subtitle")}</p>
             </div>
             <div className="flex items-center gap-3 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1.5"><span className="size-2 rounded-full bg-primary" /> You</span>
-              <span className="flex items-center gap-1.5"><span className="size-2 rounded-full bg-success" /> Niche avg</span>
+              <span className="flex items-center gap-1.5"><span className="size-2 rounded-full bg-primary" /> {t("dashboard.you")}</span>
+              <span className="flex items-center gap-1.5"><span className="size-2 rounded-full bg-success" /> {t("dashboard.niche_avg")}</span>
             </div>
           </div>
           <div className="h-64">
@@ -146,7 +148,7 @@ function Dashboard() {
         <div className="rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 p-6 shadow-pop">
           <div className="flex items-center gap-2 mb-4">
             <Flame className="size-5 text-coral" />
-            <h3 className="font-display text-xl font-semibold">{payload.spotlight_title ?? "Competitor spotlight"}</h3>
+            <h3 className="font-display text-xl font-semibold">{payload.spotlight_title ?? t("dashboard.spotlight_title")}</h3>
           </div>
           <div className="space-y-3">
             {spotlight.map((s, i) => (
@@ -180,10 +182,10 @@ function Dashboard() {
       <div className="rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 p-6 shadow-pop">
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h3 className="font-display text-xl font-semibold">{payload.wins_title ?? "Your recent wins 🎉"}</h3>
-            <p className="text-sm text-muted-foreground">{payload.wins_subtitle ?? "Posts that beat your 30-day average"}</p>
+            <h3 className="font-display text-xl font-semibold">{payload.wins_title ?? t("dashboard.wins_title")}</h3>
+            <p className="text-sm text-muted-foreground">{payload.wins_subtitle ?? t("dashboard.wins_subtitle")}</p>
           </div>
-          <Button variant="ghost" size="sm" className="rounded-full">View all</Button>
+          <Button variant="ghost" size="sm" className="rounded-full">{t("dashboard.view_all")}</Button>
         </div>
         <div className="grid md:grid-cols-3 gap-4">
           {wins.slice(0, 3).map((w, i) => (

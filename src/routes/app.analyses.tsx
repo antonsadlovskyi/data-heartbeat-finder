@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { usePageObject } from "@/lib/use-page-object";
 import { PageObjectEmpty } from "@/components/app/PageObjectEmpty";
+import { useT } from "@/lib/i18n/useT";
 
 export const Route = createFileRoute("/app/analyses")({
   component: Analyses,
@@ -35,6 +36,7 @@ const toList = (v: any): string[] => {
 
 function Analyses() {
   const { payload, isLoading, role, generatedAt } = usePageObject<any>("analyses");
+  const t = useT();
 
   const [q, setQ] = useState("");
   const [openId, setOpenId] = useState<string | null>(null);
@@ -49,16 +51,16 @@ function Analyses() {
     );
   }, [q, analyses]);
 
-  if (isLoading) return <div className="text-sm text-muted-foreground p-6">Loading analyses…</div>;
+  if (isLoading) return <div className="text-sm text-muted-foreground p-6">{t("analyses.loading")}</div>;
   if (!payload) return <PageObjectEmpty pageKey="analyses" roleKey={role} generatedAt={generatedAt} />;
 
   return (
     <div className="space-y-6 max-w-7xl">
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <h1 className="font-display text-4xl font-bold tracking-tight">Account Analyses</h1>
+          <h1 className="font-display text-4xl font-bold tracking-tight">{t("analyses.title")}</h1>
           <p className="text-muted-foreground mt-1">
-            {analyses.length} deep dives · positioning, SWOT and strategic recommendations
+            {t("analyses.subtitle", { n: analyses.length })}
           </p>
         </div>
         <div className="relative w-full max-w-sm">
@@ -66,7 +68,7 @@ function Analyses() {
           <Input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search positioning, hooks, pillars…"
+            placeholder={t("analyses.search_ph")}
             className="pl-9 rounded-full bg-card/60 border-border/60"
           />
         </div>
@@ -94,7 +96,7 @@ function Analyses() {
                     <div className="font-display text-lg font-bold">{name}</div>
                     {a.score_overall != null && (
                       <Badge variant="outline" className="rounded-full text-[11px]">
-                        Score {Number(a.score_overall).toFixed(1)}
+                        {t("analyses.score", { n: Number(a.score_overall).toFixed(1) })}
                       </Badge>
                     )}
                   </div>
@@ -115,42 +117,42 @@ function Analyses() {
 
               {open && (
                 <div className="border-t border-border/60 p-6 space-y-6">
-                  <Block icon={<Target className="size-4" />} label="Positioning">
+                  <Block icon={<Target className="size-4" />} label={t("analyses.positioning")}>
                     <p className="text-sm leading-relaxed">{a.positioning_summary}</p>
                   </Block>
 
                   <div className="grid md:grid-cols-2 gap-4">
-                    <Chips icon={<Layers className="size-4" />} label="Content pillars" items={toList(a.main_content_pillars)} tone="primary" />
-                    <Chips icon={<Sparkles className="size-4" />} label="Strongest formats" items={toList(a.strongest_formats)} tone="success" />
-                    <Chips icon={<Ban className="size-4" />} label="Weakest formats" items={toList(a.weakest_formats)} tone="warning" />
-                    <Chips icon={<Megaphone className="size-4" />} label="Main hooks" items={toList(a.main_hooks)} tone="primary" />
+                    <Chips icon={<Layers className="size-4" />} label={t("analyses.pillars")} items={toList(a.main_content_pillars)} tone="primary" />
+                    <Chips icon={<Sparkles className="size-4" />} label={t("analyses.strongest_formats")} items={toList(a.strongest_formats)} tone="success" />
+                    <Chips icon={<Ban className="size-4" />} label={t("analyses.weakest_formats")} items={toList(a.weakest_formats)} tone="warning" />
+                    <Chips icon={<Megaphone className="size-4" />} label={t("analyses.main_hooks")} items={toList(a.main_hooks)} tone="primary" />
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4">
-                    <Field label="Tone of voice" value={a.tone_of_voice} />
-                    <Field label="Visual identity" value={a.visual_identity} />
-                    <Field label="Audience pain points" value={a.audience_pain_points} />
-                    <Field label="Main CTAs" value={a.main_ctas} />
-                    <Field label="Product angle" value={a.product_angle} />
-                    <Field label="Trust signals" value={a.trust_signals} />
-                    <Field label="Community signals" value={a.community_signals} />
+                    <Field label={t("analyses.tone")} value={a.tone_of_voice} />
+                    <Field label={t("analyses.visual_identity")} value={a.visual_identity} />
+                    <Field label={t("analyses.pain")} value={a.audience_pain_points} />
+                    <Field label={t("analyses.ctas")} value={a.main_ctas} />
+                    <Field label={t("analyses.product")} value={a.product_angle} />
+                    <Field label={t("analyses.trust")} value={a.trust_signals} />
+                    <Field label={t("analyses.community")} value={a.community_signals} />
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4">
-                    <SwotCard tone="success" icon={<ShieldCheck className="size-4" />} title="Strengths" value={a.strengths} />
-                    <SwotCard tone="warning" icon={<AlertTriangle className="size-4" />} title="Weaknesses" value={a.weaknesses} />
-                    <SwotCard tone="primary" icon={<Lightbulb className="size-4" />} title="Opportunities" value={a.opportunities} />
-                    <SwotCard tone="destructive" icon={<AlertTriangle className="size-4" />} title="Threats" value={a.threats} />
+                    <SwotCard tone="success" icon={<ShieldCheck className="size-4" />} title={t("analyses.strengths")} value={a.strengths} />
+                    <SwotCard tone="warning" icon={<AlertTriangle className="size-4" />} title={t("analyses.weaknesses")} value={a.weaknesses} />
+                    <SwotCard tone="primary" icon={<Lightbulb className="size-4" />} title={t("analyses.opportunities")} value={a.opportunities} />
+                    <SwotCard tone="destructive" icon={<AlertTriangle className="size-4" />} title={t("analyses.threats")} value={a.threats} />
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4">
-                    <SwotCard tone="success" icon={<Sparkles className="size-4" />} title="Best patterns to copy" value={a.best_patterns_to_copy} />
-                    <SwotCard tone="destructive" icon={<Ban className="size-4" />} title="Things to avoid" value={a.things_to_avoid} />
+                    <SwotCard tone="success" icon={<Sparkles className="size-4" />} title={t("analyses.copy")} value={a.best_patterns_to_copy} />
+                    <SwotCard tone="destructive" icon={<Ban className="size-4" />} title={t("analyses.avoid")} value={a.things_to_avoid} />
                   </div>
 
                   <div className="rounded-2xl bg-primary/10 border border-primary/30 p-4">
                     <div className="text-xs uppercase tracking-wide text-primary/80 mb-1.5 font-semibold">
-                      Strategic summary
+                      {t("analyses.summary")}
                     </div>
                     <p className="text-sm leading-relaxed">{a.strategic_summary}</p>
                   </div>
@@ -160,9 +162,9 @@ function Analyses() {
                       Scored {a.score_overall} · Period {a.period_start} → {a.period_end}
                     </div>
                     <div className="flex gap-2">
-                      <Button variant="outline" size="sm" className="rounded-full">Save to ideas</Button>
+                      <Button variant="outline" size="sm" className="rounded-full">{t("analyses.save_idea")}</Button>
                       <Button size="sm" className="rounded-full bg-primary text-primary-foreground hover:opacity-90">
-                        Turn into to-do
+                        {t("analyses.turn_todo")}
                       </Button>
                     </div>
                   </div>
@@ -174,7 +176,7 @@ function Analyses() {
 
         {filtered.length === 0 && (
           <div className="rounded-3xl border border-dashed border-border/60 p-10 text-center text-sm text-muted-foreground">
-            No analyses match “{q}”.
+            {t("analyses.no_match", { q })}
           </div>
         )}
       </div>
