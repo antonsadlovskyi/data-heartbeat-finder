@@ -5,33 +5,37 @@ import {
 } from "lucide-react";
 import { PlatformSwitcher } from "./PlatformSwitcher";
 import { RoleSwitcher } from "./RoleSwitcher";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Logo } from "@/components/brand/Logo";
 import { cn } from "@/lib/utils";
+import { useT } from "@/lib/i18n/useT";
+import type { TranslationKey } from "@/lib/i18n/dictionaries";
 
 type NavItem = {
   to: string;
-  label: string;
+  labelKey: TranslationKey;
   icon: React.ComponentType<{ className?: string }>;
   exact?: boolean;
 };
 
 const nav: NavItem[] = [
-  { to: "/app", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { to: "/app/database", label: "Database", icon: Database },
-  { to: "/app/competitors", label: "Competitor Radar", icon: Users },
-  { to: "/app/analyses", label: "Account Analyses", icon: FileSearch },
-  { to: "/app/insights", label: "Insights", icon: Lightbulb },
-  { to: "/app/todos", label: "To Dos", icon: ListChecks },
-  { to: "/app/ideas", label: "Ideas", icon: Sparkles },
-  { to: "/app/formats", label: "Formats", icon: Layers },
-  { to: "/app/performance", label: "My Performance", icon: BarChart3 },
-  { to: "/app/trends", label: "Trends", icon: TrendingUp },
-  { to: "/app/setup", label: "Setup", icon: Wand2 },
-  { to: "/app/settings", label: "Settings", icon: Settings },
+  { to: "/app", labelKey: "nav.dashboard", icon: LayoutDashboard, exact: true },
+  { to: "/app/database", labelKey: "nav.database", icon: Database },
+  { to: "/app/competitors", labelKey: "nav.competitors", icon: Users },
+  { to: "/app/analyses", labelKey: "nav.analyses", icon: FileSearch },
+  { to: "/app/insights", labelKey: "nav.insights", icon: Lightbulb },
+  { to: "/app/todos", labelKey: "nav.todos", icon: ListChecks },
+  { to: "/app/ideas", labelKey: "nav.ideas", icon: Sparkles },
+  { to: "/app/formats", labelKey: "nav.formats", icon: Layers },
+  { to: "/app/performance", labelKey: "nav.performance", icon: BarChart3 },
+  { to: "/app/trends", labelKey: "nav.trends", icon: TrendingUp },
+  { to: "/app/setup", labelKey: "nav.setup", icon: Wand2 },
+  { to: "/app/settings", labelKey: "nav.settings", icon: Settings },
 ];
 
 export function AppShell() {
   const location = useLocation();
+  const t = useT();
   return (
     <div className="min-h-screen flex bg-background text-foreground">
       <aside className="hidden md:flex w-60 flex-col border-r border-border/60 bg-card/40 backdrop-blur-xl">
@@ -55,7 +59,7 @@ export function AppShell() {
                 )}
               >
                 <item.icon className="size-4" />
-                {item.label}
+                {t(item.labelKey)}
               </Link>
             );
           })}
@@ -66,10 +70,13 @@ export function AppShell() {
           <div className="flex items-center gap-3">
             <RoleSwitcher />
             <span className="hidden lg:inline text-xs text-muted-foreground">
-              View tailored for the selected role
+              {t("role.tailored")}
             </span>
           </div>
-          <PlatformSwitcher />
+          <div className="flex items-center gap-3">
+            <LanguageSwitcher />
+            <PlatformSwitcher />
+          </div>
         </header>
         <main className="flex-1 p-6 overflow-x-hidden">
           <Outlet />
