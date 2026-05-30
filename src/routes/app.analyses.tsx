@@ -1,11 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
+import { getDashboardData } from "@/lib/data/dashboard.functions";
 import { Search, Calendar, Sparkles, ChevronDown, Target, Layers, Megaphone, ShieldCheck, AlertTriangle, Lightbulb, Ban } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import analyses from "@/lib/data/account-analyses.json";
 
 export const Route = createFileRoute("/app/analyses")({
   component: Analyses,
@@ -24,32 +26,46 @@ export const Route = createFileRoute("/app/analyses")({
   }),
 });
 
-type Analysis = (typeof analyses)[number];
+type Analysis = any;
 
 const splitList = (s?: string | null) =>
   (s ?? "").split(/;|\u2022|\n/).map((x) => x.trim()).filter(Boolean);
 
-const accountName = (id: string) => {
-  const map: Record<string, string> = {
-    acc_001: "Dragi",
-    acc_002: "Talinaa_s",
-    acc_003: "Kristina ZNOHUB",
-    acc_004: "ZNOHUB Online",
-  };
-  return map[id] ?? id;
-};
-
 function Analyses() {
+  const fetcher = useServerFn(getDashboardData);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["dashboard"],
+    queryFn: () => fetcher(),
+  });
+
   const [q, setQ] = useState("");
-  const [openId, setOpenId] = useState<string | null>(analyses[0]?.account_analysis_id ?? null);
+  const [openId, setOpenId] = useState<string | null>(null);
+
+  const analyses: Analysis[] = data?.analyses ?? [];
+  const accounts = data?.accounts ?? [];
+  const accountName = (id: string) => accounts.find((a: any) => a.account_id === id)?.username ?? id;
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
-    if (!needle) return analyses as Analysis[];
-    return (analyses as Analysis[]).filter((a) =>
+    if (!needle) return analyses;
+    return analyses.filter((a) =>
       JSON.stringify(a).toLowerCase().includes(needle)
     );
-  }, [q]);
+  }, [q, analyses]);
+
+  if (isLoading) return <div className="text-sm text-muted-foreground p-6">Loading analyses…</div>;
+  if (error) return <div className="text-sm text-destructive p-6">Couldn't load: {(error as Error).message}</div>;
+
+  if (analyses.length === 0) {
+    return (
+      <div className="max-w-3xl mx-auto mt-12 rounded-3xl border border-dashed border-border/60 bg-card/40 p-10 text-center space-y-3">
+        <h2 className="font-display text-2xl font-bold">No deep-dive analyses yet</h2>
+        <p className="text-sm text-muted-foreground max-w-md mx-auto">
+          Your n8n workflow hasn't written any account analyses to this workspace. Load demo data from Settings to preview.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 max-w-7xl">
@@ -97,12 +113,14 @@ function Analyses() {
                     {a.positioning_summary}
                   </p>
                 </div>
+                {(a.period_start || a.period_end) && (
                 <div className="hidden md:flex items-center gap-4 text-xs text-muted-foreground shrink-0">
                   <span className="flex items-center gap-1.5">
                     <Calendar className="size-3.5" />
-                    {a.period_start} → {a.period_end}
+                    {String(a.period_start ?? "").slice(0, 10)} → {String(a.period_end ?? "").slice(0, 10)}
                   </span>
                 </div>
+                )}
                 <ChevronDown className={cn("size-5 text-muted-foreground transition", open && "rotate-180")} />
               </button>
 
