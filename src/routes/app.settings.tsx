@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Bell, Globe, Send, Mail, Trash2, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Language } from "@/lib/data/types";
+import { useT } from "@/lib/i18n/useT";
 import {
   getUserSettings,
   updateWorkspaceSettings,
@@ -42,6 +43,7 @@ const LANGS: { id: Language; label: string }[] = [
 ];
 
 function SettingsPage() {
+  const t = useT();
   const fetchSettings = useServerFn(getUserSettings);
   const updateWs = useServerFn(updateWorkspaceSettings);
   const updateProfile = useServerFn(updateUserProfile);
@@ -82,8 +84,8 @@ function SettingsPage() {
   return (
     <div className="space-y-8 max-w-4xl">
       <header>
-        <h1 className="font-display text-4xl font-bold tracking-tight">Settings</h1>
-        <p className="text-muted-foreground mt-1">Language, notifications, and how Navio reaches you.</p>
+        <h1 className="font-display text-4xl font-bold tracking-tight">{t("settings.title")}</h1>
+        <p className="text-muted-foreground mt-1">{t("settings.subtitle")}</p>
       </header>
 
       {/* Profile */}

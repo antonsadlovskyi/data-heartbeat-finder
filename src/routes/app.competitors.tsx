@@ -8,6 +8,7 @@ import {
 } from "recharts";
 import { usePageObject } from "@/lib/use-page-object";
 import { PageObjectEmpty } from "@/components/app/PageObjectEmpty";
+import { useT } from "@/lib/i18n/useT";
 
 export const Route = createFileRoute("/app/competitors")({ 
   head: () => ({
@@ -30,12 +31,13 @@ const num = (v: any) => (typeof v === "number" ? v : parseFloat(v) || 0);
 
 function Competitors() {
   const { payload, isLoading, role, generatedAt } = usePageObject<any>("competitors");
+  const t = useT();
 
-  if (isLoading) return <div className="text-sm text-muted-foreground p-6">Loading competitors…</div>;
+  if (isLoading) return <div className="text-sm text-muted-foreground p-6">{t("competitors.loading")}</div>;
   if (!payload) return <PageObjectEmpty pageKey="competitors" roleKey={role} generatedAt={generatedAt} />;
 
   const ranked = (payload.ranked ?? []) as any[];
-  const headline = payload.headline ?? `${ranked.length} accounts scored across 12 dimensions`;
+  const headline = payload.headline ?? t("competitors.headline_fallback", { n: ranked.length });
   const h2h = payload.head_to_head as any | undefined;
   const radarChartData = h2h ? (h2h.axes ?? []).map((a: any) => ({
     axis: a.axis,
@@ -47,12 +49,12 @@ function Competitors() {
     <div className="space-y-6 max-w-7xl">
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <h1 className="font-display text-4xl font-bold tracking-tight">Competitor Radar</h1>
+          <h1 className="font-display text-4xl font-bold tracking-tight">{t("competitors.title")}</h1>
           <p className="text-muted-foreground mt-1">{headline}</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" className="rounded-full">Compare two</Button>
-          <Button className="rounded-full bg-primary text-primary-foreground shadow-glow hover:opacity-90">+ Add competitor</Button>
+          <Button variant="outline" className="rounded-full">{t("competitors.compare_two")}</Button>
+          <Button className="rounded-full bg-primary text-primary-foreground shadow-glow hover:opacity-90">{t("competitors.add")}</Button>
         </div>
       </div>
 
@@ -70,7 +72,7 @@ function Competitors() {
                 <div>
                   <div className="font-display text-lg font-bold flex items-center gap-2">
                     {c.name}
-                    {c.is_own && <Badge className="rounded-full text-[10px] bg-primary/15 text-primary border-primary/30">You</Badge>}
+                    {c.is_own && <Badge className="rounded-full text-[10px] bg-primary/15 text-primary border-primary/30">{t("competitors.you_badge")}</Badge>}
                   </div>
                   <div className="text-xs text-muted-foreground">
                     {c.handle ? `@${String(c.handle).replace(/^@/, "")}` : "—"} · {c.followers ?? "—"}
@@ -79,24 +81,24 @@ function Competitors() {
               </div>
 
               <div className="grid grid-cols-4 gap-4">
-                <Stat label="Overall" value={score.toFixed(1)} highlight={score >= 7} icon={stronger ? <TrendingUp className="size-3 text-success" /> : <TrendingDown className="size-3 text-warning" />} />
-                <Stat label="Hook" value={num(c.hook).toFixed(1)} />
-                <Stat label="Visual" value={num(c.visual).toFixed(1)} />
-                <Stat label="Trust" value={num(c.trust).toFixed(1)} />
+                <Stat label={t("competitors.stat.overall")} value={score.toFixed(1)} highlight={score >= 7} icon={stronger ? <TrendingUp className="size-3 text-success" /> : <TrendingDown className="size-3 text-warning" />} />
+                <Stat label={t("competitors.stat.hook")} value={num(c.hook).toFixed(1)} />
+                <Stat label={t("competitors.stat.visual")} value={num(c.visual).toFixed(1)} />
+                <Stat label={t("competitors.stat.trust")} value={num(c.trust).toFixed(1)} />
               </div>
 
               <div className="flex gap-2">
                 {c.external_url && (
                   <a href={c.external_url} target="_blank" rel="noreferrer">
-                    <Button variant="outline" size="sm" className="rounded-full">Open</Button>
+                    <Button variant="outline" size="sm" className="rounded-full">{t("competitors.open")}</Button>
                   </a>
                 )}
               </div>
             </div>
             {(c.key_strength || c.key_weakness) && (
               <div className="grid md:grid-cols-2 gap-2 mt-4 pt-4 border-t border-border/60">
-                {c.key_strength && <div className="text-[11px] text-success/90"><b>+ Strength:</b> {c.key_strength}</div>}
-                {c.key_weakness && <div className="text-[11px] text-warning/90"><b>− Weakness:</b> {c.key_weakness}</div>}
+                {c.key_strength && <div className="text-[11px] text-success/90"><b>+ {t("competitors.strength")}:</b> {c.key_strength}</div>}
+                {c.key_weakness && <div className="text-[11px] text-warning/90"><b>− {t("competitors.weakness")}:</b> {c.key_weakness}</div>}
               </div>
             )}
           </div>
@@ -107,11 +109,11 @@ function Competitors() {
         <div className="rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 p-6 shadow-pop">
           <div className="flex items-center justify-between mb-5">
             <div>
-              <div className="font-display text-xl font-bold">You vs {h2h.top_name}</div>
-              <div className="text-xs text-muted-foreground">12-dimension head-to-head from the latest radar pass</div>
+              <div className="font-display text-xl font-bold">{t("competitors.h2h_title", { top: h2h.top_name })}</div>
+              <div className="text-xs text-muted-foreground">{t("competitors.h2h_subtitle")}</div>
             </div>
             <Badge className="rounded-full bg-primary/15 text-primary border-primary/30">
-              Δ {num(h2h.delta).toFixed(1)} overall
+              {t("competitors.delta_overall", { n: num(h2h.delta).toFixed(1) })}
             </Badge>
           </div>
           <div className="h-80">
