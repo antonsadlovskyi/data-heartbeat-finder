@@ -4,10 +4,9 @@ import { ArrowUpRight, ArrowDownRight, Sparkles, Heart, MessageCircle, Eye, Star
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LineChart, Line, ResponsiveContainer, Tooltip, AreaChart, Area } from "recharts";
-import { useServerFn } from "@tanstack/react-start";
-import { useQuery } from "@tanstack/react-query";
-import { getUserSettings } from "@/lib/data/settings.functions";
 import { useAuth } from "@/lib/auth-context";
+import { usePageObject } from "@/lib/use-page-object";
+import { PageObjectEmpty } from "@/components/app/PageObjectEmpty";
 
 export const Route = createFileRoute("/app/")({
   
@@ -27,23 +26,35 @@ export const Route = createFileRoute("/app/")({
   component: Dashboard,
 });
 
-const reachData = Array.from({ length: 14 }, (_, i) => ({
+const fallbackTrend = Array.from({ length: 14 }, (_, i) => ({
   d: i, you: 800 + Math.sin(i / 2) * 200 + i * 60, niche: 600 + Math.cos(i / 3) * 150 + i * 40,
 }));
 
 function Dashboard() {
   const { user } = useAuth();
-  const fetchSettings = useServerFn(getUserSettings);
-  const { data } = useQuery({
-    queryKey: ["user-settings"],
-    queryFn: () => fetchSettings({ data: {} } as any),
-  });
+  const { payload, isLoading, role, generatedAt, workspace } = usePageObject<any>("dashboard");
+
+  if (isLoading) {
+    return <div className="text-sm text-muted-foreground p-6">Loading dashboard…</div>;
+  }
+  if (!payload) {
+    return <PageObjectEmpty pageKey="dashboard" roleKey={role} generatedAt={generatedAt} />;
+  }
+
   const displayName =
-    (data?.profile as any)?.display_name ||
+    payload.greeting?.name ||
     user?.user_metadata?.display_name ||
     user?.email?.split("@")[0] ||
     "there";
-  const projectName = (data?.workspace as any)?.project_name;
+  const projectName = workspace?.project_name ?? payload.greeting?.project_name;
+  const subtitle = payload.greeting?.subtitle ?? "Your daily snapshot of reach, engagement and what to ship next.";
+  const topInsight = payload.top_insight;
+  const kpis = (payload.kpis ?? []) as any[];
+  const trend = (payload.trend ?? fallbackTrend) as any[];
+  const spotlight = (payload.spotlight ?? []) as any[];
+  const wins = (payload.recent_wins ?? []) as any[];
+  const insights = (payload.insights ?? []) as any[];
+
   return (
     <div className="space-y-6 max-w-7xl">
       {/* Greeting */}
@@ -51,7 +62,7 @@ function Dashboard() {
         <div>
           <h1 className="font-display text-4xl font-bold tracking-tight">Hey {displayName} 👋</h1>
           <p className="text-muted-foreground mt-1">
-            {projectName ? `${projectName} · ` : ""}Your daily snapshot of reach, engagement and what to ship next.
+            {projectName ? `${projectName} · ` : ""}{subtitle}
           </p>
         </div>
         <Button asChild className="rounded-full bg-primary text-primary-foreground shadow-glow hover:opacity-90">
@@ -60,9 +71,8 @@ function Dashboard() {
       </div>
 
       {/* Top Insight banner */}
-      <div
-        className="relative overflow-hidden rounded-3xl bg-primary/15 border border-primary/50 p-8 text-foreground shadow-glow"
-      >
+      {topInsight && (
+      <div className="relative overflow-hidden rounded-3xl bg-primary/15 border border-primary/50 p-8 text-foreground shadow-glow">
         <div className="absolute -top-24 -right-24 size-80 rounded-full bg-primary/40 blur-3xl" />
         <div className="absolute -bottom-24 -left-24 size-72 rounded-full bg-violet/40 blur-3xl" />
         <div className="relative flex flex-wrap items-center gap-6">
@@ -70,21 +80,33 @@ function Dashboard() {
             <Sparkles className="size-7" />
           </div>
           <div className="flex-1 min-w-[260px]">
-            <Badge variant="outline" className="rounded-full bg-primary/20 border-primary/40 text-foreground mb-2">⚡ Top insight today</Badge>
-            <h3 className="font-display text-2xl font-bold">Café Svit posts daily latte-art Reels and gets 4× your reach.</h3>
-            <p className="mt-1 text-foreground/80">Try a 15–25s slow-mo Reel this week. We've drafted 3 hooks for you.</p>
+            <Badge variant="outline" className="rounded-full bg-primary/20 border-primary/40 text-foreground mb-2">
+              {topInsight.badge ?? "⚡ Top insight today"}
+            </Badge>
+            <h3 className="font-display text-2xl font-bold">{topInsight.title}</h3>
+            <p className="mt-1 text-foreground/80">{topInsight.body}</p>
           </div>
-          <Button size="lg" className="rounded-full bg-background text-foreground hover:bg-background/90">
-            See examples
-          </Button>
+          {topInsight.cta && (
+            <Button size="lg" className="rounded-full bg-background text-foreground hover:bg-background/90">
+              {topInsight.cta}
+            </Button>
+          )}
         </div>
       </div>
+      )}
 
       {/* Pulse + Market */}
       <div className="grid lg:grid-cols-3 gap-5">
-        <PulseCard label="Reach (7d)" value="14.2k" delta="+18%" up data={reachData} />
-        <PulseCard label="Engagement rate" value="5.4%" delta="+0.8pt" up data={reachData.map(d => ({ ...d, you: d.you * 0.8 }))} />
-        <PulseCard label="New followers" value="+212" delta="-4%" up={false} data={reachData.map(d => ({ ...d, you: d.you * 0.6 }))} />
+        {kpis.slice(0, 3).map((k, i) => (
+          <PulseCard
+            key={i}
+            label={k.label}
+            value={k.value}
+            delta={k.delta}
+            up={k.up !== false}
+            data={trend}
+          />
+        ))}
       </div>
 
       {/* Two columns */}
@@ -92,8 +114,8 @@ function Dashboard() {
         <div className="lg:col-span-2 rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 p-6 shadow-pop">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-display text-xl font-semibold">You vs your niche</h3>
-              <p className="text-sm text-muted-foreground">Estimated reach, last 14 days</p>
+              <h3 className="font-display text-xl font-semibold">{payload.trend_title ?? "You vs your niche"}</h3>
+              <p className="text-sm text-muted-foreground">{payload.trend_subtitle ?? "Estimated reach, last 14 days"}</p>
             </div>
             <div className="flex items-center gap-3 text-xs text-muted-foreground">
               <span className="flex items-center gap-1.5"><span className="size-2 rounded-full bg-primary" /> You</span>
@@ -102,7 +124,7 @@ function Dashboard() {
           </div>
           <div className="h-64">
             <ResponsiveContainer>
-              <AreaChart data={reachData}>
+              <AreaChart data={trend}>
                 <defs>
                   <linearGradient id="g1" x1="0" x2="0" y1="0" y2="1">
                     <stop offset="0%" stopColor="oklch(0.82 0.15 220)" stopOpacity={0.4} />
@@ -124,57 +146,61 @@ function Dashboard() {
         <div className="rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 p-6 shadow-pop">
           <div className="flex items-center gap-2 mb-4">
             <Flame className="size-5 text-coral" />
-            <h3 className="font-display text-xl font-semibold">Competitor spotlight</h3>
+            <h3 className="font-display text-xl font-semibold">{payload.spotlight_title ?? "Competitor spotlight"}</h3>
           </div>
           <div className="space-y-3">
-            <div className="rounded-2xl bg-gradient-to-br from-violet/30 via-primary/20 to-primary/30 border border-primary/40 p-4 text-foreground shadow-pop">
-              <div className="flex items-center gap-3">
-                <div className="size-10 rounded-xl bg-primary/20 grid place-items-center text-2xl">☕</div>
-                <div className="flex-1 min-w-0">
-                  <div className="font-semibold truncate">@latte.art.lv</div>
-                  <div className="text-xs text-foreground/75">went viral · 48k views</div>
+            {spotlight.map((s, i) => (
+              i === 0 ? (
+                <div key={i} className="rounded-2xl bg-gradient-to-br from-violet/30 via-primary/20 to-primary/30 border border-primary/40 p-4 text-foreground shadow-pop">
+                  <div className="flex items-center gap-3">
+                    <div className="size-10 rounded-xl bg-primary/20 grid place-items-center text-2xl">{s.emoji ?? "✨"}</div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-semibold truncate">{s.handle}</div>
+                      <div className="text-xs text-foreground/75">{s.badge}</div>
+                    </div>
+                  </div>
+                  <p className="mt-3 text-sm">{s.body}</p>
                 </div>
-              </div>
-              <p className="mt-3 text-sm">"Pour-over morning routine" Reel — 12× their normal reach.</p>
-            </div>
-
-            <div className="rounded-2xl border border-border/60 p-4">
-              <div className="flex items-center gap-2 text-sm">
-                <Star className="size-4 text-warning" /> <span className="font-medium">@cafe_svit</span>
-                <span className="text-muted-foreground">+14 reviews this week</span>
-              </div>
-            </div>
-            <div className="rounded-2xl border border-border/60 p-4">
-              <div className="flex items-center gap-2 text-sm">
-                <ImageIcon className="size-4 text-violet" /> <span className="font-medium">@morningbrew_lv</span>
-                <span className="text-muted-foreground">posted 11 stories yesterday</span>
-              </div>
-            </div>
+              ) : (
+                <div key={i} className="rounded-2xl border border-border/60 p-4">
+                  <div className="flex items-center gap-2 text-sm">
+                    {s.icon === "image" ? <ImageIcon className="size-4 text-violet" /> : <Star className="size-4 text-warning" />}
+                    <span className="font-medium">{s.handle}</span>
+                    <span className="text-muted-foreground">{s.body}</span>
+                  </div>
+                </div>
+              )
+            ))}
           </div>
         </div>
       </div>
 
       {/* Recent wins */}
+      {wins.length > 0 && (
       <div className="rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 p-6 shadow-pop">
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h3 className="font-display text-xl font-semibold">Your recent wins 🎉</h3>
-            <p className="text-sm text-muted-foreground">Posts that beat your 30-day average</p>
+            <h3 className="font-display text-xl font-semibold">{payload.wins_title ?? "Your recent wins 🎉"}</h3>
+            <p className="text-sm text-muted-foreground">{payload.wins_subtitle ?? "Posts that beat your 30-day average"}</p>
           </div>
           <Button variant="ghost" size="sm" className="rounded-full">View all</Button>
         </div>
         <div className="grid md:grid-cols-3 gap-4">
-          <PostCard kind="Reel" caption="Latte art slow-mo, morning sun" reach="3.2k" likes="412" comments="38" lift="+220%" />
-          <PostCard kind="Carousel" caption="3 ways we brew our seasonal blend" reach="2.1k" likes="287" comments="22" lift="+85%" />
-          <PostCard kind="Story" caption="Behind the bar with Marko" reach="1.4k" likes="98" comments="14" lift="+42%" />
+          {wins.slice(0, 3).map((w, i) => (
+            <PostCard key={i} kind={w.kind} caption={w.caption} reach={w.reach} likes={w.likes} comments={w.comments} lift={w.lift} />
+          ))}
         </div>
       </div>
+      )}
 
       {/* Insights teaser */}
+      {insights.length > 0 && (
       <div className="grid md:grid-cols-2 gap-5">
-        <InsightTeaser tone="works" title="Behind-the-scenes Reels work for cafés" body="3.2× more engagement at your competitors over 84 posts." />
-        <InsightTeaser tone="fails" title="8+ slide carousels are dragging reach" body="47% reach drop on long carousels in your niche." />
+        {insights.slice(0, 2).map((it, i) => (
+          <InsightTeaser key={i} tone={it.tone === "fails" ? "fails" : "works"} title={it.title} body={it.body} />
+        ))}
       </div>
+      )}
     </div>
   );
 }
