@@ -544,6 +544,39 @@ export type Database = {
           },
         ]
       }
+      notification_subscriptions: {
+        Row: {
+          active: boolean
+          channel: string
+          created_at: string
+          destination: string
+          frequency: string
+          id: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          active?: boolean
+          channel: string
+          created_at?: string
+          destination: string
+          frequency?: string
+          id?: string
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          active?: boolean
+          channel?: string
+          created_at?: string
+          destination?: string
+          frequency?: string
+          id?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
       post_analyses: {
         Row: {
           analysis_date: string | null
