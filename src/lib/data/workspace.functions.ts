@@ -2,28 +2,32 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 /**
- * Returns the current user's active workspace, creating an empty one on first call.
+ * Returns the current user's active workspace membership.
+ * Reads from core.workspace_members using auth_user_id = auth.uid()
  */
-export const getOrCreateWorkspace = createServerFn({ method: "POST" })
+export const getMyWorkspace = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { supabase, userId } = context;
+    const { supabase } = context;
 
-    const { data: existing, error: selErr } = await supabase
-      .from("workspaces")
-      .select("*")
-      .eq("owner_id", userId)
-      .order("created_at", { ascending: true })
+    const { data, error } = await supabase
+      .schema("core")
+      .from("workspace_members")
+      .select(
+        "workspace_id, workspace_role, default_view_mode, allowed_view_modes, allowed_platforms, status"
+      )
+      .eq("status", "active")
       .limit(1)
       .maybeSingle();
-    if (selErr) throw new Error(selErr.message);
-    if (existing) return existing;
 
-    const { data: created, error: insErr } = await supabase
-      .from("workspaces")
-      .insert({ owner_id: userId, project_name: "My Workspace" })
-      .select()
-      .single();
-    if (insErr) throw new Error(insErr.message);
-    return created;
+    if (error) throw new Error(error.message);
+    if (!data) return null;
+
+    return {
+      workspaceId: data.workspace_id as string,
+      workspaceRole: data.workspace_role as string,
+      defaultViewMode: data.default_view_mode as string,
+      allowedViewModes: data.allowed_view_modes as string[],
+      allowedPlatforms: data.allowed_platforms as string[],
+    };
   });
