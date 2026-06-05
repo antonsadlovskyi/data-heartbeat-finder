@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { usePageObject } from "@/lib/use-page-object";
-import { PageObjectEmpty } from "@/components/app/PageObjectEmpty";
+import { PageObjectEmpty, PageObjectPending } from "@/components/app/PageObjectEmpty";
 import { useT } from "@/lib/i18n/useT";
 
 export const Route = createFileRoute("/app/analyses")({
@@ -35,7 +35,7 @@ const toList = (v: any): string[] => {
 };
 
 function Analyses() {
-  const { payload, isLoading, role, generatedAt } = usePageObject<any>("analyses");
+  const { payload, isLoading, isPending, dataStatus, role, generatedAt } = usePageObject<any>("analyses");
   const t = useT();
 
   const [q, setQ] = useState("");
@@ -52,6 +52,7 @@ function Analyses() {
   }, [q, analyses]);
 
   if (isLoading) return <div className="text-sm text-muted-foreground p-6">{t("analyses.loading")}</div>;
+  if (isPending) return <PageObjectPending pageKey="analyses" roleKey={role} dataStatus={dataStatus!} />;
   if (!payload) return <PageObjectEmpty pageKey="analyses" roleKey={role} generatedAt={generatedAt} />;
 
   return (

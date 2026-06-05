@@ -45,6 +45,10 @@ const en = {
   "empty.last_generated": "Last generated: {when}",
   "empty.recheck": "Re-check",
 
+  // Pending page-object state (data_status != ready)
+  "pending.title": "Preparing your data…",
+  "pending.body": "Our AI is crunching the latest numbers. This usually takes a few minutes — the page will refresh automatically.",
+
   // Dashboard
   "dashboard.loading": "Loading dashboard…",
   "dashboard.greeting": "Hey {name} 👋",
@@ -156,6 +160,9 @@ const uk: Record<keyof typeof en, string> = {
   "empty.body": "Ми ще готуємо сторінку {page} для ролі {role}. Вона заповниться автоматично, щойно завершиться наступний прохід аналізу.",
   "empty.last_generated": "Востаннє оновлено: {when}",
   "empty.recheck": "Перевірити ще раз",
+
+  "pending.title": "Готуємо ваші дані…",
+  "pending.body": "ШІ обробляє останні дані. Зазвичай це займає кілька хвилин — сторінка оновиться автоматично.",
 
   "dashboard.loading": "Завантаження дашборду…",
   "dashboard.greeting": "Привіт, {name} 👋",

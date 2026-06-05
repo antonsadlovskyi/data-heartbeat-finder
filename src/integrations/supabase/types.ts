@@ -1153,6 +1153,79 @@ export type Database = {
       [_ in never]: never
     }
   }
+  core: {
+    Tables: {
+      workspace_members: {
+        Row: {
+          workspace_member_id: string
+          workspace_id: string
+          app_user_id: string | null
+          auth_user_id: string | null
+          role: string
+          created_at: string
+          updated_at: string
+          workspace_role: string
+          default_view_mode: string
+          allowed_view_modes: string[]
+          allowed_platforms: string[]
+          permissions_json: Json
+          data_scope_json: Json
+          status: string
+          invited_by_app_user_id: string | null
+          metadata: Json
+        }
+        Insert: {
+          workspace_member_id?: string
+          workspace_id: string
+          app_user_id?: string | null
+          auth_user_id?: string | null
+          role: string
+          created_at?: string
+          updated_at?: string
+          workspace_role: string
+          default_view_mode: string
+          allowed_view_modes: string[]
+          allowed_platforms: string[]
+          permissions_json?: Json
+          data_scope_json?: Json
+          status: string
+          invited_by_app_user_id?: string | null
+          metadata?: Json
+        }
+        Update: {
+          workspace_member_id?: string
+          workspace_id?: string
+          app_user_id?: string | null
+          auth_user_id?: string | null
+          role?: string
+          created_at?: string
+          updated_at?: string
+          workspace_role?: string
+          default_view_mode?: string
+          allowed_view_modes?: string[]
+          allowed_platforms?: string[]
+          permissions_json?: Json
+          data_scope_json?: Json
+          status?: string
+          invited_by_app_user_id?: string | null
+          metadata?: Json
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
 }
 
 type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">

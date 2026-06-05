@@ -7,7 +7,7 @@ import {
   Radar as RadarShape, ResponsiveContainer, Legend, Tooltip,
 } from "recharts";
 import { usePageObject } from "@/lib/use-page-object";
-import { PageObjectEmpty } from "@/components/app/PageObjectEmpty";
+import { PageObjectEmpty, PageObjectPending } from "@/components/app/PageObjectEmpty";
 import { useT } from "@/lib/i18n/useT";
 
 export const Route = createFileRoute("/app/competitors")({ 
@@ -30,10 +30,11 @@ export const Route = createFileRoute("/app/competitors")({
 const num = (v: any) => (typeof v === "number" ? v : parseFloat(v) || 0);
 
 function Competitors() {
-  const { payload, isLoading, role, generatedAt } = usePageObject<any>("competitors");
+  const { payload, isLoading, isPending, dataStatus, role, generatedAt } = usePageObject<any>("competitors");
   const t = useT();
 
   if (isLoading) return <div className="text-sm text-muted-foreground p-6">{t("competitors.loading")}</div>;
+  if (isPending) return <PageObjectPending pageKey="competitors" roleKey={role} dataStatus={dataStatus!} />;
   if (!payload) return <PageObjectEmpty pageKey="competitors" roleKey={role} generatedAt={generatedAt} />;
 
   const ranked = (payload.ranked ?? []) as any[];

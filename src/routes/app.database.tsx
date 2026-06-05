@@ -12,7 +12,7 @@ import {
 } from "recharts";
 import { cn } from "@/lib/utils";
 import { usePageObject } from "@/lib/use-page-object";
-import { PageObjectEmpty } from "@/components/app/PageObjectEmpty";
+import { PageObjectEmpty, PageObjectPending } from "@/components/app/PageObjectEmpty";
 
 export const Route = createFileRoute("/app/database")({
   component: DatabasePage,
@@ -34,10 +34,13 @@ export const Route = createFileRoute("/app/database")({
 const num = (v: any) => (typeof v === "number" ? v : parseFloat(v) || 0);
 
 function DatabasePage() {
-  const { payload, isLoading, role, generatedAt, workspace } = usePageObject<any>("database");
+  const { payload, isLoading, isPending, dataStatus, role, generatedAt, workspace } = usePageObject<any>("database");
 
   if (isLoading) {
     return <div className="text-sm text-muted-foreground p-6">Loading workspace…</div>;
+  }
+  if (isPending) {
+    return <PageObjectPending pageKey="database" roleKey={role} dataStatus={dataStatus!} />;
   }
   if (!payload) {
     return <PageObjectEmpty pageKey="database" roleKey={role} generatedAt={generatedAt} />;

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { LineChart, Line, ResponsiveContainer, Tooltip, AreaChart, Area } from "recharts";
 import { useAuth } from "@/lib/auth-context";
 import { usePageObject } from "@/lib/use-page-object";
-import { PageObjectEmpty } from "@/components/app/PageObjectEmpty";
+import { PageObjectEmpty, PageObjectPending } from "@/components/app/PageObjectEmpty";
 import { useT } from "@/lib/i18n/useT";
 
 export const Route = createFileRoute("/app/")({
@@ -33,11 +33,14 @@ const fallbackTrend = Array.from({ length: 14 }, (_, i) => ({
 
 function Dashboard() {
   const { user } = useAuth();
-  const { payload, isLoading, role, generatedAt, workspace } = usePageObject<any>("dashboard");
+  const { payload, isLoading, isPending, dataStatus, role, generatedAt, workspace } = usePageObject<any>("dashboard");
   const t = useT();
 
   if (isLoading) {
     return <div className="text-sm text-muted-foreground p-6">{t("dashboard.loading")}</div>;
+  }
+  if (isPending) {
+    return <PageObjectPending pageKey="dashboard" roleKey={role} dataStatus={dataStatus!} />;
   }
   if (!payload) {
     return <PageObjectEmpty pageKey="dashboard" roleKey={role} generatedAt={generatedAt} />;
