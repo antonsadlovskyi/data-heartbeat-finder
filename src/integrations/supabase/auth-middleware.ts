@@ -3,12 +3,22 @@ import { createMiddleware } from '@tanstack/react-start'
 import { getRequest } from '@tanstack/react-start/server'
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from './types'
+// ws is required for Node.js < 22 which lacks native WebSocket support
+import ws from 'ws'
 
-
+function decodeJwtPayload(token: string): Record<string, any> | null {
+  try {
+    const base64 = token.split('.')[1];
+    const json = atob(base64.replace(/-/g, '+').replace(/_/g, '/'));
+    return JSON.parse(json);
+  } catch {
+    return null;
+  }
+}
 
 export const requireSupabaseAuth = createMiddleware({ type: 'function' }).server(
   async ({ next }) => {
-    
+
     const SUPABASE_URL = process.env.SUPABASE_URL;
     const SUPABASE_PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY;
 
@@ -17,31 +27,35 @@ export const requireSupabaseAuth = createMiddleware({ type: 'function' }).server
         ...(!SUPABASE_URL ? ['SUPABASE_URL'] : []),
         ...(!SUPABASE_PUBLISHABLE_KEY ? ['SUPABASE_PUBLISHABLE_KEY'] : []),
       ];
-      const message = `Missing Supabase environment variable(s): ${missing.join(', ')}. Connect Supabase in Lovable Cloud.`;
-      console.error(`[Supabase] ${message}`);
-      throw new Error(message);
+      throw new Error(`Missing Supabase env vars: ${missing.join(', ')}`);
     }
-    
+
     const request = getRequest();
+    console.log('[auth] request headers available:', !!request?.headers);
 
     if (!request?.headers) {
       throw new Error('Unauthorized: No request headers available');
     }
 
     const authHeader = request.headers.get('authorization');
+    console.log('[auth] Authorization header present:', !!authHeader, '| starts with Bearer:', authHeader?.startsWith('Bearer '));
 
-    if (!authHeader) {
-      throw new Error('Unauthorized: No authorization header provided');
-    }
-
-    if (!authHeader.startsWith('Bearer ')) {
-      throw new Error('Unauthorized: Only Bearer tokens are supported');
+    if (!authHeader?.startsWith('Bearer ')) {
+      throw new Error('Unauthorized: No Bearer token provided');
     }
 
     const token = authHeader.replace('Bearer ', '');
-    if (!token) {
-      throw new Error('Unauthorized: No token provided');
+    console.log('[auth] token length:', token.length);
+
+    const claims = decodeJwtPayload(token);
+    console.log('[auth] claims decoded:', !!claims, '| sub:', claims?.sub?.slice(0, 8));
+
+    const userId = claims?.sub as string | undefined;
+    if (!userId) {
+      console.log('[auth] ERROR: no sub in token');
+      throw new Error('Unauthorized: No sub in token');
     }
+    console.log('[auth] userId OK, creating supabase client...');
 
     const supabase = createClient<Database>(
       SUPABASE_URL!,
@@ -57,24 +71,19 @@ export const requireSupabaseAuth = createMiddleware({ type: 'function' }).server
           persistSession: false,
           autoRefreshToken: false,
         },
+        realtime: { transport: ws },
       }
     );
 
-    const { data, error } = await supabase.auth.getClaims(token);
-    if (error || !data?.claims) {
-      throw new Error('Unauthorized: Invalid token');
-    }
-
-    if (!data.claims.sub) {
-      throw new Error('Unauthorized: No user ID found in token');
-    }
-
-    return next({
+    console.log('[auth] calling next()...');
+    const result = await next({
       context: {
         supabase,
-        userId: data.claims.sub,
-        claims: data.claims,
+        userId,
+        claims,
       },
     });
+    console.log('[auth] next() returned:', typeof result);
+    return result;
   },
 );

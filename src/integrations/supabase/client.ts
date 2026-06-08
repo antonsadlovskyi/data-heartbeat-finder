@@ -18,12 +18,14 @@ function createSupabaseClient() {
     throw new Error(message);
   }
 
+  const isServer = typeof window === 'undefined';
   return createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
     auth: {
-      storage: typeof window !== 'undefined' ? localStorage : undefined,
-      persistSession: true,
-      autoRefreshToken: true,
-    }
+      storage: isServer ? undefined : localStorage,
+      persistSession: !isServer,
+      autoRefreshToken: !isServer,
+    },
+    realtime: isServer ? { transport: undefined as any } : undefined,
   });
 }
 

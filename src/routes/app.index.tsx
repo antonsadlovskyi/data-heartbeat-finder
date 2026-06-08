@@ -33,11 +33,17 @@ const fallbackTrend = Array.from({ length: 14 }, (_, i) => ({
 
 function Dashboard() {
   const { user } = useAuth();
-  const { payload, isLoading, isPending, dataStatus, role, generatedAt, workspace } = usePageObject<any>("dashboard");
+  const { payload, isLoading, isPending, dataStatus, role, generatedAt, workspace, isError, error, workspaceId, isWorkspaceError, workspaceError } = usePageObject<any>("dashboard");
   const t = useT();
 
   if (isLoading) {
     return <div className="text-sm text-muted-foreground p-6">{t("dashboard.loading")}</div>;
+  }
+  if (isWorkspaceError) {
+    return <div className="p-6 text-red-400 text-xs font-mono whitespace-pre-wrap">WORKSPACE ERROR: {String((workspaceError as any)?.message ?? workspaceError)}</div>;
+  }
+  if (isError) {
+    return <div className="p-6 text-red-400 text-xs font-mono whitespace-pre-wrap">ERROR: {String((error as any)?.message ?? error)}{"\n"}workspaceId: {workspaceId}</div>;
   }
   if (isPending) {
     return <PageObjectPending pageKey="dashboard" roleKey={role} dataStatus={dataStatus!} />;

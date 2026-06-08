@@ -29,11 +29,15 @@ export function usePageObject<T = any>(pageKey: string) {
   const dataStatus = (query.data as any)?.data_status ?? null;
   const isPending = dataStatus !== null && dataStatus !== "ready";
 
+  const { isError: isWorkspaceError, error: workspaceError } = useWorkspace();
+
   return {
     ...query,
     role,
     workspaceId,
     isWorkspaceLoading,
+    isWorkspaceError,
+    workspaceError,
     isPending,
     dataStatus,
     payload: (query.data?.payload ?? null) as T | null,

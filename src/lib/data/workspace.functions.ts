@@ -8,7 +8,8 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 export const getMyWorkspace = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { supabase } = context;
+    const { supabase, userId } = context;
+    console.log("[getMyWorkspace] userId from token:", userId);
 
     const { data, error } = await supabase
       .schema("core")
@@ -20,6 +21,7 @@ export const getMyWorkspace = createServerFn({ method: "GET" })
       .limit(1)
       .maybeSingle();
 
+    console.log("[getMyWorkspace] data:", data, "error:", error);
     if (error) throw new Error(error.message);
     if (!data) return null;
 
