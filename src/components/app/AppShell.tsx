@@ -1,7 +1,7 @@
 import { Link, Outlet, useLocation } from "@tanstack/react-router";
 import {
   LayoutDashboard, Users, Lightbulb, ListChecks, Sparkles,
-  Layers, BarChart3, TrendingUp, Settings, Wand2, Database, FileSearch,
+  BarChart3, TrendingUp, Settings, FileSearch, Trophy, Zap, Activity,
 } from "lucide-react";
 import { PlatformSwitcher } from "./PlatformSwitcher";
 import { RoleSwitcher } from "./RoleSwitcher";
@@ -20,16 +20,16 @@ type NavItem = {
 
 const nav: NavItem[] = [
   { to: "/app", labelKey: "nav.dashboard", icon: LayoutDashboard, exact: true },
-  { to: "/app/database", labelKey: "nav.database", icon: Database },
   { to: "/app/competitors", labelKey: "nav.competitors", icon: Users },
+  { to: "/app/best-outcomes", labelKey: "nav.best_outcomes", icon: Trophy },
+  { to: "/app/competitor-moves", labelKey: "nav.competitor_moves", icon: Zap },
   { to: "/app/analyses", labelKey: "nav.analyses", icon: FileSearch },
   { to: "/app/insights", labelKey: "nav.insights", icon: Lightbulb },
-  { to: "/app/todos", labelKey: "nav.todos", icon: ListChecks },
   { to: "/app/ideas", labelKey: "nav.ideas", icon: Sparkles },
-  { to: "/app/formats", labelKey: "nav.formats", icon: Layers },
+  { to: "/app/todos", labelKey: "nav.todos", icon: ListChecks },
   { to: "/app/performance", labelKey: "nav.performance", icon: BarChart3 },
   { to: "/app/trends", labelKey: "nav.trends", icon: TrendingUp },
-  { to: "/app/setup", labelKey: "nav.setup", icon: Wand2 },
+  { to: "/app/dynamics", labelKey: "nav.dynamics", icon: Activity },
   { to: "/app/settings", labelKey: "nav.settings", icon: Settings },
 ];
 

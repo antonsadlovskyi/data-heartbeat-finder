@@ -30,12 +30,12 @@ export const Route = createFileRoute("/app/competitors")({
 const num = (v: any) => (typeof v === "number" ? v : parseFloat(v) || 0);
 
 function Competitors() {
-  const { payload, isLoading, isPending, dataStatus, role, generatedAt } = usePageObject<any>("competitors");
+  const { payload, isLoading, isPending, dataStatus, role, generatedAt } = usePageObject<any>("competitor_radar");
   const t = useT();
 
   if (isLoading) return <div className="text-sm text-muted-foreground p-6">{t("competitors.loading")}</div>;
-  if (isPending) return <PageObjectPending pageKey="competitors" roleKey={role} dataStatus={dataStatus!} />;
-  if (!payload) return <PageObjectEmpty pageKey="competitors" roleKey={role} generatedAt={generatedAt} />;
+  if (isPending) return <PageObjectPending pageKey="competitor_radar" roleKey={role} dataStatus={dataStatus!} />;
+  if (!payload) return <PageObjectEmpty pageKey="competitor_radar" roleKey={role} generatedAt={generatedAt} />;
 
   const ranked = (payload.ranked ?? []) as any[];
   const headline = payload.headline ?? t("competitors.headline_fallback", { n: ranked.length });

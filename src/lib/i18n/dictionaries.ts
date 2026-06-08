@@ -122,6 +122,25 @@ const en = {
   "settings.title": "Settings",
   "settings.subtitle": "Language, notifications, and how Navio reaches you.",
 
+  // Best Outcomes
+  "best_outcomes.loading": "Loading…",
+  "best_outcomes.title": "Best Competitor Outcomes",
+  "best_outcomes.pattern_title": "Key patterns",
+  "best_outcomes.top_posts_title": "Top performing posts",
+
+  // Competitor Moves
+  "competitor_moves.loading": "Loading…",
+  "competitor_moves.title": "Competitor Moves",
+
+  // Dynamics
+  "dynamics.loading": "Loading…",
+  "dynamics.title": "Dynamics",
+
+  // Navigation (new)
+  "nav.best_outcomes": "Best Posts",
+  "nav.competitor_moves": "Competitor Moves",
+  "nav.dynamics": "Dynamics",
+
   // Common
   "common.loading": "Loading…",
 } as const;
@@ -231,6 +250,21 @@ const uk: Record<keyof typeof en, string> = {
 
   "settings.title": "Параметри",
   "settings.subtitle": "Мова, сповіщення та як з вами зв'язується Navio.",
+
+  "best_outcomes.loading": "Завантаження…",
+  "best_outcomes.title": "Кращі результати конкурентів",
+  "best_outcomes.pattern_title": "Ключові патерни",
+  "best_outcomes.top_posts_title": "Топ пости конкурентів",
+
+  "competitor_moves.loading": "Завантаження…",
+  "competitor_moves.title": "Ходи конкурентів",
+
+  "dynamics.loading": "Завантаження…",
+  "dynamics.title": "Динаміка",
+
+  "nav.best_outcomes": "Кращі пости",
+  "nav.competitor_moves": "Ходи конкурентів",
+  "nav.dynamics": "Динаміка",
 
   "common.loading": "Завантаження…",
 };
