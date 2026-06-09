@@ -23,7 +23,7 @@ function BestOutcomes() {
 
   const summary = payload.sections?.summary ?? {};
   const patterns: any[] = payload.sections?.patterns ?? [];
-  const topPosts: any[] = payload.top_posts ?? [];
+  const topPosts: any[] = payload.sections?.top_posts ?? [];
 
   return (
     <div className="space-y-6 max-w-7xl">

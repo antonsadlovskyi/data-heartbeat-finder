@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/app'
@@ -24,9 +25,13 @@ import { Route as AppPerformanceRouteImport } from './routes/app.performance'
 import { Route as AppInsightsRouteImport } from './routes/app.insights'
 import { Route as AppIdeasRouteImport } from './routes/app.ideas'
 import { Route as AppFormatsRouteImport } from './routes/app.formats'
+import { Route as AppDynamicsRouteImport } from './routes/app.dynamics'
 import { Route as AppDatabaseRouteImport } from './routes/app.database'
 import { Route as AppCompetitorsRouteImport } from './routes/app.competitors'
+import { Route as AppCompetitorMovesRouteImport } from './routes/app.competitor-moves'
+import { Route as AppBestOutcomesRouteImport } from './routes/app.best-outcomes'
 import { Route as AppAnalysesRouteImport } from './routes/app.analyses'
+import { Route as AppDebugPageObjectsRouteImport } from './routes/app.debug.page-objects'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -36,6 +41,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -103,6 +113,11 @@ const AppFormatsRoute = AppFormatsRouteImport.update({
   path: '/formats',
   getParentRoute: () => AppRoute,
 } as any)
+const AppDynamicsRoute = AppDynamicsRouteImport.update({
+  id: '/dynamics',
+  path: '/dynamics',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDatabaseRoute = AppDatabaseRouteImport.update({
   id: '/database',
   path: '/database',
@@ -113,9 +128,24 @@ const AppCompetitorsRoute = AppCompetitorsRouteImport.update({
   path: '/competitors',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCompetitorMovesRoute = AppCompetitorMovesRouteImport.update({
+  id: '/competitor-moves',
+  path: '/competitor-moves',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBestOutcomesRoute = AppBestOutcomesRouteImport.update({
+  id: '/best-outcomes',
+  path: '/best-outcomes',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAnalysesRoute = AppAnalysesRouteImport.update({
   id: '/analyses',
   path: '/analyses',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDebugPageObjectsRoute = AppDebugPageObjectsRouteImport.update({
+  id: '/debug/page-objects',
+  path: '/debug/page-objects',
   getParentRoute: () => AppRoute,
 } as any)
 
@@ -124,11 +154,15 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/app/analyses': typeof AppAnalysesRoute
+  '/app/best-outcomes': typeof AppBestOutcomesRoute
+  '/app/competitor-moves': typeof AppCompetitorMovesRoute
   '/app/competitors': typeof AppCompetitorsRoute
   '/app/database': typeof AppDatabaseRoute
+  '/app/dynamics': typeof AppDynamicsRoute
   '/app/formats': typeof AppFormatsRoute
   '/app/ideas': typeof AppIdeasRoute
   '/app/insights': typeof AppInsightsRoute
@@ -138,16 +172,21 @@ export interface FileRoutesByFullPath {
   '/app/todos': typeof AppTodosRoute
   '/app/trends': typeof AppTrendsRoute
   '/app/': typeof AppIndexRoute
+  '/app/debug/page-objects': typeof AppDebugPageObjectsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/app/analyses': typeof AppAnalysesRoute
+  '/app/best-outcomes': typeof AppBestOutcomesRoute
+  '/app/competitor-moves': typeof AppCompetitorMovesRoute
   '/app/competitors': typeof AppCompetitorsRoute
   '/app/database': typeof AppDatabaseRoute
+  '/app/dynamics': typeof AppDynamicsRoute
   '/app/formats': typeof AppFormatsRoute
   '/app/ideas': typeof AppIdeasRoute
   '/app/insights': typeof AppInsightsRoute
@@ -157,6 +196,7 @@ export interface FileRoutesByTo {
   '/app/todos': typeof AppTodosRoute
   '/app/trends': typeof AppTrendsRoute
   '/app': typeof AppIndexRoute
+  '/app/debug/page-objects': typeof AppDebugPageObjectsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -164,11 +204,15 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/app/analyses': typeof AppAnalysesRoute
+  '/app/best-outcomes': typeof AppBestOutcomesRoute
+  '/app/competitor-moves': typeof AppCompetitorMovesRoute
   '/app/competitors': typeof AppCompetitorsRoute
   '/app/database': typeof AppDatabaseRoute
+  '/app/dynamics': typeof AppDynamicsRoute
   '/app/formats': typeof AppFormatsRoute
   '/app/ideas': typeof AppIdeasRoute
   '/app/insights': typeof AppInsightsRoute
@@ -178,6 +222,7 @@ export interface FileRoutesById {
   '/app/todos': typeof AppTodosRoute
   '/app/trends': typeof AppTrendsRoute
   '/app/': typeof AppIndexRoute
+  '/app/debug/page-objects': typeof AppDebugPageObjectsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -186,11 +231,15 @@ export interface FileRouteTypes {
     | '/app'
     | '/login'
     | '/onboarding'
+    | '/reset-password'
     | '/signup'
     | '/sitemap.xml'
     | '/app/analyses'
+    | '/app/best-outcomes'
+    | '/app/competitor-moves'
     | '/app/competitors'
     | '/app/database'
+    | '/app/dynamics'
     | '/app/formats'
     | '/app/ideas'
     | '/app/insights'
@@ -200,16 +249,21 @@ export interface FileRouteTypes {
     | '/app/todos'
     | '/app/trends'
     | '/app/'
+    | '/app/debug/page-objects'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/onboarding'
+    | '/reset-password'
     | '/signup'
     | '/sitemap.xml'
     | '/app/analyses'
+    | '/app/best-outcomes'
+    | '/app/competitor-moves'
     | '/app/competitors'
     | '/app/database'
+    | '/app/dynamics'
     | '/app/formats'
     | '/app/ideas'
     | '/app/insights'
@@ -219,17 +273,22 @@ export interface FileRouteTypes {
     | '/app/todos'
     | '/app/trends'
     | '/app'
+    | '/app/debug/page-objects'
   id:
     | '__root__'
     | '/'
     | '/app'
     | '/login'
     | '/onboarding'
+    | '/reset-password'
     | '/signup'
     | '/sitemap.xml'
     | '/app/analyses'
+    | '/app/best-outcomes'
+    | '/app/competitor-moves'
     | '/app/competitors'
     | '/app/database'
+    | '/app/dynamics'
     | '/app/formats'
     | '/app/ideas'
     | '/app/insights'
@@ -239,6 +298,7 @@ export interface FileRouteTypes {
     | '/app/todos'
     | '/app/trends'
     | '/app/'
+    | '/app/debug/page-objects'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -246,6 +306,7 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SignupRoute: typeof SignupRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
@@ -264,6 +325,13 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -357,6 +425,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppFormatsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/dynamics': {
+      id: '/app/dynamics'
+      path: '/dynamics'
+      fullPath: '/app/dynamics'
+      preLoaderRoute: typeof AppDynamicsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/database': {
       id: '/app/database'
       path: '/database'
@@ -371,6 +446,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCompetitorsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/competitor-moves': {
+      id: '/app/competitor-moves'
+      path: '/competitor-moves'
+      fullPath: '/app/competitor-moves'
+      preLoaderRoute: typeof AppCompetitorMovesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/best-outcomes': {
+      id: '/app/best-outcomes'
+      path: '/best-outcomes'
+      fullPath: '/app/best-outcomes'
+      preLoaderRoute: typeof AppBestOutcomesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/analyses': {
       id: '/app/analyses'
       path: '/analyses'
@@ -378,13 +467,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAnalysesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/debug/page-objects': {
+      id: '/app/debug/page-objects'
+      path: '/debug/page-objects'
+      fullPath: '/app/debug/page-objects'
+      preLoaderRoute: typeof AppDebugPageObjectsRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppAnalysesRoute: typeof AppAnalysesRoute
+  AppBestOutcomesRoute: typeof AppBestOutcomesRoute
+  AppCompetitorMovesRoute: typeof AppCompetitorMovesRoute
   AppCompetitorsRoute: typeof AppCompetitorsRoute
   AppDatabaseRoute: typeof AppDatabaseRoute
+  AppDynamicsRoute: typeof AppDynamicsRoute
   AppFormatsRoute: typeof AppFormatsRoute
   AppIdeasRoute: typeof AppIdeasRoute
   AppInsightsRoute: typeof AppInsightsRoute
@@ -394,12 +493,16 @@ interface AppRouteChildren {
   AppTodosRoute: typeof AppTodosRoute
   AppTrendsRoute: typeof AppTrendsRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppDebugPageObjectsRoute: typeof AppDebugPageObjectsRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppAnalysesRoute: AppAnalysesRoute,
+  AppBestOutcomesRoute: AppBestOutcomesRoute,
+  AppCompetitorMovesRoute: AppCompetitorMovesRoute,
   AppCompetitorsRoute: AppCompetitorsRoute,
   AppDatabaseRoute: AppDatabaseRoute,
+  AppDynamicsRoute: AppDynamicsRoute,
   AppFormatsRoute: AppFormatsRoute,
   AppIdeasRoute: AppIdeasRoute,
   AppInsightsRoute: AppInsightsRoute,
@@ -409,6 +512,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppTodosRoute: AppTodosRoute,
   AppTrendsRoute: AppTrendsRoute,
   AppIndexRoute: AppIndexRoute,
+  AppDebugPageObjectsRoute: AppDebugPageObjectsRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -418,6 +522,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SignupRoute: SignupRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
 }

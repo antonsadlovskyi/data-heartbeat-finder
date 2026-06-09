@@ -1153,8 +1153,150 @@ export type Database = {
       [_ in never]: never
     }
   }
+  app: {
+    Tables: {
+      page_objects: {
+        Row: {
+          page_object_id: string
+          workspace_id: string
+          page_key: string
+          role_key: string
+          data_status: string
+          payload: Json
+          generated_at: string
+          updated_at: string
+          period_start: string | null
+          period_end: string | null
+          status: string
+          version: string
+          expires_at: string | null
+          page_title: string | null
+          page_version: string
+          metadata: Json
+          section_key: string
+          object_json: Json
+          language: string
+          role_view: string
+          platform: string
+          analysis_job_id: string | null
+          priority: number
+          object_version: string
+          run_label: string | null
+        }
+        Insert: {
+          page_object_id?: string
+          workspace_id: string
+          page_key: string
+          role_key: string
+          data_status: string
+          payload?: Json
+          generated_at?: string
+          updated_at?: string
+          period_start?: string | null
+          period_end?: string | null
+          status?: string
+          version?: string
+          expires_at?: string | null
+          page_title?: string | null
+          page_version?: string
+          metadata?: Json
+          section_key?: string
+          object_json?: Json
+          language?: string
+          role_view?: string
+          platform?: string
+          analysis_job_id?: string | null
+          priority?: number
+          object_version?: string
+          run_label?: string | null
+        }
+        Update: {
+          page_object_id?: string
+          workspace_id?: string
+          page_key?: string
+          role_key?: string
+          data_status?: string
+          payload?: Json
+          generated_at?: string
+          updated_at?: string
+          status?: string
+          version?: string
+          expires_at?: string | null
+          page_title?: string | null
+          page_version?: string
+          metadata?: Json
+          section_key?: string
+          object_json?: Json
+          language?: string
+          role_view?: string
+          platform?: string
+          analysis_job_id?: string | null
+          priority?: number
+          object_version?: string
+          run_label?: string | null
+        }
+        Relationships: []
+      }
+    }
+    Views: { [_ in never]: never }
+    Functions: { [_ in never]: never }
+    Enums: { [_ in never]: never }
+    CompositeTypes: { [_ in never]: never }
+  }
   core: {
     Tables: {
+      workspaces: {
+        Row: {
+          workspace_id: string
+          app_user_id: string
+          project_name: string
+          niche: string | null
+          country: string | null
+          language: string | null
+          target_audience: string | null
+          product_description: string | null
+          main_goal: string | null
+          status: string
+          created_at: string
+          updated_at: string
+          interface_language: string | null
+          report_language: string | null
+          content_language: string | null
+          timezone: string | null
+          organization_id: string | null
+          plan_id: string | null
+          subscription_status: string
+          onboarding_status: string
+          preferred_refresh_window: string | null
+          metadata: Json
+          business_stage: string | null
+          website_url: string | null
+          additional_context: string | null
+        }
+        Insert: {
+          workspace_id?: string
+          app_user_id: string
+          project_name: string
+          niche?: string | null
+          country?: string | null
+          language?: string | null
+          status?: string
+          created_at?: string
+          updated_at?: string
+          subscription_status?: string
+          onboarding_status?: string
+          metadata?: Json
+        }
+        Update: {
+          workspace_id?: string
+          project_name?: string
+          niche?: string | null
+          status?: string
+          updated_at?: string
+          metadata?: Json
+        }
+        Relationships: []
+      }
       workspace_members: {
         Row: {
           workspace_member_id: string
