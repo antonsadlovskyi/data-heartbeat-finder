@@ -1,11 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo } from "react";
-import { useNavio } from "@/lib/store";
-import { IdeaCard, EmptyState } from "@/components/app/cards";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { applyInsightToTodo } from "@/lib/data/services";
-import type { IdeaSuggestion } from "@/lib/data/types";
+import { usePageObject } from "@/lib/use-page-object";
+import { PageObjectEmpty, PageObjectPending } from "@/components/app/PageObjectEmpty";
 
 export const Route = createFileRoute("/app/ideas")({
   component: IdeasPage,
@@ -24,80 +20,115 @@ export const Route = createFileRoute("/app/ideas")({
   }),
 });
 
+function normPriority(v: string): "high" | "medium" | "low" {
+  if (v === "high" || v === "Високий") return "high";
+  if (v === "medium" || v === "Середній") return "medium";
+  return "low";
+}
+
+function normEffort(v: string): "high" | "medium" | "low" {
+  if (v === "high" || v === "Високий") return "high";
+  if (v === "medium" || v === "Середній") return "medium";
+  return "low";
+}
+
+function priorityBadgeClass(p: "high" | "medium" | "low") {
+  if (p === "high") return "bg-primary text-primary-foreground border-0";
+  if (p === "medium") return "bg-yellow-500/20 text-yellow-400 border-yellow-500/40";
+  return "bg-muted text-muted-foreground border-border";
+}
+
+function effortBadgeClass(e: "high" | "medium" | "low") {
+  if (e === "low") return "bg-success/20 text-success border-success/40";
+  if (e === "medium") return "bg-muted text-muted-foreground border-border";
+  return "bg-red-500/20 text-red-400 border-red-500/40";
+}
+
 function IdeasPage() {
-  const platform = useNavio((s) => s.platform);
-  const ideas = useNavio((s) => s.ideas);
-  const setIdeaStatus = useNavio((s) => s.setIdeaStatus);
+  const { payload, isLoading, isPending, dataStatus, role, generatedAt, isError, error } =
+    usePageObject<any>("idea_suggestions");
 
-  const filtered = useMemo(
-    () => ideas.filter((i) => platform === "all" || i.platform === platform || i.platform === "all"),
-    [ideas, platform]
-  );
+  if (isLoading) return <div className="text-sm text-muted-foreground p-6">Завантаження...</div>;
+  if (isError) return <div className="p-6 text-red-400 text-xs font-mono">ERROR: {String((error as any)?.message ?? error)}</div>;
+  if (isPending) return <PageObjectPending pageKey="idea_suggestions" roleKey={role} dataStatus={dataStatus!} />;
+  if (!payload) return <PageObjectEmpty pageKey="idea_suggestions" roleKey={role} generatedAt={generatedAt} />;
 
-  const groups: Record<string, IdeaSuggestion[]> = {};
-  filtered.forEach((i) => {
-    (groups[i.idea_type] ||= []).push(i);
-  });
-
-  async function createTodoFromIdea(idea: IdeaSuggestion) {
-    // map an idea to a synthetic insight shape for re-use of applyInsightToTodo
-    await applyInsightToTodo(
-      {
-        id: `i_from_${idea.id}`,
-        workspace_id: idea.workspace_id,
-        platform: idea.platform,
-        title: idea.title,
-        insight_type: "opportunity",
-        summary: idea.description,
-        evidence: idea.why_it_fits,
-        related_competitor_ids: [],
-        related_post_ids: [],
-        suggested_action: idea.implementation_steps[0] ?? idea.description,
-        expected_impact: idea.expected_impact,
-        difficulty: idea.difficulty,
-        priority: 3,
-        status: "new",
-        created_at: new Date().toISOString(),
-      },
-      { metric: "engagement_rate", baseline: 3.4, target: 5, trackingPeriodDays: 14 }
-    );
-    setIdeaStatus(idea.id, "in_todo");
-  }
+  const summary = payload.sections?.summary ?? {};
+  const groups: any[] = payload.sections?.idea_groups ?? [];
 
   return (
     <div className="space-y-8 max-w-7xl">
-      <header className="flex items-end justify-between flex-wrap gap-4">
-        <div>
-          <h1 className="font-display text-4xl font-bold tracking-tight">Ideas</h1>
-          <p className="text-muted-foreground mt-1">
-            Ready-to-shoot concepts based on what's working for your competitors and the trends you should ride.
-          </p>
-        </div>
-        <Button variant="outline" className="rounded-full">Generate more</Button>
+      <header>
+        <h1 className="font-display text-4xl font-bold tracking-tight">{summary.title || "Ідеї для дій"}</h1>
+        {summary.ideas_count != null && (
+          <p className="text-muted-foreground mt-1">{summary.ideas_count} ідей сформовано</p>
+        )}
       </header>
 
-      {filtered.length === 0 && (
-        <EmptyState title="No ideas for this platform yet" body="Switch the platform filter or run a fresh scan." />
-      )}
+      {groups.map((group) => {
+        const isOpportunities = group.group_key === "opportunities";
+        return (
+          <section key={group.group_key} className="space-y-4">
+            <div className="flex items-center gap-3">
+              <h2 className="font-display text-2xl font-bold">{group.label}</h2>
+              <Badge variant="outline" className="rounded-full">{(group.items ?? []).length}</Badge>
+            </div>
 
-      {Object.entries(groups).map(([type, list]) => (
-        <section key={type} className="space-y-3">
-          <div className="flex items-center gap-3">
-            <h2 className="font-display text-2xl font-bold capitalize">{type}</h2>
-            <Badge variant="outline" className="rounded-full">{list.length}</Badge>
-          </div>
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {list.map((idea) => (
-              <IdeaCard
-                key={idea.id}
-                idea={idea}
-                onCreateTodo={() => createTodoFromIdea(idea)}
-                onSave={() => setIdeaStatus(idea.id, "saved")}
-              />
-            ))}
-          </div>
-        </section>
-      ))}
+            {isOpportunities ? (
+              <div className="grid md:grid-cols-2 gap-4">
+                {(group.items ?? []).map((item: any, i: number) => {
+                  const p = normPriority(item.priority ?? "");
+                  const e = normEffort(item.effort ?? "");
+                  return (
+                    <div key={i} className="rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 p-5 shadow-pop space-y-3">
+                      <div className="flex flex-wrap gap-2">
+                        <Badge className={`rounded-full border text-xs ${priorityBadgeClass(p)}`}>
+                          priority: {p}
+                        </Badge>
+                        <Badge className={`rounded-full border text-xs ${effortBadgeClass(e)}`}>
+                          effort: {e}
+                        </Badge>
+                      </div>
+                      <h3 className="font-display text-lg font-semibold leading-snug">{item.opportunity}</h3>
+                      {item.expected_impact && (
+                        <p className="text-sm text-muted-foreground">{item.expected_impact}</p>
+                      )}
+                      {item.recommended_action && (
+                        <details className="text-sm">
+                          <summary className="cursor-pointer text-primary font-medium">Дія →</summary>
+                          <p className="mt-2 text-muted-foreground">{item.recommended_action}</p>
+                        </details>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 gap-4">
+                {(group.items ?? []).map((item: any, i: number) => (
+                  <div key={i} className="rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 p-5 shadow-pop space-y-3">
+                    <h3 className="font-display text-lg font-semibold leading-snug">{item.test_type}</h3>
+                    {item.hypothesis && (
+                      <p className="text-sm text-muted-foreground">{item.hypothesis}</p>
+                    )}
+                    {(item.metric_to_watch || item.success_criteria) && (
+                      <details className="text-sm">
+                        <summary className="cursor-pointer text-primary font-medium">Деталі →</summary>
+                        <div className="mt-2 space-y-1 text-muted-foreground">
+                          {item.metric_to_watch && <p><span className="font-medium text-foreground">Метрика:</span> {item.metric_to_watch}</p>}
+                          {item.success_criteria && <p><span className="font-medium text-foreground">Успіх:</span> {item.success_criteria}</p>}
+                        </div>
+                      </details>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        );
+      })}
+
+      {groups.length === 0 && <PageObjectEmpty pageKey="idea_suggestions" roleKey={role} generatedAt={generatedAt} />}
     </div>
   );
 }

@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Instagram, Facebook, MapPin, ArrowUpRight, ArrowDownRight, Sparkles, Plug } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid, ScatterChart, Scatter, ZAxis } from "recharts";
+import { usePageObject } from "@/lib/use-page-object";
+import { PageObjectEmpty, PageObjectPending } from "@/components/app/PageObjectEmpty";
 
-export const Route = createFileRoute("/app/performance")({ 
+export const Route = createFileRoute("/app/performance")({
   head: () => ({
     meta: [
       { title: "My Performance — Navio" },
@@ -21,115 +21,145 @@ export const Route = createFileRoute("/app/performance")({
   component: Performance,
 });
 
-const reach = Array.from({ length: 30 }, (_, i) => ({
-  day: i + 1,
-  reach: 600 + Math.sin(i / 4) * 200 + i * 25 + Math.random() * 100,
-  engagement: 3 + Math.cos(i / 5) * 1.2 + i * 0.05,
-}));
+const STRONG_SPOTS_LABELS: Record<string, string> = {
+  brand_positioning_signal: "Сильний бренд",
+  high_content_learning_value: "Висока навчальна цінність",
+  high_product_learning_value: "Навчальна цінність продукту",
+  high_strategic_value: "Висока стратегічна цінність",
+  high_value_low_engagement: "Висока цінність, низьке залучення",
+  offer_signal: "Чіткий офер",
+  pricing_signal: "Цінова сигналізація",
+  product_signal: "Продуктовий сигнал",
+  strong_marketer_relevance: "Релевантний для маркетологів",
+  strong_owner_relevance: "Релевантний для власників",
+  strong_smm_relevance: "Релевантний для SMM",
+};
 
-const correlation = [
-  { likes: 412, comments: 38, type: "Reel BTS", z: 200 },
-  { likes: 287, comments: 22, type: "Carousel", z: 150 },
-  { likes: 98, comments: 14, type: "Story", z: 80 },
-  { likes: 540, comments: 51, type: "Reel BTS", z: 240 },
-  { likes: 180, comments: 12, type: "Single", z: 60 },
-  { likes: 612, comments: 78, type: "Reel BTS", z: 280 },
-  { likes: 220, comments: 18, type: "Carousel", z: 100 },
-  { likes: 340, comments: 28, type: "Single", z: 120 },
-];
-
-function Performance() {
-  return (
-    <div className="space-y-6 max-w-7xl">
-      <div className="flex items-end justify-between flex-wrap gap-4">
-        <div>
-          <h1 className="font-display text-4xl font-bold tracking-tight">My Performance</h1>
-          <p className="text-muted-foreground mt-1">Connected accounts and how Navio insights moved your numbers.</p>
-        </div>
-        <Button className="rounded-full bg-primary text-primary-foreground shadow-glow hover:opacity-90"><Plug className="size-4 mr-1.5" /> Connect another</Button>
-      </div>
-
-      {/* Connected accounts */}
-      <div className="grid md:grid-cols-3 gap-4">
-        <Account icon={<Instagram className="size-5" />} name="@cafe_svitlo" platform="Instagram" connected />
-        <Account icon={<Facebook className="size-5" />} name="Café Svitlo" platform="Facebook" connected />
-        <Account icon={<MapPin className="size-5" />} name="Café Svitlo · Lviv" platform="Google Business" />
-      </div>
-
-      {/* Before/After lift */}
-      <div className="rounded-3xl bg-gradient-to-br from-primary/40 via-primary/20 to-violet/50 border border-primary/60 p-8 text-primary-foreground shadow-glow relative overflow-hidden">
-        <div className="absolute -top-20 -right-20 size-72 rounded-full bg-primary/20 blur-3xl" />
-        <div className="relative grid md:grid-cols-[auto_1fr_auto] items-center gap-6">
-          <Sparkles className="size-10" />
-          <div>
-            <Badge variant="outline" className="rounded-full bg-primary/20 border-primary/40 text-foreground mb-2">Insight lift</Badge>
-            <h3 className="font-display text-2xl font-bold">You applied 3 insights this week.</h3>
-            <p className="text-foreground/80 mt-1">Reach +18% · Engagement rate +0.8pt · Followers +212. Keep it going.</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Reach chart */}
-      <div className="rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 p-6 shadow-pop">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h3 className="font-display text-xl font-semibold">Reach over time</h3>
-            <p className="text-sm text-muted-foreground">Last 30 days · all connected accounts</p>
-          </div>
-          <div className="flex gap-2">
-            <Badge variant="outline" className="rounded-full">7d</Badge>
-            <Badge className="rounded-full bg-primary text-primary-foreground border-0">30d</Badge>
-            <Badge variant="outline" className="rounded-full">90d</Badge>
-          </div>
-        </div>
-        <div className="h-72">
-          <ResponsiveContainer>
-            <LineChart data={reach}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-              <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 11 }} />
-              <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11 }} />
-              <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid var(--border)", background: "var(--card)" }} />
-              <Line type="monotone" dataKey="reach" stroke="oklch(0.82 0.15 220)" strokeWidth={3} dot={{ r: 3 }} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* Correlation */}
-      <div className="rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 p-6 shadow-pop">
-        <div className="mb-4">
-          <h3 className="font-display text-xl font-semibold">Likes ↔ Comments correlation</h3>
-          <p className="text-sm text-muted-foreground">Bubble size = saves. BTS Reels cluster top-right.</p>
-        </div>
-        <div className="h-72">
-          <ResponsiveContainer>
-            <ScatterChart>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-              <XAxis type="number" dataKey="likes" name="Likes" axisLine={false} tickLine={false} tick={{ fontSize: 11 }} />
-              <YAxis type="number" dataKey="comments" name="Comments" axisLine={false} tickLine={false} tick={{ fontSize: 11 }} />
-              <ZAxis type="number" dataKey="z" range={[80, 400]} />
-              <Tooltip cursor={{ strokeDasharray: "3 3" }} contentStyle={{ borderRadius: 12, border: "1px solid var(--border)", background: "var(--card)" }} />
-              <Scatter data={correlation} fill="oklch(0.82 0.15 220)" />
-            </ScatterChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-    </div>
-  );
+function formatSpot(key: string): string {
+  return STRONG_SPOTS_LABELS[key] ?? key.replace(/_/g, " ");
 }
 
-function Account({ icon, name, platform, connected }: any) {
+function threatColor(level: string) {
+  if (level === "high") return "text-red-400";
+  if (level === "medium") return "text-yellow-400";
+  return "text-muted-foreground";
+}
+
+function threatBadgeClass(level: string) {
+  if (level === "high") return "bg-red-500/20 text-red-400 border-red-500/40";
+  if (level === "medium") return "bg-yellow-500/20 text-yellow-400 border-yellow-500/40";
+  return "bg-muted text-muted-foreground border-border";
+}
+
+function Performance() {
+  const { payload, isLoading, isPending, dataStatus, role, generatedAt, isError, error } =
+    usePageObject<any>("my_performance");
+
+  if (isLoading) return <div className="text-sm text-muted-foreground p-6">Завантаження...</div>;
+  if (isError) return <div className="p-6 text-red-400 text-xs font-mono">ERROR: {String((error as any)?.message ?? error)}</div>;
+  if (isPending) return <PageObjectPending pageKey="my_performance" roleKey={role} dataStatus={dataStatus!} />;
+  if (!payload) return <PageObjectEmpty pageKey="my_performance" roleKey={role} generatedAt={generatedAt} />;
+
+  const perfSummary = payload.sections?.performance_summary ?? {};
+  const benchmark: any[] = payload.sections?.benchmark_vs_competitors ?? [];
+  const topPosts: any[] = payload.sections?.own_top_posts ?? [];
+  const weakPosts: any[] = payload.sections?.own_weak_posts ?? [];
+
+  const summaryParagraphs: string[] = (perfSummary.summary ?? "").split(/\n\n+/).filter(Boolean);
+
   return (
-    <div className="rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 p-5 shadow-pop flex items-center gap-3">
-      <div className="size-11 rounded-2xl bg-gradient-to-br from-primary/30 via-primary/15 to-violet/30 border border-primary/40 grid place-items-center  text-primary shadow-pop">{icon}</div>
-      <div className="flex-1 min-w-0">
-        <div className="font-semibold truncate">{name}</div>
-        <div className="text-xs text-muted-foreground">{platform}</div>
+    <div className="space-y-6 max-w-7xl">
+      <div>
+        <h1 className="font-display text-4xl font-bold tracking-tight">
+          {perfSummary.title || "Моя ефективність"}
+        </h1>
       </div>
-      {connected ? (
-        <Badge className="rounded-full bg-success text-success-foreground border-0">Connected</Badge>
-      ) : (
-        <Button size="sm" variant="outline" className="rounded-full">Connect</Button>
+
+      {/* Not enough data banner */}
+      {perfSummary.overall_status === "not_enough_data" && (
+        <div className="rounded-3xl bg-yellow-500/10 border border-yellow-500/30 p-6 space-y-2">
+          <div className="text-xs font-semibold text-yellow-400 uppercase tracking-widest">Недостатньо даних</div>
+          <p className="font-semibold">Недостатньо власних постів для аналізу</p>
+          {perfSummary.recommended_focus && (
+            <p className="text-sm text-muted-foreground">{perfSummary.recommended_focus}</p>
+          )}
+        </div>
+      )}
+
+      {/* Summary text */}
+      {summaryParagraphs.length > 0 && (
+        <div className="rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 p-6 shadow-pop space-y-4">
+          {summaryParagraphs.map((p, i) => (
+            <p key={i} className="text-sm leading-relaxed text-foreground/90">{p}</p>
+          ))}
+        </div>
+      )}
+
+      {/* Top posts (when available) */}
+      {topPosts.length > 0 && (
+        <section className="space-y-3">
+          <h2 className="font-display text-2xl font-bold">Топ пости</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            {topPosts.map((post: any, i: number) => (
+              <div key={i} className="rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 p-5 shadow-pop">
+                <p className="text-sm">{post.caption || post.post_id}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Benchmark vs competitors */}
+      {benchmark.length > 0 && (
+        <section className="space-y-4">
+          <div className="flex items-center gap-3">
+            <h2 className="font-display text-2xl font-bold">Конкуренти для порівняння</h2>
+            <Badge variant="outline" className="rounded-full">{benchmark.length}</Badge>
+          </div>
+          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+            {benchmark.map((comp: any, i: number) => (
+              <div key={i} className="rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 p-5 shadow-pop space-y-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <div className="font-semibold">{comp.display_name}</div>
+                    <div className="text-xs text-muted-foreground">@{comp.username}</div>
+                  </div>
+                  {comp.profile_url && (
+                    <a href={comp.profile_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">
+                      <ExternalLink className="size-4" />
+                    </a>
+                  )}
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {comp.overall_score != null && (
+                    <Badge variant="outline" className="rounded-full text-xs">
+                      Score: {typeof comp.overall_score === "number" ? comp.overall_score.toFixed(1) : comp.overall_score}
+                    </Badge>
+                  )}
+                  {comp.strategic_threat_level && (
+                    <Badge className={`rounded-full border text-xs ${threatBadgeClass(comp.strategic_threat_level)}`}>
+                      {comp.strategic_threat_level} threat
+                    </Badge>
+                  )}
+                  {comp.platform && (
+                    <Badge variant="outline" className="rounded-full text-xs">{comp.platform}</Badge>
+                  )}
+                </div>
+
+                {comp.strong_spots?.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {comp.strong_spots.map((spot: string, j: number) => (
+                      <Badge key={j} variant="outline" className="rounded-full text-xs">
+                        {formatSpot(spot)}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
       )}
     </div>
   );

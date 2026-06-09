@@ -1,13 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo } from "react";
-import { useNavio } from "@/lib/store";
-import { TodoCard, TrackingExperimentCard, EmptyState } from "@/components/app/cards";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  startTodo, startTrackingTodo, pauseTodo, postponeTodo, completeTodo,
-} from "@/lib/data/services";
-import type { TodoStatus } from "@/lib/data/types";
+import { usePageObject } from "@/lib/use-page-object";
+import { PageObjectEmpty, PageObjectPending } from "@/components/app/PageObjectEmpty";
 
 export const Route = createFileRoute("/app/todos")({
   component: TodosPage,
@@ -26,99 +22,125 @@ export const Route = createFileRoute("/app/todos")({
   }),
 });
 
-const STATUS_TABS: { id: TodoStatus | "all"; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "in_progress", label: "Doing" },
-  { id: "tracking", label: "Tracking" },
-  { id: "paused", label: "Paused" },
-  { id: "completed", label: "Done" },
-];
+const STATUS_TABS = [
+  { id: "all", label: "Всі" },
+  { id: "active", label: "Активні" },
+  { id: "tracking", label: "Трекінг" },
+  { id: "completed", label: "Виконано" },
+] as const;
+
+function priorityBadgeClass(p: string) {
+  if (p === "high") return "bg-primary text-primary-foreground border-0";
+  if (p === "medium") return "bg-yellow-500/20 text-yellow-400 border-yellow-500/40";
+  return "bg-muted text-muted-foreground border-border";
+}
 
 function TodosPage() {
-  const platform = useNavio((s) => s.platform);
-  const todos = useNavio((s) => s.todos);
-  const experiments = useNavio((s) => s.experiments);
+  const { payload, isLoading, isPending, dataStatus, role, generatedAt, isError, error } =
+    usePageObject<any>("todos");
+  const [tab, setTab] = useState<"all" | "active" | "tracking" | "completed">("all");
 
-  const filterTab = "all"; // visual tabs only for v1; keep simple
+  if (isLoading) return <div className="text-sm text-muted-foreground p-6">Завантаження...</div>;
+  if (isError) return <div className="p-6 text-red-400 text-xs font-mono">ERROR: {String((error as any)?.message ?? error)}</div>;
+  if (isPending) return <PageObjectPending pageKey="todos" roleKey={role} dataStatus={dataStatus!} />;
+  if (!payload) return <PageObjectEmpty pageKey="todos" roleKey={role} generatedAt={generatedAt} />;
 
-  const filtered = useMemo(() => {
-    return todos.filter((t) => {
-      const platformMatch = platform === "all" || t.platform === platform || t.platform === "all";
-      const statusMatch = filterTab === "all" || t.status === filterTab;
-      return platformMatch && statusMatch;
-    });
-  }, [todos, platform, filterTab]);
+  const todos: any[] = payload.todos ?? [];
+  const summary = payload.summary ?? {};
 
-  const active = filtered.filter((t) => t.status !== "completed");
-  const done = filtered.filter((t) => t.status === "completed");
-  const liveExperiments = experiments.filter((e) => e.result_status === "running" || e.result_status === "improved");
+  const filtered = todos.filter((t) => {
+    if (tab === "all") return true;
+    if (tab === "tracking") return t.tracking_status === "tracking";
+    return t.status === tab;
+  });
+
+  if (todos.length === 0) return <PageObjectEmpty pageKey="todos" roleKey={role} generatedAt={generatedAt} />;
 
   return (
     <div className="space-y-8 max-w-7xl">
       <header className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <h1 className="font-display text-4xl font-bold tracking-tight">To Dos</h1>
-          <p className="text-muted-foreground mt-1">
-            Concrete weekly actions, each tied to one metric. Pick one, do it, then track the result.
-          </p>
+          <h1 className="font-display text-4xl font-bold tracking-tight">Завдання</h1>
         </div>
         <div className="flex flex-wrap gap-2">
           {STATUS_TABS.map((t) => (
-            <Button key={t.id} variant="outline" size="sm" className="rounded-full h-8">
+            <Button
+              key={t.id}
+              variant={tab === t.id ? "default" : "outline"}
+              size="sm"
+              className="rounded-full h-8"
+              onClick={() => setTab(t.id)}
+            >
               {t.label}
             </Button>
           ))}
         </div>
       </header>
 
-      <section className="space-y-3">
-        <div className="flex items-center gap-3">
-          <h2 className="font-display text-2xl font-bold">Active</h2>
-          <Badge variant="outline" className="rounded-full">{active.length}</Badge>
-        </div>
-        {active.length === 0 ? (
-          <EmptyState title="No active to dos" body="Apply an insight or idea to create your first tracked to do." />
-        ) : (
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {active.map((t) => (
-              <TodoCard
-                key={t.id}
-                todo={t}
-                onStart={() => startTodo(t.id)}
-                onTrack={() => startTrackingTodo(t.id)}
-                onPause={() => pauseTodo(t.id)}
-                onPostpone={() => postponeTodo(t.id)}
-                onComplete={() => completeTodo(t.id)}
-              />
-            ))}
-          </div>
+      {/* Summary stats */}
+      <div className="flex flex-wrap gap-2">
+        {summary.total != null && <Badge variant="outline" className="rounded-full">Всього: {summary.total}</Badge>}
+        {summary.active != null && <Badge variant="outline" className="rounded-full">Активних: {summary.active}</Badge>}
+        {summary.tracking != null && <Badge variant="outline" className="rounded-full">В трекінгу: {summary.tracking}</Badge>}
+        {summary.completed != null && <Badge variant="outline" className="rounded-full">Виконано: {summary.completed}</Badge>}
+        {summary.high_priority != null && (
+          <Badge className="rounded-full bg-primary text-primary-foreground border-0">Пріоритетних: {summary.high_priority}</Badge>
         )}
-      </section>
+      </div>
 
-      {liveExperiments.length > 0 && (
-        <section className="space-y-3">
-          <div className="flex items-center gap-3">
-            <h2 className="font-display text-2xl font-bold">Live experiments</h2>
-            <Badge variant="outline" className="rounded-full">{liveExperiments.length}</Badge>
-          </div>
-          <div className="grid md:grid-cols-2 gap-4">
-            {liveExperiments.map((e) => <TrackingExperimentCard key={e.id} exp={e} />)}
-          </div>
-        </section>
-      )}
+      {filtered.length === 0 ? (
+        <div className="rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 p-8 text-center text-muted-foreground">
+          Немає завдань у цій категорії
+        </div>
+      ) : (
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+          {filtered.map((todo) => (
+            <div
+              key={todo.todo_id}
+              className="rounded-3xl bg-card/70 backdrop-blur-sm border border-border/60 p-5 shadow-pop space-y-3"
+            >
+              <div className="flex flex-wrap gap-2">
+                <Badge className={`rounded-full border text-xs ${priorityBadgeClass(todo.priority)}`}>
+                  {todo.priority === "high" ? "Високий" : todo.priority === "medium" ? "Середній" : "Низький"}
+                </Badge>
+                {todo.platform && todo.platform !== "all" && (
+                  <Badge variant="outline" className="rounded-full text-xs">{todo.platform}</Badge>
+                )}
+                {todo.status === "completed" && (
+                  <Badge className="rounded-full bg-success text-success-foreground border-0 text-xs">Виконано</Badge>
+                )}
+              </div>
 
-      {done.length > 0 && (
-        <section className="space-y-3">
-          <div className="flex items-center gap-3">
-            <h2 className="font-display text-2xl font-bold">Completed</h2>
-            <Badge variant="outline" className="rounded-full">{done.length}</Badge>
-          </div>
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4 opacity-80">
-            {done.map((t) => (
-              <TodoCard key={t.id} todo={t} />
-            ))}
-          </div>
-        </section>
+              <h3 className="font-display text-base font-semibold leading-snug">{todo.title}</h3>
+              {todo.description && <p className="text-sm text-muted-foreground">{todo.description}</p>}
+
+              {todo.recommended_action && (
+                <details className="text-sm">
+                  <summary className="cursor-pointer text-primary font-medium">Рекомендована дія →</summary>
+                  <p className="mt-2 text-muted-foreground">{todo.recommended_action}</p>
+                </details>
+              )}
+
+              {todo.tracking_status === "tracking" && todo.tracking && (
+                <div className="rounded-2xl bg-primary/5 border border-primary/20 p-3 space-y-1 text-xs">
+                  <div className="font-semibold text-primary">В трекінгу</div>
+                  {todo.tracking.metric_key && <div className="text-muted-foreground">Метрика: {todo.tracking.metric_key}</div>}
+                  {todo.tracking.baseline_value != null && (
+                    <div className="text-muted-foreground">Baseline: {todo.tracking.baseline_value}</div>
+                  )}
+                  {todo.tracking.current_value != null && (
+                    <div className="text-muted-foreground">Поточне: {todo.tracking.current_value}</div>
+                  )}
+                  {todo.last_result?.delta_percent != null && (
+                    <div className={todo.last_result.delta_percent >= 0 ? "text-success" : "text-destructive"}>
+                      Δ {todo.last_result.delta_percent > 0 ? "+" : ""}{todo.last_result.delta_percent}%
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { getDashboardData, seedWorkspaceFromMock } from "@/lib/data/dashboard.functions";
+import { getDashboardData } from "@/lib/data/dashboard.functions";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Database, Copy, Check, Sparkles } from "lucide-react";
+import { Database, Copy, Check } from "lucide-react";
 
 const TABLES = [
   "social_accounts", "account_snapshots", "social_posts", "post_assets",
@@ -14,11 +14,8 @@ const TABLES = [
 
 export function N8nPanel() {
   const fetcher = useServerFn(getDashboardData);
-  const seed = useServerFn(seedWorkspaceFromMock);
-  const qc = useQueryClient();
   const { data } = useQuery({ queryKey: ["dashboard"], queryFn: () => fetcher() });
   const [copied, setCopied] = useState<string | null>(null);
-  const [seeding, setSeeding] = useState(false);
 
   const wsId = data?.workspace?.id ?? "—";
   const supaUrl = import.meta.env.VITE_SUPABASE_URL ?? "";
@@ -65,33 +62,6 @@ export function N8nPanel() {
         </p>
       </div>
 
-      <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4 flex items-center justify-between gap-3 flex-wrap">
-        <div className="flex items-start gap-3">
-          <Sparkles className="size-4 text-primary mt-0.5" />
-          <div>
-            <div className="font-semibold text-sm">Load demo data</div>
-            <p className="text-xs text-muted-foreground">
-              Populate this workspace with the bundled sample dataset so you can preview every dashboard.
-            </p>
-          </div>
-        </div>
-        <Button
-          size="sm"
-          className="rounded-full bg-primary text-primary-foreground"
-          disabled={seeding}
-          onClick={async () => {
-            setSeeding(true);
-            try {
-              await seed();
-              await qc.invalidateQueries({ queryKey: ["dashboard"] });
-            } finally {
-              setSeeding(false);
-            }
-          }}
-        >
-          {seeding ? "Loading…" : "Load demo data"}
-        </Button>
-      </div>
     </section>
   );
 }

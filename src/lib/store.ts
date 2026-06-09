@@ -18,22 +18,6 @@ import type {
   PostMetrics,
   NotificationSubscription,
 } from "./data/types";
-import {
-  mockWorkspace,
-  mockOwnProfiles,
-  mockCompetitors,
-  mockScorecards,
-  mockInsights,
-  mockTodos,
-  mockExperiments,
-  mockIdeas,
-  mockTrends,
-  mockFormats,
-  mockDashboardCards,
-  mockPosts,
-  mockMetrics,
-  mockNotifications,
-} from "./data/mock";
 
 interface NavioState {
   // UI
@@ -79,20 +63,20 @@ export const useNavio = create<NavioState>()(
       setPlatform: (p) => set({ platform: p }),
       setLanguage: (l) => set({ language: l }),
 
-      workspace: mockWorkspace,
-      ownProfiles: mockOwnProfiles,
-      competitors: mockCompetitors,
-      scorecards: mockScorecards,
-      insights: mockInsights,
-      todos: mockTodos,
-      experiments: mockExperiments,
-      ideas: mockIdeas,
-      trends: mockTrends,
-      formats: mockFormats,
-      dashboardCards: mockDashboardCards,
-      posts: mockPosts,
-      metrics: mockMetrics,
-      notifications: mockNotifications,
+      workspace: {} as Workspace,
+      ownProfiles: [] as OwnSocialProfile[],
+      competitors: [] as CompetitorProfile[],
+      scorecards: [] as CompetitorScorecard[],
+      insights: [] as Insight[],
+      todos: [] as TodoItem[],
+      experiments: [] as TrackingExperiment[],
+      ideas: [] as IdeaSuggestion[],
+      trends: [] as TrendItem[],
+      formats: [] as ContentFormatAnalysis[],
+      dashboardCards: [] as DashboardCard[],
+      posts: [] as Post[],
+      metrics: [] as PostMetrics[],
+      notifications: [] as NotificationSubscription[],
 
       updateWorkspace: (w) =>
         set((s) => ({ workspace: { ...s.workspace, ...w, updated_at: new Date().toISOString() } })),
