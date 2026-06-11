@@ -7,6 +7,7 @@ import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
 // before the first client RPC call arrives (fixes "Invalid server function ID" in dev mode).
 import "@/lib/data/workspace.functions";
 import "@/lib/data/page-objects.functions";
+import "@/lib/data/onboarding.functions";
 
 const errorMiddleware = createMiddleware().server(async ({ next }) => {
   const { getRequest } = await import('@tanstack/react-start/server');

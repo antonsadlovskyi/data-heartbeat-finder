@@ -1,46 +1,79 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-async function ensureWorkspace(supabase: any, userId: string) {
-  const { data: existing } = await supabase
-    .from("workspaces")
-    .select("*")
-    .eq("owner_id", userId)
-    .order("created_at", { ascending: true })
+// types.ts is not fully regenerated – cast to any for tables outside
+// the generated type definitions (app_users, social_accounts, workspace_settings)
+const db = (supabase: any) => supabase as any;
+
+// ---------------------------------------------------------------------------
+// Internal helper – get workspace + app_user_id for the authed user
+// ---------------------------------------------------------------------------
+async function getWorkspaceForUser(supabase: any, userId: string) {
+  const { data: member, error: memberErr } = await supabase
+    .schema("core")
+    .from("workspace_members")
+    .select("workspace_id, app_user_id")
+    .eq("auth_user_id", userId)
+    .eq("status", "active")
     .limit(1)
     .maybeSingle();
-  if (existing) return existing;
-  const { data: created, error } = await supabase
+
+  if (memberErr) throw new Error(memberErr.message);
+  if (!member) throw new Error("No active workspace found for this user");
+
+  const { data: ws, error: wsErr } = await supabase
+    .schema("core")
     .from("workspaces")
-    .insert({ owner_id: userId, project_name: "My Workspace" })
-    .select()
-    .single();
-  if (error) throw new Error(error.message);
-  return created;
+    .select("*")
+    .eq("workspace_id", member.workspace_id)
+    .maybeSingle();
+
+  if (wsErr) throw new Error(wsErr.message);
+  if (!ws) throw new Error("Workspace record not found");
+
+  return { ws, appUserId: member.app_user_id as string | null };
 }
 
+// ---------------------------------------------------------------------------
+// getUserSettings
+// ---------------------------------------------------------------------------
 export const getUserSettings = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-    const workspace = await ensureWorkspace(supabase, userId);
-    const [profileR, accountsR, notifsR] = await Promise.all([
-      supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
-      supabase.from("social_accounts").select("*").eq("workspace_id", workspace.id),
-      supabase
-        .from("notification_subscriptions")
-        .select("*")
-        .eq("workspace_id", workspace.id)
-        .order("created_at", { ascending: true }),
-    ]);
+    const { ws, appUserId } = await getWorkspaceForUser(supabase, userId);
+
+    // Profile – core.app_users (linked via workspace_members.app_user_id)
+    let profile: { display_name: string | null; email: string | null } | null = null;
+    if (appUserId) {
+      const { data: appUser } = await db(supabase)
+        .schema("core")
+        .from("app_users")
+        .select("display_name, email")
+        .eq("app_user_id", appUserId)
+        .maybeSingle();
+      if (appUser) profile = appUser;
+    }
+
+    // Social accounts – core.social_accounts
+    const { data: accounts } = await db(supabase)
+      .schema("core")
+      .from("social_accounts")
+      .select("*")
+      .eq("workspace_id", ws.workspace_id);
+
     return {
-      workspace,
-      profile: profileR.data ?? null,
-      accounts: accountsR.data ?? [],
-      notifications: notifsR.data ?? [],
+      workspace: ws,
+      profile: profile ?? { display_name: null, email: null },
+      accounts: (accounts ?? []) as any[],
+      // notification_subscriptions table does not exist yet
+      notifications: [] as any[],
     };
   });
 
+// ---------------------------------------------------------------------------
+// updateWorkspaceSettings
+// ---------------------------------------------------------------------------
 export const updateWorkspaceSettings = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(
@@ -57,63 +90,62 @@ export const updateWorkspaceSettings = createServerFn({ method: "POST" })
   )
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
-    const ws = await ensureWorkspace(supabase, userId);
+    const { ws } = await getWorkspaceForUser(supabase, userId);
+
+    const allowed = [
+      "project_name", "niche", "product_description",
+      "target_audience", "main_goal", "country", "language",
+    ] as const;
     const patch: Record<string, any> = {};
-    for (const k of [
-      "project_name",
-      "niche",
-      "product_description",
-      "target_audience",
-      "main_goal",
-      "country",
-      "language",
-      "notes",
-    ] as const) {
+    for (const k of allowed) {
       if (data[k] !== undefined) patch[k] = data[k];
     }
     if (Object.keys(patch).length === 0) return ws;
-    const { data: updated, error } = await supabase
+
+    const { data: updated, error } = await db(supabase)
+      .schema("core")
       .from("workspaces")
-      .update(patch as never)
-      .eq("id", ws.id)
+      .update(patch)
+      .eq("workspace_id", ws.workspace_id)
       .select()
       .single();
+
     if (error) throw new Error(error.message);
     return updated;
   });
 
+// ---------------------------------------------------------------------------
+// updateUserProfile – updates display_name in core.app_users
+// ---------------------------------------------------------------------------
 export const updateUserProfile = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((i: { display_name?: string; avatar_url?: string }) => i)
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
+    const { appUserId } = await getWorkspaceForUser(supabase, userId);
+    if (!appUserId) throw new Error("No app_user_id linked to this auth user");
+
     const patch: Record<string, any> = {};
     if (data.display_name !== undefined) patch.display_name = data.display_name;
-    if (data.avatar_url !== undefined) patch.avatar_url = data.avatar_url;
-    const { data: existing } = await supabase
-      .from("profiles")
-      .select("id")
-      .eq("id", userId)
-      .maybeSingle();
-    if (!existing) {
-      const { data: created, error } = await supabase
-        .from("profiles")
-        .insert({ id: userId, ...patch } as never)
-        .select()
-        .single();
-      if (error) throw new Error(error.message);
-      return created;
-    }
-    const { data: updated, error } = await supabase
-      .from("profiles")
-      .update(patch as never)
-      .eq("id", userId)
+
+    if (Object.keys(patch).length === 0) return { ok: true };
+
+    const { data: updated, error } = await db(supabase)
+      .schema("core")
+      .from("app_users")
+      .update(patch)
+      .eq("app_user_id", appUserId)
       .select()
       .single();
+
     if (error) throw new Error(error.message);
     return updated;
   });
 
+// ---------------------------------------------------------------------------
+// upsertNotification / deleteNotification – stub (no backing table yet)
+// TODO: create app.notification_subscriptions and implement properly
+// ---------------------------------------------------------------------------
 export const upsertNotification = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(
@@ -125,63 +157,34 @@ export const upsertNotification = createServerFn({ method: "POST" })
       active?: boolean;
     }) => i,
   )
-  .handler(async ({ context, data }) => {
-    const { supabase, userId } = context;
-    const ws = await ensureWorkspace(supabase, userId);
-    const row = {
-      workspace_id: ws.id,
-      channel: data.channel,
-      destination: data.destination,
-      frequency: data.frequency ?? "weekly",
-      active: data.active ?? true,
-      updated_at: new Date().toISOString(),
-    };
-    if (data.id) {
-      const { data: updated, error } = await supabase
-        .from("notification_subscriptions")
-        .update(row)
-        .eq("id", data.id)
-        .eq("workspace_id", ws.id)
-        .select()
-        .single();
-      if (error) throw new Error(error.message);
-      return updated;
-    }
-    const { data: inserted, error } = await supabase
-      .from("notification_subscriptions")
-      .insert(row)
-      .select()
-      .single();
-    if (error) throw new Error(error.message);
-    return inserted;
+  .handler(async () => {
+    return { ok: true, stub: true };
   });
 
 export const deleteNotification = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((i: { id: string }) => i)
-  .handler(async ({ context, data }) => {
-    const { supabase, userId } = context;
-    const ws = await ensureWorkspace(supabase, userId);
-    const { error } = await supabase
-      .from("notification_subscriptions")
-      .delete()
-      .eq("id", data.id)
-      .eq("workspace_id", ws.id);
-    if (error) throw new Error(error.message);
-    return { ok: true };
+  .handler(async () => {
+    return { ok: true, stub: true };
   });
 
+// ---------------------------------------------------------------------------
+// deleteSocialAccount
+// ---------------------------------------------------------------------------
 export const deleteSocialAccount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((i: { account_id: string }) => i)
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
-    const ws = await ensureWorkspace(supabase, userId);
-    const { error } = await supabase
+    const { ws } = await getWorkspaceForUser(supabase, userId);
+
+    const { error } = await db(supabase)
+      .schema("core")
       .from("social_accounts")
       .delete()
       .eq("account_id", data.account_id)
-      .eq("workspace_id", ws.id);
+      .eq("workspace_id", ws.workspace_id);
+
     if (error) throw new Error(error.message);
     return { ok: true };
   });
