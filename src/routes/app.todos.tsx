@@ -1,9 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { usePageObject } from "@/lib/use-page-object";
 import { PageObjectEmpty, PageObjectPending } from "@/components/app/PageObjectEmpty";
+import { startTodoTracking } from "@/lib/data/todos.functions";
 
 export const Route = createFileRoute("/app/todos")({
   component: TodosPage,
@@ -39,6 +44,22 @@ function TodosPage() {
   const { payload, isLoading, isPending, dataStatus, role, generatedAt, isError, error } =
     usePageObject<any>("todos");
   const [tab, setTab] = useState<"all" | "active" | "tracking" | "completed">("all");
+  const [trackingId, setTrackingId] = useState<string | null>(null);
+  const startTrackingFn = useServerFn(startTodoTracking);
+  const queryClient = useQueryClient();
+
+  async function handleStartTracking(todo_id: string, tracking_metric?: string) {
+    setTrackingId(todo_id);
+    try {
+      await startTrackingFn({ data: { todo_id, tracking_metric } });
+      toast.success("Трекінг розпочато!");
+      queryClient.invalidateQueries({ queryKey: ["page-object", "todos"] });
+    } catch (e: any) {
+      toast.error(e?.message ?? "Невідома помилка");
+    } finally {
+      setTrackingId(null);
+    }
+  }
 
   if (isLoading) return <div className="text-sm text-muted-foreground p-6">Завантаження...</div>;
   if (isError) return <div className="p-6 text-red-400 text-xs font-mono">ERROR: {String((error as any)?.message ?? error)}</div>;
@@ -119,6 +140,21 @@ function TodosPage() {
                   <summary className="cursor-pointer text-primary font-medium">Рекомендована дія →</summary>
                   <p className="mt-2 text-muted-foreground">{todo.recommended_action}</p>
                 </details>
+              )}
+
+              {todo.tracking_status !== "tracking" && todo.status !== "completed" && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="rounded-full text-xs"
+                  disabled={trackingId === todo.todo_id}
+                  onClick={() => handleStartTracking(todo.todo_id, todo.recommended_tracking_metric)}
+                >
+                  {trackingId === todo.todo_id
+                    ? <><Loader2 className="size-3 mr-1 animate-spin" /> Запускаємо...</>
+                    : "Розпочати трекінг →"
+                  }
+                </Button>
               )}
 
               {todo.tracking_status === "tracking" && todo.tracking && (

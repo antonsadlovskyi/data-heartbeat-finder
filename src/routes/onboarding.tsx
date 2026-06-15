@@ -53,6 +53,9 @@ function Onboarding() {
   const [language, setLanguage] = useState<"uk" | "en" | "de">("uk");
   const [customHandle, setCustomHandle] = useState("");
   const [customs, setCustoms] = useState<{ handle: string; name: string; emoji: string }[]>([]);
+  const [targetAudience, setTargetAudience] = useState("");
+  const [productDescription, setProductDescription] = useState("");
+  const [mainGoal, setMainGoal] = useState("");
   const [scanning, setScanning] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -63,6 +66,13 @@ function Onboarding() {
   const totalCompetitors = customs.length;
 
   const next = () => {
+    if (step === 1) {
+      if (!targetAudience.trim() || !productDescription.trim() || !mainGoal.trim()) {
+        setSubmitError("Заповни всі поля для продовження");
+        return;
+      }
+      setSubmitError(null);
+    }
     if (step < 3) setStep(step + 1);
     else handleSubmit();
   };
@@ -93,6 +103,9 @@ function Onboarding() {
         data: {
           project_name: businessName || niche,
           niche,
+          target_audience: targetAudience,
+          product_description: productDescription,
+          main_goal: mainGoal,
           report_language: language,
           own_accounts: ownAccounts,
           competitor_accounts: competitorAccounts,
@@ -198,6 +211,42 @@ function Onboarding() {
                         </button>
                       ))}
                     </div>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">
+                      {language === "de" ? "Zielgruppe" : language === "en" ? "Target audience" : "Цільова аудиторія"}
+                    </label>
+                    <textarea
+                      value={targetAudience}
+                      onChange={e => setTargetAudience(e.target.value)}
+                      placeholder={language === "de" ? "Wer sind Ihre Kunden? Alter, Interessen, Probleme..." : language === "en" ? "Who are your customers? Age, interests, pain points..." : "Хто ваші клієнти? Вік, інтереси, болі..."}
+                      className="w-full h-24 rounded-xl border border-border bg-card/50 p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">
+                      {language === "de" ? "Produktbeschreibung" : language === "en" ? "Product description" : "Опис продукту"}
+                    </label>
+                    <textarea
+                      value={productDescription}
+                      onChange={e => setProductDescription(e.target.value)}
+                      placeholder={language === "de" ? "Was verkaufen Sie und was ist der Hauptnutzen?" : language === "en" ? "What do you sell and what is the main value?" : "Що ви продаєте і в чому головна цінність?"}
+                      className="w-full h-24 rounded-xl border border-border bg-card/50 p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">
+                      {language === "de" ? "Hauptziel" : language === "en" ? "Main goal" : "Головна мета"}
+                    </label>
+                    <textarea
+                      value={mainGoal}
+                      onChange={e => setMainGoal(e.target.value)}
+                      placeholder={language === "de" ? "Was möchten Sie erreichen? Mehr Kunden, Bekanntheit..." : language === "en" ? "What do you want to achieve? More customers, brand awareness..." : "Що хочете досягти? Наприклад: більше клієнтів, впізнаваність..."}
+                      className="w-full h-24 rounded-xl border border-border bg-card/50 p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    />
                   </div>
                 </div>
               </>

@@ -8,6 +8,8 @@ import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
 import "@/lib/data/workspace.functions";
 import "@/lib/data/page-objects.functions";
 import "@/lib/data/onboarding.functions";
+import "@/lib/data/insights.functions";
+import "@/lib/data/todos.functions";
 
 const errorMiddleware = createMiddleware().server(async ({ next }) => {
   const { getRequest } = await import('@tanstack/react-start/server');
