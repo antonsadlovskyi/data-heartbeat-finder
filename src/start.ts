@@ -6,12 +6,16 @@ import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
 // ENV validation — fail fast on server start if required vars are missing
 const REQUIRED_ENV = [
   "VITE_SUPABASE_URL",
-  "VITE_SUPABASE_ANON_KEY",
+  "VITE_SUPABASE_PUBLISHABLE_KEY",
   "N8N_WF01_WEBHOOK_URL",
-  "N8N_WEBHOOK_SECRET",
+  "N8N_WF01_SECRET",
+  "N8N_WF06_URL",
+  "N8N_WF06_SECRET",
+  "N8N_WF07_URL",
+  "N8N_WF07_SECRET",
 ] as const;
 
-const OPTIONAL_ENV = ["N8N_WF06_URL", "N8N_WF07_URL"] as const;
+const OPTIONAL_ENV: string[] = [];
 
 for (const key of REQUIRED_ENV) {
   const val = process.env[key] ?? (import.meta as any).env?.[key];

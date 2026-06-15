@@ -10,10 +10,9 @@ export const startTodoTracking = createServerFn({ method: "POST" })
   }) => i)
   .handler(async ({ context, data }) => {
     const webhookUrl = process.env.N8N_WF07_URL;
+    const secret = process.env.N8N_WF07_SECRET;
     if (!webhookUrl) throw new Error("N8N_WF07_URL not configured");
-
-    const secret = process.env.N8N_WEBHOOK_SECRET;
-    if (!secret) throw new Error("N8N_WEBHOOK_SECRET not configured");
+    if (!secret) throw new Error("N8N_WF07_SECRET not configured");
 
     const { supabase, userId } = context;
 
@@ -32,7 +31,7 @@ export const startTodoTracking = createServerFn({ method: "POST" })
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-FlyHigh-Webhook-Secret": secret,
+        "x-n8n-webhook-secret": secret,
       },
       body: JSON.stringify({
         workspace_id: member.workspace_id,

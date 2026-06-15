@@ -16,14 +16,12 @@ async function getWorkspaceId(supabase: any, userId: string): Promise<string> {
   return data.workspace_id;
 }
 
-async function callN8nWebhook(url: string, body: object): Promise<any> {
-  const secret = process.env.N8N_WEBHOOK_SECRET;
-  if (!secret) throw new Error("N8N_WEBHOOK_SECRET not configured");
+async function callN8nWebhook(url: string, secret: string, body: object): Promise<any> {
   const res = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-FlyHigh-Webhook-Secret": secret,
+      "x-n8n-webhook-secret": secret,
     },
     body: JSON.stringify(body),
   });
@@ -56,10 +54,12 @@ export const applyInsight = createServerFn({ method: "POST" })
   .inputValidator((i: { insight_id: string; role_key: "owner" | "marketer" | "smm" }) => i)
   .handler(async ({ context, data }) => {
     const webhookUrl = process.env.N8N_WF06_URL;
+    const secret = process.env.N8N_WF06_SECRET;
     if (!webhookUrl) throw new Error("N8N_WF06_URL not configured");
+    if (!secret) throw new Error("N8N_WF06_SECRET not configured");
     const { supabase, userId } = context;
     const workspace_id = await getWorkspaceId(supabase, userId);
-    return callN8nWebhook(webhookUrl, {
+    return callN8nWebhook(webhookUrl, secret, {
       workspace_id,
       auth_user_id: userId,
       insight_id: data.insight_id,

@@ -19,9 +19,9 @@ export const submitOnboarding = createServerFn({ method: "POST" })
   .inputValidator((i: OnboardingInput) => i)
   .handler(async ({ context, data }) => {
     const webhookUrl = process.env.N8N_WF01_WEBHOOK_URL;
-    const secret = process.env.N8N_WEBHOOK_SECRET;
+    const secret = process.env.N8N_WF01_SECRET;
     if (!webhookUrl) throw new Error("N8N_WF01_WEBHOOK_URL not configured");
-    if (!secret) throw new Error("N8N_WEBHOOK_SECRET not configured");
+    if (!secret) throw new Error("N8N_WF01_SECRET not configured");
 
     const { supabase, userId } = context;
     const { data: { user } } = await supabase.auth.getUser();
@@ -119,7 +119,7 @@ export const submitOnboarding = createServerFn({ method: "POST" })
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-FlyHigh-Webhook-Secret": secret,
+          "x-n8n-webhook-secret": secret,
         },
         body: JSON.stringify(payload),
       });
