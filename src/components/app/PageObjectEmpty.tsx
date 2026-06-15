@@ -1,9 +1,31 @@
 import { Sparkles, RefreshCw, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useQueryClient } from "@tanstack/react-query";
 import { type RoleKey } from "@/lib/role-store";
 import { useT } from "@/lib/i18n/useT";
 import type { TranslationKey } from "@/lib/i18n/dictionaries";
+
+export function PageObjectSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-4 w-72" />
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="rounded-2xl border border-border/40 p-5 space-y-3">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-7 w-16" />
+            <Skeleton className="h-3 w-full" />
+            <Skeleton className="h-3 w-3/4" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function PageObjectPending({
   pageKey,

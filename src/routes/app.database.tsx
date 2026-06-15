@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
   Users, FileText, MessageSquare, Image as ImageIcon, Trophy, Target,
@@ -15,6 +15,11 @@ import { usePageObject } from "@/lib/use-page-object";
 import { PageObjectEmpty, PageObjectPending } from "@/components/app/PageObjectEmpty";
 
 export const Route = createFileRoute("/app/database")({
+  beforeLoad: () => {
+    if (import.meta.env.PROD) {
+      throw redirect({ to: "/app" });
+    }
+  },
   component: DatabasePage,
   head: () => ({
     meta: [

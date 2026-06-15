@@ -1,7 +1,7 @@
-import { Link, Outlet, useLocation } from "@tanstack/react-router";
+import { Link, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
 import {
   LayoutDashboard, Users, Lightbulb, ListChecks, Sparkles,
-  BarChart3, TrendingUp, Settings, FileSearch, Trophy, Zap, Activity,
+  BarChart3, TrendingUp, Settings, FileSearch, Trophy, Zap, Activity, LogOut,
 } from "lucide-react";
 import { PlatformSwitcher } from "./PlatformSwitcher";
 import { RoleSwitcher } from "./RoleSwitcher";
@@ -10,6 +10,7 @@ import { Logo } from "@/components/brand/Logo";
 import { cn } from "@/lib/utils";
 import { useT } from "@/lib/i18n/useT";
 import type { TranslationKey } from "@/lib/i18n/dictionaries";
+import { supabase } from "@/integrations/supabase/client";
 
 type NavItem = {
   to: string;
@@ -35,7 +36,14 @@ const nav: NavItem[] = [
 
 export function AppShell() {
   const location = useLocation();
+  const navigate = useNavigate();
   const t = useT();
+
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    navigate({ to: "/login" });
+  }
+
   return (
     <div className="min-h-screen flex bg-background text-foreground">
       <aside className="hidden md:flex w-60 flex-col border-r border-border/60 bg-card/40 backdrop-blur-xl">
@@ -64,6 +72,15 @@ export function AppShell() {
             );
           })}
         </nav>
+        <div className="p-3 border-t border-border/60">
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2.5 h-9 px-3 w-full rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-white/5 transition"
+          >
+            <LogOut className="size-4" />
+            Вийти
+          </button>
+        </div>
       </aside>
       <div className="flex-1 flex flex-col min-w-0">
         <header className="h-16 flex items-center justify-between px-6 border-b border-border/60 bg-card/30 backdrop-blur-xl">

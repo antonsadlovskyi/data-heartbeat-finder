@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { AlertTriangle, Database, Loader2 } from "lucide-react";
@@ -7,6 +7,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/app/debug/page-objects")({
+  beforeLoad: () => {
+    if (import.meta.env.PROD) {
+      throw redirect({ to: "/app" });
+    }
+  },
   component: PageObjectsDebug,
   head: () => ({
     meta: [

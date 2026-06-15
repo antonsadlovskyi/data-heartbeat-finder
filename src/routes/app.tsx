@@ -1,5 +1,6 @@
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/app/AppShell";
+import { ErrorBoundary } from "@/components/app/ErrorBoundary";
 import { useAuth } from "@/lib/auth-context";
 
 export const Route = createFileRoute("/app")({
@@ -17,5 +18,9 @@ function AppGate() {
     );
   }
   if (!user) return <Navigate to="/login" replace />;
-  return <AppShell />;
+  return (
+    <ErrorBoundary>
+      <AppShell />
+    </ErrorBoundary>
+  );
 }
