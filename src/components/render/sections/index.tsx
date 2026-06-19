@@ -4,6 +4,11 @@ import { PlatformScoreRow } from "./PlatformScoreRow";
 import { BenchmarkTable } from "./BenchmarkTable";
 import { SummaryBlock } from "./SummaryBlock";
 import { SummaryCards } from "./SummaryCards";
+import { ChangeCards } from "./ChangeCards";
+import { CompetitorCards } from "./CompetitorCards";
+import { PostCards } from "./PostCards";
+import { PostCardsCompact } from "./PostCardsCompact";
+import { TrendCards } from "./TrendCards";
 
 /**
  * A page-object section: `section_key -> { title, component, items[] }`.
@@ -59,19 +64,26 @@ function makeStub(componentName: string): ComponentType<SectionProps> {
 
 // The 16 canonical component keys backed by app.page_objects.
 // Batch A (Session 4): KpiCards, PlatformScoreRow, BenchmarkTable, SummaryBlock, SummaryCards — real.
-// Remaining 11 stubs replaced in Sessions 5–7.
-export { KpiCards, PlatformScoreRow, BenchmarkTable, SummaryBlock, SummaryCards };
+// Batch B (Session 5): ChangeCards, CompetitorCards, PostCards, PostCardsCompact, TrendCards — real.
+// Remaining 6 stubs replaced in Sessions 6–7.
+export {
+  KpiCards,
+  PlatformScoreRow,
+  BenchmarkTable,
+  SummaryBlock,
+  SummaryCards,
+  ChangeCards,
+  CompetitorCards,
+  PostCards,
+  PostCardsCompact,
+  TrendCards,
+};
 export const AccountTable = makeStub("account_table");
-export const ChangeCards = makeStub("change_cards");
-export const CompetitorCards = makeStub("competitor_cards");
 export const DecisionCards = makeStub("decision_cards");
 export const HypothesisCards = makeStub("hypothesis_cards");
 export const MoveGroups = makeStub("move_groups");
 export const PlatformStatusCards = makeStub("platform_status_cards");
-export const PostCards = makeStub("post_cards");
-export const PostCardsCompact = makeStub("post_cards_compact");
 export const ScoreBreakdown = makeStub("score_breakdown");
-export const TrendCards = makeStub("trend_cards");
 
 /** Maps `section.component` values to their renderer. 16 canonical keys. */
 export const componentMap: Record<string, ComponentType<SectionProps>> = {
@@ -81,16 +93,17 @@ export const componentMap: Record<string, ComponentType<SectionProps>> = {
   benchmark_table: BenchmarkTable,
   summary_block: SummaryBlock,
   summary_cards: SummaryCards,
-  // Stubs — Sessions 5–7
-  account_table: AccountTable,
+  // Batch B — real (Session 5)
   change_cards: ChangeCards,
   competitor_cards: CompetitorCards,
+  post_cards: PostCards,
+  post_cards_compact: PostCardsCompact,
+  trend_cards: TrendCards,
+  // Stubs — Sessions 6–7
+  account_table: AccountTable,
   decision_cards: DecisionCards,
   hypothesis_cards: HypothesisCards,
   move_groups: MoveGroups,
   platform_status_cards: PlatformStatusCards,
-  post_cards: PostCards,
-  post_cards_compact: PostCardsCompact,
   score_breakdown: ScoreBreakdown,
-  trend_cards: TrendCards,
 };
