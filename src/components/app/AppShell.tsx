@@ -31,7 +31,7 @@ const nav: NavItem[] = [
   { to: "/app/trends", labelKey: "nav.trends", icon: TrendingUp },
   { to: "/app/hypotheses", labelKey: "nav.hypotheses", icon: FlaskConical },
   { to: "/app/dynamics", labelKey: "nav.dynamics", icon: Activity },
-  { to: "/app/settings", labelKey: "nav.settings", icon: Settings },
+  { to: "/app/connected", labelKey: "nav.settings", icon: Settings },
 ];
 
 export function AppShell() {

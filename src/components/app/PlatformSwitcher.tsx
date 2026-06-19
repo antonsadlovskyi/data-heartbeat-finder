@@ -1,4 +1,4 @@
-import { Instagram, Music2, AtSign, X as XIcon, Layers } from "lucide-react";
+import { Instagram, Music2, AtSign, X as XIcon, Layers, Youtube, Send } from "lucide-react";
 import { usePlatform, PLATFORMS, type Platform } from "@/lib/platform-store";
 import { cn } from "@/lib/utils";
 import { useT } from "@/lib/i18n/useT";
@@ -49,6 +49,22 @@ export function PlatformSwitcher({ compact = false }: { compact?: boolean }) {
           </button>
         );
       })}
+      <button
+        disabled
+        title="YouTube · Скоро"
+        className="flex items-center gap-1.5 px-3 h-8 rounded-full text-xs font-medium opacity-40 cursor-not-allowed text-muted-foreground"
+      >
+        <Youtube className="size-3.5" />
+        {!compact && <span className="hidden sm:inline">YouTube · Скоро</span>}
+      </button>
+      <button
+        disabled
+        title="Telegram · Скоро"
+        className="flex items-center gap-1.5 px-3 h-8 rounded-full text-xs font-medium opacity-40 cursor-not-allowed text-muted-foreground"
+      >
+        <Send className="size-3.5" />
+        {!compact && <span className="hidden sm:inline">Telegram · Скоро</span>}
+      </button>
     </div>
   );
 }

@@ -28,6 +28,7 @@ import { Route as AppHypothesesRouteImport } from './routes/app.hypotheses'
 import { Route as AppFormatsRouteImport } from './routes/app.formats'
 import { Route as AppDynamicsRouteImport } from './routes/app.dynamics'
 import { Route as AppDatabaseRouteImport } from './routes/app.database'
+import { Route as AppConnectedRouteImport } from './routes/app.connected'
 import { Route as AppCompetitorsRouteImport } from './routes/app.competitors'
 import { Route as AppCompetitorMovesRouteImport } from './routes/app.competitor-moves'
 import { Route as AppBestOutcomesRouteImport } from './routes/app.best-outcomes'
@@ -129,6 +130,11 @@ const AppDatabaseRoute = AppDatabaseRouteImport.update({
   path: '/database',
   getParentRoute: () => AppRoute,
 } as any)
+const AppConnectedRoute = AppConnectedRouteImport.update({
+  id: '/connected',
+  path: '/connected',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppCompetitorsRoute = AppCompetitorsRouteImport.update({
   id: '/competitors',
   path: '/competitors',
@@ -167,6 +173,7 @@ export interface FileRoutesByFullPath {
   '/app/best-outcomes': typeof AppBestOutcomesRoute
   '/app/competitor-moves': typeof AppCompetitorMovesRoute
   '/app/competitors': typeof AppCompetitorsRoute
+  '/app/connected': typeof AppConnectedRoute
   '/app/database': typeof AppDatabaseRoute
   '/app/dynamics': typeof AppDynamicsRoute
   '/app/formats': typeof AppFormatsRoute
@@ -192,6 +199,7 @@ export interface FileRoutesByTo {
   '/app/best-outcomes': typeof AppBestOutcomesRoute
   '/app/competitor-moves': typeof AppCompetitorMovesRoute
   '/app/competitors': typeof AppCompetitorsRoute
+  '/app/connected': typeof AppConnectedRoute
   '/app/database': typeof AppDatabaseRoute
   '/app/dynamics': typeof AppDynamicsRoute
   '/app/formats': typeof AppFormatsRoute
@@ -219,6 +227,7 @@ export interface FileRoutesById {
   '/app/best-outcomes': typeof AppBestOutcomesRoute
   '/app/competitor-moves': typeof AppCompetitorMovesRoute
   '/app/competitors': typeof AppCompetitorsRoute
+  '/app/connected': typeof AppConnectedRoute
   '/app/database': typeof AppDatabaseRoute
   '/app/dynamics': typeof AppDynamicsRoute
   '/app/formats': typeof AppFormatsRoute
@@ -247,6 +256,7 @@ export interface FileRouteTypes {
     | '/app/best-outcomes'
     | '/app/competitor-moves'
     | '/app/competitors'
+    | '/app/connected'
     | '/app/database'
     | '/app/dynamics'
     | '/app/formats'
@@ -272,6 +282,7 @@ export interface FileRouteTypes {
     | '/app/best-outcomes'
     | '/app/competitor-moves'
     | '/app/competitors'
+    | '/app/connected'
     | '/app/database'
     | '/app/dynamics'
     | '/app/formats'
@@ -298,6 +309,7 @@ export interface FileRouteTypes {
     | '/app/best-outcomes'
     | '/app/competitor-moves'
     | '/app/competitors'
+    | '/app/connected'
     | '/app/database'
     | '/app/dynamics'
     | '/app/formats'
@@ -458,6 +470,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDatabaseRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/connected': {
+      id: '/app/connected'
+      path: '/connected'
+      fullPath: '/app/connected'
+      preLoaderRoute: typeof AppConnectedRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/competitors': {
       id: '/app/competitors'
       path: '/competitors'
@@ -501,6 +520,7 @@ interface AppRouteChildren {
   AppBestOutcomesRoute: typeof AppBestOutcomesRoute
   AppCompetitorMovesRoute: typeof AppCompetitorMovesRoute
   AppCompetitorsRoute: typeof AppCompetitorsRoute
+  AppConnectedRoute: typeof AppConnectedRoute
   AppDatabaseRoute: typeof AppDatabaseRoute
   AppDynamicsRoute: typeof AppDynamicsRoute
   AppFormatsRoute: typeof AppFormatsRoute
@@ -521,6 +541,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppBestOutcomesRoute: AppBestOutcomesRoute,
   AppCompetitorMovesRoute: AppCompetitorMovesRoute,
   AppCompetitorsRoute: AppCompetitorsRoute,
+  AppConnectedRoute: AppConnectedRoute,
   AppDatabaseRoute: AppDatabaseRoute,
   AppDynamicsRoute: AppDynamicsRoute,
   AppFormatsRoute: AppFormatsRoute,
