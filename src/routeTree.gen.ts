@@ -24,6 +24,7 @@ import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as AppPerformanceRouteImport } from './routes/app.performance'
 import { Route as AppInsightsRouteImport } from './routes/app.insights'
 import { Route as AppIdeasRouteImport } from './routes/app.ideas'
+import { Route as AppHypothesesRouteImport } from './routes/app.hypotheses'
 import { Route as AppFormatsRouteImport } from './routes/app.formats'
 import { Route as AppDynamicsRouteImport } from './routes/app.dynamics'
 import { Route as AppDatabaseRouteImport } from './routes/app.database'
@@ -108,6 +109,11 @@ const AppIdeasRoute = AppIdeasRouteImport.update({
   path: '/ideas',
   getParentRoute: () => AppRoute,
 } as any)
+const AppHypothesesRoute = AppHypothesesRouteImport.update({
+  id: '/hypotheses',
+  path: '/hypotheses',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppFormatsRoute = AppFormatsRouteImport.update({
   id: '/formats',
   path: '/formats',
@@ -164,6 +170,7 @@ export interface FileRoutesByFullPath {
   '/app/database': typeof AppDatabaseRoute
   '/app/dynamics': typeof AppDynamicsRoute
   '/app/formats': typeof AppFormatsRoute
+  '/app/hypotheses': typeof AppHypothesesRoute
   '/app/ideas': typeof AppIdeasRoute
   '/app/insights': typeof AppInsightsRoute
   '/app/performance': typeof AppPerformanceRoute
@@ -188,6 +195,7 @@ export interface FileRoutesByTo {
   '/app/database': typeof AppDatabaseRoute
   '/app/dynamics': typeof AppDynamicsRoute
   '/app/formats': typeof AppFormatsRoute
+  '/app/hypotheses': typeof AppHypothesesRoute
   '/app/ideas': typeof AppIdeasRoute
   '/app/insights': typeof AppInsightsRoute
   '/app/performance': typeof AppPerformanceRoute
@@ -214,6 +222,7 @@ export interface FileRoutesById {
   '/app/database': typeof AppDatabaseRoute
   '/app/dynamics': typeof AppDynamicsRoute
   '/app/formats': typeof AppFormatsRoute
+  '/app/hypotheses': typeof AppHypothesesRoute
   '/app/ideas': typeof AppIdeasRoute
   '/app/insights': typeof AppInsightsRoute
   '/app/performance': typeof AppPerformanceRoute
@@ -241,6 +250,7 @@ export interface FileRouteTypes {
     | '/app/database'
     | '/app/dynamics'
     | '/app/formats'
+    | '/app/hypotheses'
     | '/app/ideas'
     | '/app/insights'
     | '/app/performance'
@@ -265,6 +275,7 @@ export interface FileRouteTypes {
     | '/app/database'
     | '/app/dynamics'
     | '/app/formats'
+    | '/app/hypotheses'
     | '/app/ideas'
     | '/app/insights'
     | '/app/performance'
@@ -290,6 +301,7 @@ export interface FileRouteTypes {
     | '/app/database'
     | '/app/dynamics'
     | '/app/formats'
+    | '/app/hypotheses'
     | '/app/ideas'
     | '/app/insights'
     | '/app/performance'
@@ -418,6 +430,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIdeasRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/hypotheses': {
+      id: '/app/hypotheses'
+      path: '/hypotheses'
+      fullPath: '/app/hypotheses'
+      preLoaderRoute: typeof AppHypothesesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/formats': {
       id: '/app/formats'
       path: '/formats'
@@ -485,6 +504,7 @@ interface AppRouteChildren {
   AppDatabaseRoute: typeof AppDatabaseRoute
   AppDynamicsRoute: typeof AppDynamicsRoute
   AppFormatsRoute: typeof AppFormatsRoute
+  AppHypothesesRoute: typeof AppHypothesesRoute
   AppIdeasRoute: typeof AppIdeasRoute
   AppInsightsRoute: typeof AppInsightsRoute
   AppPerformanceRoute: typeof AppPerformanceRoute
@@ -504,6 +524,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppDatabaseRoute: AppDatabaseRoute,
   AppDynamicsRoute: AppDynamicsRoute,
   AppFormatsRoute: AppFormatsRoute,
+  AppHypothesesRoute: AppHypothesesRoute,
   AppIdeasRoute: AppIdeasRoute,
   AppInsightsRoute: AppInsightsRoute,
   AppPerformanceRoute: AppPerformanceRoute,

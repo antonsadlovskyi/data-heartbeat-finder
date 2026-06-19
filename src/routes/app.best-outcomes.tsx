@@ -22,8 +22,11 @@ function BestOutcomes() {
   if (!payload) return <PageObjectEmpty pageKey="best_competitor_outcomes" roleKey={role} generatedAt={generatedAt} />;
 
   const summary = payload.sections?.summary ?? {};
-  const patterns: any[] = payload.sections?.patterns ?? [];
-  const topPosts: any[] = payload.sections?.top_posts ?? [];
+  // V2 sections may differ in shape from this legacy view; coerce array fields
+  // defensively so the page degrades to its empty state instead of crashing.
+  const toArr = (v: any): any[] => (Array.isArray(v) ? v : []);
+  const patterns: any[] = toArr(payload.sections?.patterns);
+  const topPosts: any[] = toArr(payload.sections?.top_posts);
 
   return (
     <div className="space-y-6 max-w-7xl">

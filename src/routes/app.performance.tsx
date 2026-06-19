@@ -61,9 +61,12 @@ function Performance() {
   if (!payload) return <PageObjectEmpty pageKey="my_performance" roleKey={role} generatedAt={generatedAt} />;
 
   const perfSummary = payload.sections?.performance_summary ?? {};
-  const benchmark: any[] = payload.sections?.benchmark_vs_competitors ?? [];
-  const topPosts: any[] = payload.sections?.own_top_posts ?? [];
-  const weakPosts: any[] = payload.sections?.own_weak_posts ?? [];
+  // V2 sections may differ in shape from this legacy view; coerce array fields
+  // defensively so the page degrades to its empty state instead of crashing.
+  const toArr = (v: any): any[] => (Array.isArray(v) ? v : []);
+  const benchmark: any[] = toArr(payload.sections?.benchmark_vs_competitors);
+  const topPosts: any[] = toArr(payload.sections?.own_top_posts);
+  const weakPosts: any[] = toArr(payload.sections?.own_weak_posts);
 
   const summaryParagraphs: string[] = (perfSummary.summary ?? "").split(/\n\n+/).filter(Boolean);
 

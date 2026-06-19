@@ -1,7 +1,7 @@
 import { Link, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
 import {
-  LayoutDashboard, Users, Lightbulb, ListChecks, Sparkles,
-  BarChart3, TrendingUp, Settings, FileSearch, Trophy, Zap, Activity, LogOut,
+  LayoutDashboard, Users, BarChart3, TrendingUp, Settings,
+  Trophy, Zap, Activity, FlaskConical, LogOut,
 } from "lucide-react";
 import { PlatformSwitcher } from "./PlatformSwitcher";
 import { RoleSwitcher } from "./RoleSwitcher";
@@ -19,17 +19,17 @@ type NavItem = {
   exact?: boolean;
 };
 
+// Exactly the 9 canonical V2 pages, each mapped to its canonical page_key route
+// (see memory: navio-v2-contract). Legacy routes (analyses/insights/ideas/todos/
+// database/formats/setup) are dropped from nav here; full removal is Session 8.
 const nav: NavItem[] = [
   { to: "/app", labelKey: "nav.dashboard", icon: LayoutDashboard, exact: true },
   { to: "/app/competitors", labelKey: "nav.competitors", icon: Users },
   { to: "/app/best-outcomes", labelKey: "nav.best_outcomes", icon: Trophy },
   { to: "/app/competitor-moves", labelKey: "nav.competitor_moves", icon: Zap },
-  { to: "/app/analyses", labelKey: "nav.analyses", icon: FileSearch },
-  { to: "/app/insights", labelKey: "nav.insights", icon: Lightbulb },
-  { to: "/app/ideas", labelKey: "nav.ideas", icon: Sparkles },
-  { to: "/app/todos", labelKey: "nav.todos", icon: ListChecks },
   { to: "/app/performance", labelKey: "nav.performance", icon: BarChart3 },
   { to: "/app/trends", labelKey: "nav.trends", icon: TrendingUp },
+  { to: "/app/hypotheses", labelKey: "nav.hypotheses", icon: FlaskConical },
   { to: "/app/dynamics", labelKey: "nav.dynamics", icon: Activity },
   { to: "/app/settings", labelKey: "nav.settings", icon: Settings },
 ];

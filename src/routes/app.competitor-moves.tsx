@@ -34,7 +34,11 @@ function CompetitorMovesPage() {
 
   const period = payload.period ?? {};
   const summary = payload.sections?.summary ?? {};
-  const moveGroups: any[] = payload.sections?.move_groups ?? [];
+  // V2 payload may carry `move_groups` as a non-array shape; coerce defensively
+  // so this legacy view degrades to its empty state instead of crashing. The
+  // real V2 rendering lands in a later session.
+  const mg = payload.sections?.move_groups;
+  const moveGroups: any[] = Array.isArray(mg) ? mg : [];
 
   if (moveGroups.length === 0) {
     return <PageObjectEmpty pageKey="competitor_moves" roleKey={role} generatedAt={generatedAt} />;

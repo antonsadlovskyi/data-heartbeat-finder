@@ -140,6 +140,7 @@ const en = {
   "nav.best_outcomes": "Best Posts",
   "nav.competitor_moves": "Competitor Moves",
   "nav.dynamics": "Dynamics",
+  "nav.hypotheses": "Hypotheses",
 
   // Common
   "common.loading": "Loading…",
@@ -265,6 +266,7 @@ const uk: Record<keyof typeof en, string> = {
   "nav.best_outcomes": "Кращі пости",
   "nav.competitor_moves": "Ходи конкурентів",
   "nav.dynamics": "Динаміка",
+  "nav.hypotheses": "Гіпотези",
 
   "common.loading": "Завантаження…",
 };
