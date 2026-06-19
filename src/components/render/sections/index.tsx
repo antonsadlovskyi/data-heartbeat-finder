@@ -1,4 +1,9 @@
 import type { ComponentType } from "react";
+import { KpiCards } from "./KpiCards";
+import { PlatformScoreRow } from "./PlatformScoreRow";
+import { BenchmarkTable } from "./BenchmarkTable";
+import { SummaryBlock } from "./SummaryBlock";
+import { SummaryCards } from "./SummaryCards";
 
 /**
  * A page-object section: `section_key -> { title, component, items[] }`.
@@ -52,41 +57,40 @@ function makeStub(componentName: string): ComponentType<SectionProps> {
   return StubSection;
 }
 
-// The 16 canonical component keys backed by app.page_objects. Real
-// implementations replace these stubs in later sessions.
+// The 16 canonical component keys backed by app.page_objects.
+// Batch A (Session 4): KpiCards, PlatformScoreRow, BenchmarkTable, SummaryBlock, SummaryCards — real.
+// Remaining 11 stubs replaced in Sessions 5–7.
+export { KpiCards, PlatformScoreRow, BenchmarkTable, SummaryBlock, SummaryCards };
 export const AccountTable = makeStub("account_table");
-export const BenchmarkTable = makeStub("benchmark_table");
 export const ChangeCards = makeStub("change_cards");
 export const CompetitorCards = makeStub("competitor_cards");
 export const DecisionCards = makeStub("decision_cards");
 export const HypothesisCards = makeStub("hypothesis_cards");
-export const KpiCards = makeStub("kpi_cards");
 export const MoveGroups = makeStub("move_groups");
-export const PlatformScoreRow = makeStub("platform_score_row");
 export const PlatformStatusCards = makeStub("platform_status_cards");
 export const PostCards = makeStub("post_cards");
 export const PostCardsCompact = makeStub("post_cards_compact");
 export const ScoreBreakdown = makeStub("score_breakdown");
-export const SummaryBlock = makeStub("summary_block");
-export const SummaryCards = makeStub("summary_cards");
 export const TrendCards = makeStub("trend_cards");
 
 /** Maps `section.component` values to their renderer. 16 canonical keys. */
 export const componentMap: Record<string, ComponentType<SectionProps>> = {
-  account_table: AccountTable,
+  // Batch A — real (Session 4)
+  kpi_cards: KpiCards,
+  platform_score_row: PlatformScoreRow,
   benchmark_table: BenchmarkTable,
+  summary_block: SummaryBlock,
+  summary_cards: SummaryCards,
+  // Stubs — Sessions 5–7
+  account_table: AccountTable,
   change_cards: ChangeCards,
   competitor_cards: CompetitorCards,
   decision_cards: DecisionCards,
   hypothesis_cards: HypothesisCards,
-  kpi_cards: KpiCards,
   move_groups: MoveGroups,
-  platform_score_row: PlatformScoreRow,
   platform_status_cards: PlatformStatusCards,
   post_cards: PostCards,
   post_cards_compact: PostCardsCompact,
   score_breakdown: ScoreBreakdown,
-  summary_block: SummaryBlock,
-  summary_cards: SummaryCards,
   trend_cards: TrendCards,
 };
