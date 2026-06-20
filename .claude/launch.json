@@ -4,8 +4,8 @@
     {
       "name": "navio-dev",
       "runtimeExecutable": "/Users/antonsadlovskij/.nvm/versions/node/v20.20.2/bin/node",
-      "runtimeArgs": ["/Users/antonsadlovskij/Desktop/Coding/data-heartbeat-finder/node_modules/.bin/vite", "dev", "--port", "3000", "--strictPort"],
-      "port": 3000
+      "runtimeArgs": ["/Users/antonsadlovskij/Desktop/Coding/data-heartbeat-finder/node_modules/.bin/vite", "dev", "--port", "8080", "--strictPort"],
+      "port": 8080
     }
   ]
 }
