@@ -12,905 +12,1201 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
-  public: {
+  app: {
     Tables: {
-      account_analyses: {
+      hypotheses: {
         Row: {
-          account_analysis_id: string
-          account_id: string | null
-          audience_pain_points: string | null
-          best_patterns_to_copy: string | null
-          community_signals: string | null
-          main_content_pillars: string | null
-          main_ctas: string | null
-          main_hooks: string | null
-          opportunities: string | null
-          period_end: string | null
-          period_start: string | null
-          positioning_summary: string | null
-          product_angle: string | null
-          score_overall: number | null
-          strategic_summary: string | null
-          strengths: string | null
-          strongest_formats: string | null
-          things_to_avoid: string | null
-          threats: string | null
-          tone_of_voice: string | null
-          trust_signals: string | null
-          visual_identity: string | null
-          weakest_formats: string | null
-          weaknesses: string | null
-          workspace_id: string
-        }
-        Insert: {
-          account_analysis_id: string
-          account_id?: string | null
-          audience_pain_points?: string | null
-          best_patterns_to_copy?: string | null
-          community_signals?: string | null
-          main_content_pillars?: string | null
-          main_ctas?: string | null
-          main_hooks?: string | null
-          opportunities?: string | null
-          period_end?: string | null
-          period_start?: string | null
-          positioning_summary?: string | null
-          product_angle?: string | null
-          score_overall?: number | null
-          strategic_summary?: string | null
-          strengths?: string | null
-          strongest_formats?: string | null
-          things_to_avoid?: string | null
-          threats?: string | null
-          tone_of_voice?: string | null
-          trust_signals?: string | null
-          visual_identity?: string | null
-          weakest_formats?: string | null
-          weaknesses?: string | null
-          workspace_id: string
-        }
-        Update: {
-          account_analysis_id?: string
-          account_id?: string | null
-          audience_pain_points?: string | null
-          best_patterns_to_copy?: string | null
-          community_signals?: string | null
-          main_content_pillars?: string | null
-          main_ctas?: string | null
-          main_hooks?: string | null
-          opportunities?: string | null
-          period_end?: string | null
-          period_start?: string | null
-          positioning_summary?: string | null
-          product_angle?: string | null
-          score_overall?: number | null
-          strategic_summary?: string | null
-          strengths?: string | null
-          strongest_formats?: string | null
-          things_to_avoid?: string | null
-          threats?: string | null
-          tone_of_voice?: string | null
-          trust_signals?: string | null
-          visual_identity?: string | null
-          weakest_formats?: string | null
-          weaknesses?: string | null
-          workspace_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "account_analyses_account_id_fkey"
-            columns: ["account_id"]
-            isOneToOne: false
-            referencedRelation: "social_accounts"
-            referencedColumns: ["account_id"]
-          },
-          {
-            foreignKeyName: "account_analyses_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspaces"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      account_snapshots: {
-        Row: {
-          account_id: string | null
-          avg_comments_last_10: number | null
-          avg_likes_last_10: number | null
-          avg_views_last_10: number | null
-          carousels_last_7_days: number | null
-          date: string | null
-          engagement_rate: number | null
-          followers_count: number | null
-          following_count: number | null
-          notes: string | null
-          posts_count: number | null
-          posts_last_7_days: number | null
-          reels_last_7_days: number | null
-          snapshot_id: string
-          static_posts_last_7_days: number | null
-          workspace_id: string
-        }
-        Insert: {
-          account_id?: string | null
-          avg_comments_last_10?: number | null
-          avg_likes_last_10?: number | null
-          avg_views_last_10?: number | null
-          carousels_last_7_days?: number | null
-          date?: string | null
-          engagement_rate?: number | null
-          followers_count?: number | null
-          following_count?: number | null
-          notes?: string | null
-          posts_count?: number | null
-          posts_last_7_days?: number | null
-          reels_last_7_days?: number | null
-          snapshot_id: string
-          static_posts_last_7_days?: number | null
-          workspace_id: string
-        }
-        Update: {
-          account_id?: string | null
-          avg_comments_last_10?: number | null
-          avg_likes_last_10?: number | null
-          avg_views_last_10?: number | null
-          carousels_last_7_days?: number | null
-          date?: string | null
-          engagement_rate?: number | null
-          followers_count?: number | null
-          following_count?: number | null
-          notes?: string | null
-          posts_count?: number | null
-          posts_last_7_days?: number | null
-          reels_last_7_days?: number | null
-          snapshot_id?: string
-          static_posts_last_7_days?: number | null
-          workspace_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "account_snapshots_account_id_fkey"
-            columns: ["account_id"]
-            isOneToOne: false
-            referencedRelation: "social_accounts"
-            referencedColumns: ["account_id"]
-          },
-          {
-            foreignKeyName: "account_snapshots_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspaces"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      action_plan: {
-        Row: {
-          action_id: string
-          action_type: string | null
-          based_on_insight: string | null
+          affected_area: string | null
+          app_user_id: string | null
+          baseline_value: number | null
+          completed_at: string | null
           content_format: string | null
-          deadline: string | null
-          example_topic: string | null
-          expected_effect: string | null
-          notes: string | null
-          priority: string | null
-          responsible: string | null
-          status: string | null
-          what_to_do: string | null
-          workspace_id: string
-        }
-        Insert: {
-          action_id: string
-          action_type?: string | null
-          based_on_insight?: string | null
-          content_format?: string | null
-          deadline?: string | null
-          example_topic?: string | null
-          expected_effect?: string | null
-          notes?: string | null
-          priority?: string | null
-          responsible?: string | null
-          status?: string | null
-          what_to_do?: string | null
-          workspace_id: string
-        }
-        Update: {
-          action_id?: string
-          action_type?: string | null
-          based_on_insight?: string | null
-          content_format?: string | null
-          deadline?: string | null
-          example_topic?: string | null
-          expected_effect?: string | null
-          notes?: string | null
-          priority?: string | null
-          responsible?: string | null
-          status?: string | null
-          what_to_do?: string | null
-          workspace_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "action_plan_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspaces"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      best_outcomes: {
-        Row: {
-          account_id: string | null
-          account_name: string | null
-          comment_reaction: string | null
-          content_pattern: string | null
-          hook_text: string | null
-          how_we_can_adapt: string | null
-          metric_used: string | null
-          metric_value: number | null
-          outcome_id: string
-          post_id: string | null
-          post_type: string | null
-          post_url: string | null
-          priority: string | null
-          risk_if_copying: string | null
-          topic: string | null
-          visual_pattern: string | null
-          why_it_worked: string | null
-          why_selected: string | null
-          workspace_id: string
-        }
-        Insert: {
-          account_id?: string | null
-          account_name?: string | null
-          comment_reaction?: string | null
-          content_pattern?: string | null
-          hook_text?: string | null
-          how_we_can_adapt?: string | null
-          metric_used?: string | null
-          metric_value?: number | null
-          outcome_id: string
-          post_id?: string | null
-          post_type?: string | null
-          post_url?: string | null
-          priority?: string | null
-          risk_if_copying?: string | null
-          topic?: string | null
-          visual_pattern?: string | null
-          why_it_worked?: string | null
-          why_selected?: string | null
-          workspace_id: string
-        }
-        Update: {
-          account_id?: string | null
-          account_name?: string | null
-          comment_reaction?: string | null
-          content_pattern?: string | null
-          hook_text?: string | null
-          how_we_can_adapt?: string | null
-          metric_used?: string | null
-          metric_value?: number | null
-          outcome_id?: string
-          post_id?: string | null
-          post_type?: string | null
-          post_url?: string | null
-          priority?: string | null
-          risk_if_copying?: string | null
-          topic?: string | null
-          visual_pattern?: string | null
-          why_it_worked?: string | null
-          why_selected?: string | null
-          workspace_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "best_outcomes_account_id_fkey"
-            columns: ["account_id"]
-            isOneToOne: false
-            referencedRelation: "social_accounts"
-            referencedColumns: ["account_id"]
-          },
-          {
-            foreignKeyName: "best_outcomes_post_id_fkey"
-            columns: ["post_id"]
-            isOneToOne: false
-            referencedRelation: "social_posts"
-            referencedColumns: ["post_id"]
-          },
-          {
-            foreignKeyName: "best_outcomes_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspaces"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      comment_summaries: {
-        Row: {
-          audience_pain_points: string | null
-          buying_signals: string | null
-          comment_summary: string | null
-          comment_summary_id: string
-          common_objections: string | null
-          content_requests: string | null
-          negative_count: number | null
-          neutral_count: number | null
-          positive_count: number | null
-          positive_reactions: string | null
-          post_id: string | null
-          strategic_insight: string | null
-          top_questions: string | null
-          total_comments_analyzed: number | null
-          workspace_id: string
-        }
-        Insert: {
-          audience_pain_points?: string | null
-          buying_signals?: string | null
-          comment_summary?: string | null
-          comment_summary_id: string
-          common_objections?: string | null
-          content_requests?: string | null
-          negative_count?: number | null
-          neutral_count?: number | null
-          positive_count?: number | null
-          positive_reactions?: string | null
-          post_id?: string | null
-          strategic_insight?: string | null
-          top_questions?: string | null
-          total_comments_analyzed?: number | null
-          workspace_id: string
-        }
-        Update: {
-          audience_pain_points?: string | null
-          buying_signals?: string | null
-          comment_summary?: string | null
-          comment_summary_id?: string
-          common_objections?: string | null
-          content_requests?: string | null
-          negative_count?: number | null
-          neutral_count?: number | null
-          positive_count?: number | null
-          positive_reactions?: string | null
-          post_id?: string | null
-          strategic_insight?: string | null
-          top_questions?: string | null
-          total_comments_analyzed?: number | null
-          workspace_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "comment_summaries_post_id_fkey"
-            columns: ["post_id"]
-            isOneToOne: false
-            referencedRelation: "social_posts"
-            referencedColumns: ["post_id"]
-          },
-          {
-            foreignKeyName: "comment_summaries_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspaces"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      competitor_comparison: {
-        Row: {
-          area: string | null
-          comparison_id: string
-          competitor_account_id: string | null
-          competitor_score: number | null
-          gap: number | null
-          own_account_id: string | null
-          own_score: number | null
-          period_end: string | null
-          period_start: string | null
-          priority: string | null
-          recommended_action: string | null
-          what_to_learn: string | null
-          who_is_stronger: string | null
-          why: string | null
-          workspace_id: string
-        }
-        Insert: {
-          area?: string | null
-          comparison_id: string
-          competitor_account_id?: string | null
-          competitor_score?: number | null
-          gap?: number | null
-          own_account_id?: string | null
-          own_score?: number | null
-          period_end?: string | null
-          period_start?: string | null
-          priority?: string | null
-          recommended_action?: string | null
-          what_to_learn?: string | null
-          who_is_stronger?: string | null
-          why?: string | null
-          workspace_id: string
-        }
-        Update: {
-          area?: string | null
-          comparison_id?: string
-          competitor_account_id?: string | null
-          competitor_score?: number | null
-          gap?: number | null
-          own_account_id?: string | null
-          own_score?: number | null
-          period_end?: string | null
-          period_start?: string | null
-          priority?: string | null
-          recommended_action?: string | null
-          what_to_learn?: string | null
-          who_is_stronger?: string | null
-          why?: string | null
-          workspace_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "competitor_comparison_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspaces"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      competitor_radar: {
-        Row: {
-          account_id: string | null
-          account_name: string | null
-          community_engagement: number | null
-          content_consistency: number | null
-          educational_value: number | null
-          emotional_connection: number | null
-          format_diversity: number | null
-          hook_strength: number | null
-          key_strength: string | null
-          key_weakness: string | null
-          main_reason: string | null
-          overall_score: number | null
-          positioning_strength: number | null
-          product_differentiation: number | null
-          radar_id: string
-          sales_clarity: number | null
-          trend_usage: number | null
-          trust_signals: number | null
-          visual_identity: number | null
-          workspace_id: string
-        }
-        Insert: {
-          account_id?: string | null
-          account_name?: string | null
-          community_engagement?: number | null
-          content_consistency?: number | null
-          educational_value?: number | null
-          emotional_connection?: number | null
-          format_diversity?: number | null
-          hook_strength?: number | null
-          key_strength?: string | null
-          key_weakness?: string | null
-          main_reason?: string | null
-          overall_score?: number | null
-          positioning_strength?: number | null
-          product_differentiation?: number | null
-          radar_id: string
-          sales_clarity?: number | null
-          trend_usage?: number | null
-          trust_signals?: number | null
-          visual_identity?: number | null
-          workspace_id: string
-        }
-        Update: {
-          account_id?: string | null
-          account_name?: string | null
-          community_engagement?: number | null
-          content_consistency?: number | null
-          educational_value?: number | null
-          emotional_connection?: number | null
-          format_diversity?: number | null
-          hook_strength?: number | null
-          key_strength?: string | null
-          key_weakness?: string | null
-          main_reason?: string | null
-          overall_score?: number | null
-          positioning_strength?: number | null
-          product_differentiation?: number | null
-          radar_id?: string
-          sales_clarity?: number | null
-          trend_usage?: number | null
-          trust_signals?: number | null
-          visual_identity?: number | null
-          workspace_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "competitor_radar_account_id_fkey"
-            columns: ["account_id"]
-            isOneToOne: false
-            referencedRelation: "social_accounts"
-            referencedColumns: ["account_id"]
-          },
-          {
-            foreignKeyName: "competitor_radar_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspaces"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      notification_subscriptions: {
-        Row: {
-          active: boolean
-          channel: string
           created_at: string
-          destination: string
-          frequency: string
-          id: string
+          evidence_json: Json
+          expected_effect: string | null
+          hypothesis_id: string
+          hypothesis_text: string
+          metadata: Json
+          metric_to_track: string
+          minimum_delta_percent: number | null
+          platform: string | null
+          recommended_action: string | null
+          result_status: string | null
+          result_summary: string | null
+          source_insight_id: string | null
+          source_semantic_key: string | null
+          source_todo_id: string | null
+          source_type: string
+          started_at: string | null
+          status: string
+          success_criteria_json: Json
+          target_direction: string
+          target_value: number | null
+          title: string
+          tracking_period_days: number
           updated_at: string
           workspace_id: string
         }
         Insert: {
-          active?: boolean
-          channel: string
+          affected_area?: string | null
+          app_user_id?: string | null
+          baseline_value?: number | null
+          completed_at?: string | null
+          content_format?: string | null
           created_at?: string
-          destination: string
-          frequency?: string
-          id?: string
+          evidence_json?: Json
+          expected_effect?: string | null
+          hypothesis_id?: string
+          hypothesis_text: string
+          metadata?: Json
+          metric_to_track?: string
+          minimum_delta_percent?: number | null
+          platform?: string | null
+          recommended_action?: string | null
+          result_status?: string | null
+          result_summary?: string | null
+          source_insight_id?: string | null
+          source_semantic_key?: string | null
+          source_todo_id?: string | null
+          source_type?: string
+          started_at?: string | null
+          status?: string
+          success_criteria_json?: Json
+          target_direction?: string
+          target_value?: number | null
+          title: string
+          tracking_period_days?: number
           updated_at?: string
           workspace_id: string
         }
         Update: {
-          active?: boolean
-          channel?: string
+          affected_area?: string | null
+          app_user_id?: string | null
+          baseline_value?: number | null
+          completed_at?: string | null
+          content_format?: string | null
           created_at?: string
-          destination?: string
-          frequency?: string
-          id?: string
+          evidence_json?: Json
+          expected_effect?: string | null
+          hypothesis_id?: string
+          hypothesis_text?: string
+          metadata?: Json
+          metric_to_track?: string
+          minimum_delta_percent?: number | null
+          platform?: string | null
+          recommended_action?: string | null
+          result_status?: string | null
+          result_summary?: string | null
+          source_insight_id?: string | null
+          source_semantic_key?: string | null
+          source_todo_id?: string | null
+          source_type?: string
+          started_at?: string | null
+          status?: string
+          success_criteria_json?: Json
+          target_direction?: string
+          target_value?: number | null
+          title?: string
+          tracking_period_days?: number
           updated_at?: string
           workspace_id?: string
+        }
+        Relationships: []
+      }
+      idea_suggestions: {
+        Row: {
+          affected_area: string | null
+          competitor_examples_json: Json
+          confidence_score: number | null
+          created_at: string
+          difficulty_score: number | null
+          expected_effect: string | null
+          idea_id: string
+          idea_type: string | null
+          impact_score: number | null
+          implementation_steps: Json
+          marketing_idea: string | null
+          platform: string | null
+          priority: string | null
+          semantic_key: string | null
+          short_description: string | null
+          source_pattern: string | null
+          status: string
+          suggested_ctas: Json
+          suggested_formats: Json
+          suggested_hooks: Json
+          title: string
+          updated_at: string
+          why_it_fits_us: string | null
+          workspace_id: string
+        }
+        Insert: {
+          affected_area?: string | null
+          competitor_examples_json?: Json
+          confidence_score?: number | null
+          created_at?: string
+          difficulty_score?: number | null
+          expected_effect?: string | null
+          idea_id?: string
+          idea_type?: string | null
+          impact_score?: number | null
+          implementation_steps?: Json
+          marketing_idea?: string | null
+          platform?: string | null
+          priority?: string | null
+          semantic_key?: string | null
+          short_description?: string | null
+          source_pattern?: string | null
+          status?: string
+          suggested_ctas?: Json
+          suggested_formats?: Json
+          suggested_hooks?: Json
+          title: string
+          updated_at?: string
+          why_it_fits_us?: string | null
+          workspace_id: string
+        }
+        Update: {
+          affected_area?: string | null
+          competitor_examples_json?: Json
+          confidence_score?: number | null
+          created_at?: string
+          difficulty_score?: number | null
+          expected_effect?: string | null
+          idea_id?: string
+          idea_type?: string | null
+          impact_score?: number | null
+          implementation_steps?: Json
+          marketing_idea?: string | null
+          platform?: string | null
+          priority?: string | null
+          semantic_key?: string | null
+          short_description?: string | null
+          source_pattern?: string | null
+          status?: string
+          suggested_ctas?: Json
+          suggested_formats?: Json
+          suggested_hooks?: Json
+          title?: string
+          updated_at?: string
+          why_it_fits_us?: string | null
+          workspace_id?: string
+        }
+        Relationships: []
+      }
+      insights_feed: {
+        Row: {
+          affected_area: string | null
+          apply_status: string
+          confidence_score: number | null
+          created_at: string
+          detailed_explanation: string | null
+          effort_score: number | null
+          evidence_json: Json
+          expected_effect: string | null
+          impact_score: number | null
+          insight_id: string
+          insight_type: string | null
+          platform: string | null
+          platform_specific_json: Json
+          priority: string | null
+          recommended_action: string | null
+          recommended_tracking_metric: string | null
+          recommended_tracking_period_days: number | null
+          semantic_key: string | null
+          short_summary: string | null
+          source_entity_id: string | null
+          source_type: string | null
+          success_criteria_json: Json
+          title: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          affected_area?: string | null
+          apply_status?: string
+          confidence_score?: number | null
+          created_at?: string
+          detailed_explanation?: string | null
+          effort_score?: number | null
+          evidence_json?: Json
+          expected_effect?: string | null
+          impact_score?: number | null
+          insight_id?: string
+          insight_type?: string | null
+          platform?: string | null
+          platform_specific_json?: Json
+          priority?: string | null
+          recommended_action?: string | null
+          recommended_tracking_metric?: string | null
+          recommended_tracking_period_days?: number | null
+          semantic_key?: string | null
+          short_summary?: string | null
+          source_entity_id?: string | null
+          source_type?: string | null
+          success_criteria_json?: Json
+          title: string
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          affected_area?: string | null
+          apply_status?: string
+          confidence_score?: number | null
+          created_at?: string
+          detailed_explanation?: string | null
+          effort_score?: number | null
+          evidence_json?: Json
+          expected_effect?: string | null
+          impact_score?: number | null
+          insight_id?: string
+          insight_type?: string | null
+          platform?: string | null
+          platform_specific_json?: Json
+          priority?: string | null
+          recommended_action?: string | null
+          recommended_tracking_metric?: string | null
+          recommended_tracking_period_days?: number | null
+          semantic_key?: string | null
+          short_summary?: string | null
+          source_entity_id?: string | null
+          source_type?: string | null
+          success_criteria_json?: Json
+          title?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
+      onboarding_submissions: {
+        Row: {
+          app_user_id: string | null
+          contract_version: string
+          created_at: string
+          display_name: string | null
+          email: string
+          error_message: string | null
+          onboarding_submission_id: string
+          payload: Json
+          processed_at: string | null
+          project_name: string
+          run_label: string | null
+          status: string
+          updated_at: string
+          wf01_execution_id: string | null
+          wf08_execution_id: string | null
+          workspace_id: string | null
+        }
+        Insert: {
+          app_user_id?: string | null
+          contract_version?: string
+          created_at?: string
+          display_name?: string | null
+          email: string
+          error_message?: string | null
+          onboarding_submission_id?: string
+          payload?: Json
+          processed_at?: string | null
+          project_name: string
+          run_label?: string | null
+          status?: string
+          updated_at?: string
+          wf01_execution_id?: string | null
+          wf08_execution_id?: string | null
+          workspace_id?: string | null
+        }
+        Update: {
+          app_user_id?: string | null
+          contract_version?: string
+          created_at?: string
+          display_name?: string | null
+          email?: string
+          error_message?: string | null
+          onboarding_submission_id?: string
+          payload?: Json
+          processed_at?: string | null
+          project_name?: string
+          run_label?: string | null
+          status?: string
+          updated_at?: string
+          wf01_execution_id?: string | null
+          wf08_execution_id?: string | null
+          workspace_id?: string | null
         }
         Relationships: []
       }
       page_objects: {
         Row: {
+          analysis_job_id: string | null
+          data_status: string
+          expires_at: string | null
           generated_at: string
+          language: string
+          metadata: Json
+          object_json: Json
+          object_version: string
           page_key: string
+          page_object_id: string
+          page_title: string | null
+          page_version: string
           payload: Json
+          period_end: string | null
+          period_start: string | null
+          platform: string
+          priority: number
           role_key: string
+          role_view: string
+          run_label: string | null
+          section_key: string
+          status: string
+          updated_at: string
+          version: string
+          workspace_id: string
+        }
+        Insert: {
+          analysis_job_id?: string | null
+          data_status?: string
+          expires_at?: string | null
+          generated_at?: string
+          language?: string
+          metadata?: Json
+          object_json?: Json
+          object_version?: string
+          page_key: string
+          page_object_id?: string
+          page_title?: string | null
+          page_version?: string
+          payload?: Json
+          period_end?: string | null
+          period_start?: string | null
+          platform?: string
+          priority?: number
+          role_key?: string
+          role_view?: string
+          run_label?: string | null
+          section_key?: string
+          status?: string
+          updated_at?: string
+          version?: string
+          workspace_id: string
+        }
+        Update: {
+          analysis_job_id?: string | null
+          data_status?: string
+          expires_at?: string | null
+          generated_at?: string
+          language?: string
+          metadata?: Json
+          object_json?: Json
+          object_version?: string
+          page_key?: string
+          page_object_id?: string
+          page_title?: string | null
+          page_version?: string
+          payload?: Json
+          period_end?: string | null
+          period_start?: string | null
+          platform?: string
+          priority?: number
+          role_key?: string
+          role_view?: string
+          run_label?: string | null
+          section_key?: string
+          status?: string
+          updated_at?: string
+          version?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
+      page_objects_backup_frontend_unblock_v2: {
+        Row: {
+          backed_up_at: string
+          backup_id: string
+          backup_reason: string
+          language: string | null
+          page_key: string | null
+          page_object_id: string | null
+          platform: string | null
+          role_key: string | null
+          role_view: string | null
+          row_json: Json
+          run_label: string | null
+          workspace_id: string
+        }
+        Insert: {
+          backed_up_at?: string
+          backup_id?: string
+          backup_reason?: string
+          language?: string | null
+          page_key?: string | null
+          page_object_id?: string | null
+          platform?: string | null
+          role_key?: string | null
+          role_view?: string | null
+          row_json: Json
+          run_label?: string | null
+          workspace_id: string
+        }
+        Update: {
+          backed_up_at?: string
+          backup_id?: string
+          backup_reason?: string
+          language?: string | null
+          page_key?: string | null
+          page_object_id?: string | null
+          platform?: string | null
+          role_key?: string | null
+          role_view?: string | null
+          row_json?: Json
+          run_label?: string | null
+          workspace_id?: string
+        }
+        Relationships: []
+      }
+      tested_hypotheses: {
+        Row: {
+          action_taken: string | null
+          affected_area: string | null
+          baseline_value: number | null
+          confidence_score: number | null
+          content_format: string | null
+          created_at: string
+          delta_percent: number | null
+          delta_value: number | null
+          evaluated_at: string | null
+          evidence_json: Json
+          final_value: number | null
+          hypothesis_description: string | null
+          hypothesis_id: string
+          hypothesis_title: string
+          platform: string | null
+          recommendation_for_future: string | null
+          result_status: string
+          reusable_learning: string | null
+          source_insight_id: string | null
+          success_criteria_json: Json
+          todo_id: string | null
+          tracking_metric: string
+          tracking_period_days: number | null
+          workspace_id: string
+        }
+        Insert: {
+          action_taken?: string | null
+          affected_area?: string | null
+          baseline_value?: number | null
+          confidence_score?: number | null
+          content_format?: string | null
+          created_at?: string
+          delta_percent?: number | null
+          delta_value?: number | null
+          evaluated_at?: string | null
+          evidence_json?: Json
+          final_value?: number | null
+          hypothesis_description?: string | null
+          hypothesis_id?: string
+          hypothesis_title: string
+          platform?: string | null
+          recommendation_for_future?: string | null
+          result_status: string
+          reusable_learning?: string | null
+          source_insight_id?: string | null
+          success_criteria_json?: Json
+          todo_id?: string | null
+          tracking_metric: string
+          tracking_period_days?: number | null
+          workspace_id: string
+        }
+        Update: {
+          action_taken?: string | null
+          affected_area?: string | null
+          baseline_value?: number | null
+          confidence_score?: number | null
+          content_format?: string | null
+          created_at?: string
+          delta_percent?: number | null
+          delta_value?: number | null
+          evaluated_at?: string | null
+          evidence_json?: Json
+          final_value?: number | null
+          hypothesis_description?: string | null
+          hypothesis_id?: string
+          hypothesis_title?: string
+          platform?: string | null
+          recommendation_for_future?: string | null
+          result_status?: string
+          reusable_learning?: string | null
+          source_insight_id?: string | null
+          success_criteria_json?: Json
+          todo_id?: string | null
+          tracking_metric?: string
+          tracking_period_days?: number | null
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tested_hypotheses_todo_id_fkey"
+            columns: ["todo_id"]
+            isOneToOne: false
+            referencedRelation: "todos"
+            referencedColumns: ["todo_id"]
+          },
+        ]
+      }
+      todo_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          from_status: string | null
+          metadata: Json
+          note: string | null
+          to_status: string | null
+          todo_event_id: string
+          todo_id: string
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          from_status?: string | null
+          metadata?: Json
+          note?: string | null
+          to_status?: string | null
+          todo_event_id?: string
+          todo_id: string
+          workspace_id: string
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          from_status?: string | null
+          metadata?: Json
+          note?: string | null
+          to_status?: string | null
+          todo_event_id?: string
+          todo_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "todo_events_todo_id_fkey"
+            columns: ["todo_id"]
+            isOneToOne: false
+            referencedRelation: "todos"
+            referencedColumns: ["todo_id"]
+          },
+        ]
+      }
+      todo_metric_tracking: {
+        Row: {
+          baseline_period_end: string | null
+          baseline_period_start: string | null
+          baseline_value: number | null
+          change_absolute: number | null
+          change_percent: number | null
+          current_value: number | null
+          interpretation: string | null
+          last_updated_at: string
+          metric_name: string
+          result_status: string | null
+          target_value: number | null
+          todo_id: string
+          tracking_id: string
+          tracking_period_end: string | null
+          tracking_period_start: string | null
+          workspace_id: string
+        }
+        Insert: {
+          baseline_period_end?: string | null
+          baseline_period_start?: string | null
+          baseline_value?: number | null
+          change_absolute?: number | null
+          change_percent?: number | null
+          current_value?: number | null
+          interpretation?: string | null
+          last_updated_at?: string
+          metric_name: string
+          result_status?: string | null
+          target_value?: number | null
+          todo_id: string
+          tracking_id?: string
+          tracking_period_end?: string | null
+          tracking_period_start?: string | null
+          workspace_id: string
+        }
+        Update: {
+          baseline_period_end?: string | null
+          baseline_period_start?: string | null
+          baseline_value?: number | null
+          change_absolute?: number | null
+          change_percent?: number | null
+          current_value?: number | null
+          interpretation?: string | null
+          last_updated_at?: string
+          metric_name?: string
+          result_status?: string | null
+          target_value?: number | null
+          todo_id?: string
+          tracking_id?: string
+          tracking_period_end?: string | null
+          tracking_period_start?: string | null
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "todo_metric_tracking_todo_id_fkey"
+            columns: ["todo_id"]
+            isOneToOne: false
+            referencedRelation: "todos"
+            referencedColumns: ["todo_id"]
+          },
+        ]
+      }
+      todo_tracking_configs: {
+        Row: {
+          baseline_value: number | null
+          created_at: string
+          current_value: number | null
+          delta_percent: number | null
+          delta_value: number | null
+          end_at: string | null
+          evaluated_at: string | null
+          final_value: number | null
+          metadata: Json
+          metric_key: string
+          minimum_delta_percent: number | null
+          result_status: string | null
+          start_at: string | null
+          status: string
+          success_criteria_json: Json
+          target_direction: string | null
+          todo_id: string
+          tracking_config_id: string
+          tracking_period_days: number
           updated_at: string
           workspace_id: string
         }
         Insert: {
-          generated_at?: string
-          page_key: string
-          payload?: Json
-          role_key: string
+          baseline_value?: number | null
+          created_at?: string
+          current_value?: number | null
+          delta_percent?: number | null
+          delta_value?: number | null
+          end_at?: string | null
+          evaluated_at?: string | null
+          final_value?: number | null
+          metadata?: Json
+          metric_key: string
+          minimum_delta_percent?: number | null
+          result_status?: string | null
+          start_at?: string | null
+          status?: string
+          success_criteria_json?: Json
+          target_direction?: string | null
+          todo_id: string
+          tracking_config_id?: string
+          tracking_period_days?: number
           updated_at?: string
           workspace_id: string
         }
         Update: {
-          generated_at?: string
-          page_key?: string
-          payload?: Json
-          role_key?: string
+          baseline_value?: number | null
+          created_at?: string
+          current_value?: number | null
+          delta_percent?: number | null
+          delta_value?: number | null
+          end_at?: string | null
+          evaluated_at?: string | null
+          final_value?: number | null
+          metadata?: Json
+          metric_key?: string
+          minimum_delta_percent?: number | null
+          result_status?: string | null
+          start_at?: string | null
+          status?: string
+          success_criteria_json?: Json
+          target_direction?: string | null
+          todo_id?: string
+          tracking_config_id?: string
+          tracking_period_days?: number
           updated_at?: string
           workspace_id?: string
         }
-        Relationships: []
-      }
-      post_analyses: {
-        Row: {
-          analysis_date: string | null
-          analysis_id: string
-          content_structure: string | null
-          content_type: string | null
-          cta_strength: number | null
-          cta_type: string | null
-          emotional_trigger: string | null
-          format: string | null
-          hook_strength: number | null
-          hook_type: string | null
-          main_promise: string | null
-          pain_points: string | null
-          post_id: string | null
-          reusable_pattern: string | null
-          sales_angle: string | null
-          score_overall: number | null
-          strategic_note: string | null
-          target_audience: string | null
-          topic: string | null
-          trust_signal: string | null
-          visual_style: string | null
-          why_it_failed: string | null
-          why_it_worked: string | null
-          workspace_id: string
-        }
-        Insert: {
-          analysis_date?: string | null
-          analysis_id: string
-          content_structure?: string | null
-          content_type?: string | null
-          cta_strength?: number | null
-          cta_type?: string | null
-          emotional_trigger?: string | null
-          format?: string | null
-          hook_strength?: number | null
-          hook_type?: string | null
-          main_promise?: string | null
-          pain_points?: string | null
-          post_id?: string | null
-          reusable_pattern?: string | null
-          sales_angle?: string | null
-          score_overall?: number | null
-          strategic_note?: string | null
-          target_audience?: string | null
-          topic?: string | null
-          trust_signal?: string | null
-          visual_style?: string | null
-          why_it_failed?: string | null
-          why_it_worked?: string | null
-          workspace_id: string
-        }
-        Update: {
-          analysis_date?: string | null
-          analysis_id?: string
-          content_structure?: string | null
-          content_type?: string | null
-          cta_strength?: number | null
-          cta_type?: string | null
-          emotional_trigger?: string | null
-          format?: string | null
-          hook_strength?: number | null
-          hook_type?: string | null
-          main_promise?: string | null
-          pain_points?: string | null
-          post_id?: string | null
-          reusable_pattern?: string | null
-          sales_angle?: string | null
-          score_overall?: number | null
-          strategic_note?: string | null
-          target_audience?: string | null
-          topic?: string | null
-          trust_signal?: string | null
-          visual_style?: string | null
-          why_it_failed?: string | null
-          why_it_worked?: string | null
-          workspace_id?: string
-        }
         Relationships: [
           {
-            foreignKeyName: "post_analyses_post_id_fkey"
-            columns: ["post_id"]
-            isOneToOne: false
-            referencedRelation: "social_posts"
-            referencedColumns: ["post_id"]
-          },
-          {
-            foreignKeyName: "post_analyses_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspaces"
-            referencedColumns: ["id"]
+            foreignKeyName: "todo_tracking_configs_todo_id_fkey"
+            columns: ["todo_id"]
+            isOneToOne: true
+            referencedRelation: "todos"
+            referencedColumns: ["todo_id"]
           },
         ]
       }
-      post_assets: {
+      todo_tracking_results: {
         Row: {
-          asset_id: string
-          asset_order: number | null
-          asset_type: string | null
-          asset_url: string | null
-          emotion: string | null
-          notes: string | null
-          pacing: string | null
-          post_id: string | null
-          quality_score: number | null
-          role_in_post: string | null
-          text_on_screen: string | null
-          visual_description: string | null
-          visual_style: string | null
-          workspace_id: string
-        }
-        Insert: {
-          asset_id: string
-          asset_order?: number | null
-          asset_type?: string | null
-          asset_url?: string | null
-          emotion?: string | null
-          notes?: string | null
-          pacing?: string | null
-          post_id?: string | null
-          quality_score?: number | null
-          role_in_post?: string | null
-          text_on_screen?: string | null
-          visual_description?: string | null
-          visual_style?: string | null
-          workspace_id: string
-        }
-        Update: {
-          asset_id?: string
-          asset_order?: number | null
-          asset_type?: string | null
-          asset_url?: string | null
-          emotion?: string | null
-          notes?: string | null
-          pacing?: string | null
-          post_id?: string | null
-          quality_score?: number | null
-          role_in_post?: string | null
-          text_on_screen?: string | null
-          visual_description?: string | null
-          visual_style?: string | null
-          workspace_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "post_assets_post_id_fkey"
-            columns: ["post_id"]
-            isOneToOne: false
-            referencedRelation: "social_posts"
-            referencedColumns: ["post_id"]
-          },
-          {
-            foreignKeyName: "post_assets_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspaces"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      post_comments: {
-        Row: {
-          author_username: string | null
-          buying_signal: string | null
-          comment_id: string
-          comment_text: string | null
-          comment_type: string | null
-          like_count: number | null
-          notes: string | null
-          objection: string | null
-          pain_point: string | null
-          post_id: string | null
-          published_at: string | null
-          question: string | null
-          sentiment: string | null
-          workspace_id: string
-        }
-        Insert: {
-          author_username?: string | null
-          buying_signal?: string | null
-          comment_id: string
-          comment_text?: string | null
-          comment_type?: string | null
-          like_count?: number | null
-          notes?: string | null
-          objection?: string | null
-          pain_point?: string | null
-          post_id?: string | null
-          published_at?: string | null
-          question?: string | null
-          sentiment?: string | null
-          workspace_id: string
-        }
-        Update: {
-          author_username?: string | null
-          buying_signal?: string | null
-          comment_id?: string
-          comment_text?: string | null
-          comment_type?: string | null
-          like_count?: number | null
-          notes?: string | null
-          objection?: string | null
-          pain_point?: string | null
-          post_id?: string | null
-          published_at?: string | null
-          question?: string | null
-          sentiment?: string | null
-          workspace_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "post_comments_post_id_fkey"
-            columns: ["post_id"]
-            isOneToOne: false
-            referencedRelation: "social_posts"
-            referencedColumns: ["post_id"]
-          },
-          {
-            foreignKeyName: "post_comments_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspaces"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      profiles: {
-        Row: {
-          avatar_url: string | null
+          affected_area: string | null
+          baseline_value: number | null
           created_at: string
-          display_name: string | null
-          id: string
+          delta_percent: number | null
+          delta_value: number | null
+          measurement_at: string
+          measurement_type: string
+          metric_key: string
+          metric_value: number | null
+          minimum_delta_percent: number | null
+          platform: string | null
+          source_json: Json
+          source_semantic_key: string | null
+          success_criteria_json: Json
+          target_direction: string | null
+          todo_id: string
+          tracking_config_id: string | null
+          tracking_result_id: string
+          workspace_id: string
         }
         Insert: {
-          avatar_url?: string | null
+          affected_area?: string | null
+          baseline_value?: number | null
           created_at?: string
-          display_name?: string | null
-          id: string
+          delta_percent?: number | null
+          delta_value?: number | null
+          measurement_at?: string
+          measurement_type?: string
+          metric_key: string
+          metric_value?: number | null
+          minimum_delta_percent?: number | null
+          platform?: string | null
+          source_json?: Json
+          source_semantic_key?: string | null
+          success_criteria_json?: Json
+          target_direction?: string | null
+          todo_id: string
+          tracking_config_id?: string | null
+          tracking_result_id?: string
+          workspace_id: string
         }
         Update: {
-          avatar_url?: string | null
+          affected_area?: string | null
+          baseline_value?: number | null
           created_at?: string
-          display_name?: string | null
-          id?: string
+          delta_percent?: number | null
+          delta_value?: number | null
+          measurement_at?: string
+          measurement_type?: string
+          metric_key?: string
+          metric_value?: number | null
+          minimum_delta_percent?: number | null
+          platform?: string | null
+          source_json?: Json
+          source_semantic_key?: string | null
+          success_criteria_json?: Json
+          target_direction?: string | null
+          todo_id?: string
+          tracking_config_id?: string | null
+          tracking_result_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "todo_tracking_results_todo_id_fkey"
+            columns: ["todo_id"]
+            isOneToOne: false
+            referencedRelation: "todos"
+            referencedColumns: ["todo_id"]
+          },
+          {
+            foreignKeyName: "todo_tracking_results_tracking_config_id_fkey"
+            columns: ["tracking_config_id"]
+            isOneToOne: false
+            referencedRelation: "todo_tracking_configs"
+            referencedColumns: ["tracking_config_id"]
+          },
+        ]
+      }
+      todos: {
+        Row: {
+          action_type: string | null
+          affected_area: string | null
+          app_user_id: string | null
+          baseline_value: number | null
+          completed_at: string | null
+          created_at: string
+          description: string | null
+          due_at: string | null
+          due_date: string | null
+          expected_effect: string | null
+          metadata: Json
+          platform: string | null
+          postponed_until: string | null
+          priority: string | null
+          recommended_action: string | null
+          source_hypothesis_id: string | null
+          source_id: string | null
+          source_insight_id: string | null
+          source_semantic_key: string | null
+          source_type: string | null
+          start_tracking_at: string | null
+          status: string
+          success_criteria_json: Json
+          target_metric: string | null
+          target_value: number | null
+          title: string
+          todo_id: string
+          tracking_end_date: string | null
+          tracking_metric: string | null
+          tracking_period_days: number | null
+          tracking_start_date: string | null
+          tracking_status: string | null
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          action_type?: string | null
+          affected_area?: string | null
+          app_user_id?: string | null
+          baseline_value?: number | null
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          due_at?: string | null
+          due_date?: string | null
+          expected_effect?: string | null
+          metadata?: Json
+          platform?: string | null
+          postponed_until?: string | null
+          priority?: string | null
+          recommended_action?: string | null
+          source_hypothesis_id?: string | null
+          source_id?: string | null
+          source_insight_id?: string | null
+          source_semantic_key?: string | null
+          source_type?: string | null
+          start_tracking_at?: string | null
+          status?: string
+          success_criteria_json?: Json
+          target_metric?: string | null
+          target_value?: number | null
+          title: string
+          todo_id?: string
+          tracking_end_date?: string | null
+          tracking_metric?: string | null
+          tracking_period_days?: number | null
+          tracking_start_date?: string | null
+          tracking_status?: string | null
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          action_type?: string | null
+          affected_area?: string | null
+          app_user_id?: string | null
+          baseline_value?: number | null
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          due_at?: string | null
+          due_date?: string | null
+          expected_effect?: string | null
+          metadata?: Json
+          platform?: string | null
+          postponed_until?: string | null
+          priority?: string | null
+          recommended_action?: string | null
+          source_hypothesis_id?: string | null
+          source_id?: string | null
+          source_insight_id?: string | null
+          source_semantic_key?: string | null
+          source_type?: string | null
+          start_tracking_at?: string | null
+          status?: string
+          success_criteria_json?: Json
+          target_metric?: string | null
+          target_value?: number | null
+          title?: string
+          todo_id?: string
+          tracking_end_date?: string | null
+          tracking_metric?: string | null
+          tracking_period_days?: number | null
+          tracking_start_date?: string | null
+          tracking_status?: string | null
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "todos_source_insight_id_fkey"
+            columns: ["source_insight_id"]
+            isOneToOne: false
+            referencedRelation: "insights_feed"
+            referencedColumns: ["insight_id"]
+          },
+        ]
+      }
+      tracking_metric_rules: {
+        Row: {
+          affected_area: string | null
+          created_at: string
+          default_tracking_period_days: number
+          insight_type: string
+          metadata: Json
+          minimum_delta_percent: number
+          primary_metric: string
+          rule_id: string
+          secondary_metrics: Json
+          target_direction: string
+        }
+        Insert: {
+          affected_area?: string | null
+          created_at?: string
+          default_tracking_period_days?: number
+          insight_type: string
+          metadata?: Json
+          minimum_delta_percent?: number
+          primary_metric: string
+          rule_id?: string
+          secondary_metrics?: Json
+          target_direction?: string
+        }
+        Update: {
+          affected_area?: string | null
+          created_at?: string
+          default_tracking_period_days?: number
+          insight_type?: string
+          metadata?: Json
+          minimum_delta_percent?: number
+          primary_metric?: string
+          rule_id?: string
+          secondary_metrics?: Json
+          target_direction?: string
         }
         Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      get_page_object: {
+        Args: {
+          p_language?: string
+          p_page_key: string
+          p_platform: string
+          p_role_key: string
+          p_workspace_id: string
+        }
+        Returns: Json
+      }
+      get_workspace_ui_context: {
+        Args: { p_app_user_id: string; p_workspace_id: string }
+        Returns: Json
+      }
+      upsert_page_object_v2: {
+        Args: {
+          p_analysis_job_id?: string
+          p_language: string
+          p_metadata?: Json
+          p_object_json: Json
+          p_object_version?: string
+          p_page_key: string
+          p_period_end?: string
+          p_period_start?: string
+          p_platform: string
+          p_priority?: number
+          p_role_view: string
+          p_section_key: string
+          p_workspace_id: string
+        }
+        Returns: string
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+  core: {
+    Tables: {
+      app_users: {
+        Row: {
+          app_user_id: string
+          created_at: string
+          default_organization_id: string | null
+          display_name: string | null
+          email: string
+          updated_at: string
+        }
+        Insert: {
+          app_user_id?: string
+          created_at?: string
+          default_organization_id?: string | null
+          display_name?: string | null
+          email: string
+          updated_at?: string
+        }
+        Update: {
+          app_user_id?: string
+          created_at?: string
+          default_organization_id?: string | null
+          display_name?: string | null
+          email?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "app_users_default_organization_fk"
+            columns: ["default_organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["organization_id"]
+          },
+        ]
+      }
+      organization_members: {
+        Row: {
+          app_user_id: string
+          created_at: string
+          metadata: Json
+          org_role: string
+          organization_id: string
+          organization_member_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          app_user_id: string
+          created_at?: string
+          metadata?: Json
+          org_role?: string
+          organization_id: string
+          organization_member_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          app_user_id?: string
+          created_at?: string
+          metadata?: Json
+          org_role?: string
+          organization_id?: string
+          organization_member_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_members_app_user_id_fkey"
+            columns: ["app_user_id"]
+            isOneToOne: false
+            referencedRelation: "app_users"
+            referencedColumns: ["app_user_id"]
+          },
+          {
+            foreignKeyName: "organization_members_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["organization_id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          created_at: string
+          metadata: Json
+          name: string
+          organization_id: string
+          owner_app_user_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          metadata?: Json
+          name: string
+          organization_id?: string
+          owner_app_user_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          metadata?: Json
+          name?: string
+          organization_id?: string
+          owner_app_user_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organizations_owner_app_user_id_fkey"
+            columns: ["owner_app_user_id"]
+            isOneToOne: false
+            referencedRelation: "app_users"
+            referencedColumns: ["app_user_id"]
+          },
+        ]
       }
       social_accounts: {
         Row: {
           account_id: string
-          account_positioning: string | null
-          account_type: string | null
+          account_type: string
           bio: string | null
           created_at: string
+          display_name: string | null
+          external_profile_id: string | null
           external_url: string | null
-          first_impression: string | null
-          followers_count: number | null
-          following_count: number | null
           last_scraped_at: string | null
-          notes: string | null
-          platform: string | null
-          posts_count: number | null
-          profile_name: string | null
-          profile_url: string | null
-          status: string | null
+          last_successful_scrape_at: string | null
+          platform: string
+          platform_metadata: Json
+          platform_profile_url: string | null
+          profile_url: string
+          scrape_enabled: boolean | null
+          scrape_error: string | null
+          status: string
+          updated_at: string
           username: string | null
           workspace_id: string
         }
         Insert: {
-          account_id: string
-          account_positioning?: string | null
-          account_type?: string | null
+          account_id?: string
+          account_type: string
           bio?: string | null
           created_at?: string
+          display_name?: string | null
+          external_profile_id?: string | null
           external_url?: string | null
-          first_impression?: string | null
-          followers_count?: number | null
-          following_count?: number | null
           last_scraped_at?: string | null
-          notes?: string | null
-          platform?: string | null
-          posts_count?: number | null
-          profile_name?: string | null
-          profile_url?: string | null
-          status?: string | null
+          last_successful_scrape_at?: string | null
+          platform: string
+          platform_metadata?: Json
+          platform_profile_url?: string | null
+          profile_url: string
+          scrape_enabled?: boolean | null
+          scrape_error?: string | null
+          status?: string
+          updated_at?: string
           username?: string | null
           workspace_id: string
         }
         Update: {
           account_id?: string
-          account_positioning?: string | null
-          account_type?: string | null
+          account_type?: string
           bio?: string | null
           created_at?: string
+          display_name?: string | null
+          external_profile_id?: string | null
           external_url?: string | null
-          first_impression?: string | null
-          followers_count?: number | null
-          following_count?: number | null
           last_scraped_at?: string | null
-          notes?: string | null
-          platform?: string | null
-          posts_count?: number | null
-          profile_name?: string | null
-          profile_url?: string | null
-          status?: string | null
+          last_successful_scrape_at?: string | null
+          platform?: string
+          platform_metadata?: Json
+          platform_profile_url?: string | null
+          profile_url?: string
+          scrape_enabled?: boolean | null
+          scrape_error?: string | null
+          status?: string
+          updated_at?: string
           username?: string | null
           workspace_id?: string
         }
@@ -920,231 +1216,255 @@ export type Database = {
             columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "workspaces"
-            referencedColumns: ["id"]
+            referencedColumns: ["workspace_id"]
           },
         ]
       }
-      social_posts: {
+      workspace_members: {
         Row: {
-          account_id: string | null
-          caption: string | null
-          comments_count: number | null
-          content_pillar: string | null
-          cta_text: string | null
-          engagement_rate: number | null
-          hashtags: string | null
-          hook_text: string | null
-          likes_count: number | null
-          mentions: string | null
-          performance_level: string | null
-          platform_post_id: string | null
-          post_id: string
-          post_type: string | null
-          post_url: string | null
-          product_type: string | null
-          published_at: string | null
-          raw_notes: string | null
-          saves_count: number | null
-          shares_count: number | null
-          short_code: string | null
-          subtopic: string | null
-          topic: string | null
-          views_count: number | null
+          allowed_platforms: string[]
+          allowed_view_modes: string[]
+          app_user_id: string | null
+          auth_user_id: string | null
+          created_at: string
+          data_scope_json: Json
+          default_view_mode: string
+          invited_by_app_user_id: string | null
+          metadata: Json
+          permissions_json: Json
+          role: string
+          status: string
+          updated_at: string
+          workspace_id: string
+          workspace_member_id: string
+          workspace_role: string
+        }
+        Insert: {
+          allowed_platforms?: string[]
+          allowed_view_modes?: string[]
+          app_user_id?: string | null
+          auth_user_id?: string | null
+          created_at?: string
+          data_scope_json?: Json
+          default_view_mode?: string
+          invited_by_app_user_id?: string | null
+          metadata?: Json
+          permissions_json?: Json
+          role?: string
+          status?: string
+          updated_at?: string
+          workspace_id: string
+          workspace_member_id?: string
+          workspace_role?: string
+        }
+        Update: {
+          allowed_platforms?: string[]
+          allowed_view_modes?: string[]
+          app_user_id?: string | null
+          auth_user_id?: string | null
+          created_at?: string
+          data_scope_json?: Json
+          default_view_mode?: string
+          invited_by_app_user_id?: string | null
+          metadata?: Json
+          permissions_json?: Json
+          role?: string
+          status?: string
+          updated_at?: string
+          workspace_id?: string
+          workspace_member_id?: string
+          workspace_role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workspace_members_app_user_id_fkey"
+            columns: ["app_user_id"]
+            isOneToOne: false
+            referencedRelation: "app_users"
+            referencedColumns: ["app_user_id"]
+          },
+          {
+            foreignKeyName: "workspace_members_invited_by_app_user_id_fkey"
+            columns: ["invited_by_app_user_id"]
+            isOneToOne: false
+            referencedRelation: "app_users"
+            referencedColumns: ["app_user_id"]
+          },
+          {
+            foreignKeyName: "workspace_members_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["workspace_id"]
+          },
+        ]
+      }
+      workspace_settings: {
+        Row: {
+          analysis_frequency: string
+          comments_enabled: boolean
+          created_at: string
+          max_competitors: number
+          media_description_enabled: boolean
+          notification_email_enabled: boolean
+          notification_telegram_enabled: boolean
+          scraping_frequency: string
+          timezone: string
+          transcription_enabled: boolean
+          updated_at: string
           workspace_id: string
         }
         Insert: {
-          account_id?: string | null
-          caption?: string | null
-          comments_count?: number | null
-          content_pillar?: string | null
-          cta_text?: string | null
-          engagement_rate?: number | null
-          hashtags?: string | null
-          hook_text?: string | null
-          likes_count?: number | null
-          mentions?: string | null
-          performance_level?: string | null
-          platform_post_id?: string | null
-          post_id: string
-          post_type?: string | null
-          post_url?: string | null
-          product_type?: string | null
-          published_at?: string | null
-          raw_notes?: string | null
-          saves_count?: number | null
-          shares_count?: number | null
-          short_code?: string | null
-          subtopic?: string | null
-          topic?: string | null
-          views_count?: number | null
+          analysis_frequency?: string
+          comments_enabled?: boolean
+          created_at?: string
+          max_competitors?: number
+          media_description_enabled?: boolean
+          notification_email_enabled?: boolean
+          notification_telegram_enabled?: boolean
+          scraping_frequency?: string
+          timezone?: string
+          transcription_enabled?: boolean
+          updated_at?: string
           workspace_id: string
         }
         Update: {
-          account_id?: string | null
-          caption?: string | null
-          comments_count?: number | null
-          content_pillar?: string | null
-          cta_text?: string | null
-          engagement_rate?: number | null
-          hashtags?: string | null
-          hook_text?: string | null
-          likes_count?: number | null
-          mentions?: string | null
-          performance_level?: string | null
-          platform_post_id?: string | null
-          post_id?: string
-          post_type?: string | null
-          post_url?: string | null
-          product_type?: string | null
-          published_at?: string | null
-          raw_notes?: string | null
-          saves_count?: number | null
-          shares_count?: number | null
-          short_code?: string | null
-          subtopic?: string | null
-          topic?: string | null
-          views_count?: number | null
+          analysis_frequency?: string
+          comments_enabled?: boolean
+          created_at?: string
+          max_competitors?: number
+          media_description_enabled?: boolean
+          notification_email_enabled?: boolean
+          notification_telegram_enabled?: boolean
+          scraping_frequency?: string
+          timezone?: string
+          transcription_enabled?: boolean
+          updated_at?: string
           workspace_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "social_posts_account_id_fkey"
-            columns: ["account_id"]
-            isOneToOne: false
-            referencedRelation: "social_accounts"
-            referencedColumns: ["account_id"]
-          },
-          {
-            foreignKeyName: "social_posts_workspace_id_fkey"
+            foreignKeyName: "workspace_settings_workspace_id_fkey"
             columns: ["workspace_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "workspaces"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      workspace_report: {
-        Row: {
-          best_opportunities: string | null
-          competitor_strengths: string | null
-          competitor_weaknesses: string | null
-          executive_summary: string | null
-          final_note: string | null
-          key_content_ideas: string | null
-          main_success_factors: string | null
-          main_threats: string | null
-          market_patterns: string | null
-          next_30_days_actions: string | null
-          next_7_days_actions: string | null
-          own_profile_strengths: string | null
-          own_profile_weaknesses: string | null
-          period_end: string | null
-          period_start: string | null
-          recommended_strategy: string | null
-          report_date: string | null
-          report_id: string
-          workspace_id: string
-        }
-        Insert: {
-          best_opportunities?: string | null
-          competitor_strengths?: string | null
-          competitor_weaknesses?: string | null
-          executive_summary?: string | null
-          final_note?: string | null
-          key_content_ideas?: string | null
-          main_success_factors?: string | null
-          main_threats?: string | null
-          market_patterns?: string | null
-          next_30_days_actions?: string | null
-          next_7_days_actions?: string | null
-          own_profile_strengths?: string | null
-          own_profile_weaknesses?: string | null
-          period_end?: string | null
-          period_start?: string | null
-          recommended_strategy?: string | null
-          report_date?: string | null
-          report_id: string
-          workspace_id: string
-        }
-        Update: {
-          best_opportunities?: string | null
-          competitor_strengths?: string | null
-          competitor_weaknesses?: string | null
-          executive_summary?: string | null
-          final_note?: string | null
-          key_content_ideas?: string | null
-          main_success_factors?: string | null
-          main_threats?: string | null
-          market_patterns?: string | null
-          next_30_days_actions?: string | null
-          next_7_days_actions?: string | null
-          own_profile_strengths?: string | null
-          own_profile_weaknesses?: string | null
-          period_end?: string | null
-          period_start?: string | null
-          recommended_strategy?: string | null
-          report_date?: string | null
-          report_id?: string
-          workspace_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "workspace_report_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspaces"
-            referencedColumns: ["id"]
+            referencedColumns: ["workspace_id"]
           },
         ]
       }
       workspaces: {
         Row: {
+          additional_context: string | null
+          app_user_id: string
+          business_stage: string | null
+          content_language: string | null
           country: string | null
           created_at: string
-          id: string
+          interface_language: string | null
           language: string | null
           main_goal: string | null
+          metadata: Json
           niche: string | null
-          notes: string | null
-          owner_id: string
+          onboarding_status: string
+          organization_id: string | null
+          plan_id: string | null
+          preferred_refresh_window: string | null
           product_description: string | null
           project_name: string
+          report_language: string | null
+          status: string
+          subscription_status: string
           target_audience: string | null
+          timezone: string | null
+          updated_at: string
+          website_url: string | null
+          workspace_id: string
         }
         Insert: {
+          additional_context?: string | null
+          app_user_id: string
+          business_stage?: string | null
+          content_language?: string | null
           country?: string | null
           created_at?: string
-          id?: string
+          interface_language?: string | null
           language?: string | null
           main_goal?: string | null
+          metadata?: Json
           niche?: string | null
-          notes?: string | null
-          owner_id: string
+          onboarding_status?: string
+          organization_id?: string | null
+          plan_id?: string | null
+          preferred_refresh_window?: string | null
           product_description?: string | null
           project_name: string
+          report_language?: string | null
+          status?: string
+          subscription_status?: string
           target_audience?: string | null
+          timezone?: string | null
+          updated_at?: string
+          website_url?: string | null
+          workspace_id?: string
         }
         Update: {
+          additional_context?: string | null
+          app_user_id?: string
+          business_stage?: string | null
+          content_language?: string | null
           country?: string | null
           created_at?: string
-          id?: string
+          interface_language?: string | null
           language?: string | null
           main_goal?: string | null
+          metadata?: Json
           niche?: string | null
-          notes?: string | null
-          owner_id?: string
+          onboarding_status?: string
+          organization_id?: string | null
+          plan_id?: string | null
+          preferred_refresh_window?: string | null
           product_description?: string | null
           project_name?: string
+          report_language?: string | null
+          status?: string
+          subscription_status?: string
           target_audience?: string | null
+          timezone?: string | null
+          updated_at?: string
+          website_url?: string | null
+          workspace_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "workspaces_app_user_id_fkey"
+            columns: ["app_user_id"]
+            isOneToOne: false
+            referencedRelation: "app_users"
+            referencedColumns: ["app_user_id"]
+          },
+          {
+            foreignKeyName: "workspaces_organization_fk"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["organization_id"]
+          },
+        ]
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      owns_workspace: { Args: { _ws: string }; Returns: boolean }
+      default_allowed_view_modes: {
+        Args: { p_workspace_role: string }
+        Returns: string[]
+      }
+      default_workspace_permissions: {
+        Args: { p_workspace_role: string }
+        Returns: Json
+      }
+      is_workspace_member: { Args: { _workspace_id: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
@@ -1153,207 +1473,9 @@ export type Database = {
       [_ in never]: never
     }
   }
-  app: {
+  public: {
     Tables: {
-      page_objects: {
-        Row: {
-          page_object_id: string
-          workspace_id: string
-          page_key: string
-          role_key: string
-          data_status: string
-          payload: Json
-          generated_at: string
-          updated_at: string
-          period_start: string | null
-          period_end: string | null
-          status: string
-          version: string
-          expires_at: string | null
-          page_title: string | null
-          page_version: string
-          metadata: Json
-          section_key: string
-          object_json: Json
-          language: string
-          role_view: string
-          platform: string
-          analysis_job_id: string | null
-          priority: number
-          object_version: string
-          run_label: string | null
-        }
-        Insert: {
-          page_object_id?: string
-          workspace_id: string
-          page_key: string
-          role_key: string
-          data_status: string
-          payload?: Json
-          generated_at?: string
-          updated_at?: string
-          period_start?: string | null
-          period_end?: string | null
-          status?: string
-          version?: string
-          expires_at?: string | null
-          page_title?: string | null
-          page_version?: string
-          metadata?: Json
-          section_key?: string
-          object_json?: Json
-          language?: string
-          role_view?: string
-          platform?: string
-          analysis_job_id?: string | null
-          priority?: number
-          object_version?: string
-          run_label?: string | null
-        }
-        Update: {
-          page_object_id?: string
-          workspace_id?: string
-          page_key?: string
-          role_key?: string
-          data_status?: string
-          payload?: Json
-          generated_at?: string
-          updated_at?: string
-          status?: string
-          version?: string
-          expires_at?: string | null
-          page_title?: string | null
-          page_version?: string
-          metadata?: Json
-          section_key?: string
-          object_json?: Json
-          language?: string
-          role_view?: string
-          platform?: string
-          analysis_job_id?: string | null
-          priority?: number
-          object_version?: string
-          run_label?: string | null
-        }
-        Relationships: []
-      }
-    }
-    Views: { [_ in never]: never }
-    Functions: { [_ in never]: never }
-    Enums: { [_ in never]: never }
-    CompositeTypes: { [_ in never]: never }
-  }
-  core: {
-    Tables: {
-      workspaces: {
-        Row: {
-          workspace_id: string
-          app_user_id: string
-          project_name: string
-          niche: string | null
-          country: string | null
-          language: string | null
-          target_audience: string | null
-          product_description: string | null
-          main_goal: string | null
-          status: string
-          created_at: string
-          updated_at: string
-          interface_language: string | null
-          report_language: string | null
-          content_language: string | null
-          timezone: string | null
-          organization_id: string | null
-          plan_id: string | null
-          subscription_status: string
-          onboarding_status: string
-          preferred_refresh_window: string | null
-          metadata: Json
-          business_stage: string | null
-          website_url: string | null
-          additional_context: string | null
-        }
-        Insert: {
-          workspace_id?: string
-          app_user_id: string
-          project_name: string
-          niche?: string | null
-          country?: string | null
-          language?: string | null
-          status?: string
-          created_at?: string
-          updated_at?: string
-          subscription_status?: string
-          onboarding_status?: string
-          metadata?: Json
-        }
-        Update: {
-          workspace_id?: string
-          project_name?: string
-          niche?: string | null
-          status?: string
-          updated_at?: string
-          metadata?: Json
-        }
-        Relationships: []
-      }
-      workspace_members: {
-        Row: {
-          workspace_member_id: string
-          workspace_id: string
-          app_user_id: string | null
-          auth_user_id: string | null
-          role: string
-          created_at: string
-          updated_at: string
-          workspace_role: string
-          default_view_mode: string
-          allowed_view_modes: string[]
-          allowed_platforms: string[]
-          permissions_json: Json
-          data_scope_json: Json
-          status: string
-          invited_by_app_user_id: string | null
-          metadata: Json
-        }
-        Insert: {
-          workspace_member_id?: string
-          workspace_id: string
-          app_user_id?: string | null
-          auth_user_id?: string | null
-          role: string
-          created_at?: string
-          updated_at?: string
-          workspace_role: string
-          default_view_mode: string
-          allowed_view_modes: string[]
-          allowed_platforms: string[]
-          permissions_json?: Json
-          data_scope_json?: Json
-          status: string
-          invited_by_app_user_id?: string | null
-          metadata?: Json
-        }
-        Update: {
-          workspace_member_id?: string
-          workspace_id?: string
-          app_user_id?: string | null
-          auth_user_id?: string | null
-          role?: string
-          created_at?: string
-          updated_at?: string
-          workspace_role?: string
-          default_view_mode?: string
-          allowed_view_modes?: string[]
-          allowed_platforms?: string[]
-          permissions_json?: Json
-          data_scope_json?: Json
-          status?: string
-          invited_by_app_user_id?: string | null
-          metadata?: Json
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
@@ -1488,6 +1610,12 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  app: {
+    Enums: {},
+  },
+  core: {
+    Enums: {},
+  },
   public: {
     Enums: {},
   },
