@@ -22,8 +22,10 @@ export function useWorkspace() {
     defaultViewMode: query.data?.defaultViewMode ?? null,
     allowedViewModes: query.data?.allowedViewModes ?? [],
     allowedPlatforms: query.data?.allowedPlatforms ?? [],
+    onboardingStatus: query.data?.onboardingStatus ?? null,
     isLoading: query.isLoading,
     isError: query.isError,
     error: query.error,
+    refetch: query.refetch,
   };
 }
