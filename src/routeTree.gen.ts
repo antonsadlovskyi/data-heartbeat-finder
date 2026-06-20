@@ -18,21 +18,14 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppTrendsRouteImport } from './routes/app.trends'
-import { Route as AppTodosRouteImport } from './routes/app.todos'
-import { Route as AppSetupRouteImport } from './routes/app.setup'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as AppPerformanceRouteImport } from './routes/app.performance'
-import { Route as AppInsightsRouteImport } from './routes/app.insights'
-import { Route as AppIdeasRouteImport } from './routes/app.ideas'
 import { Route as AppHypothesesRouteImport } from './routes/app.hypotheses'
-import { Route as AppFormatsRouteImport } from './routes/app.formats'
 import { Route as AppDynamicsRouteImport } from './routes/app.dynamics'
-import { Route as AppDatabaseRouteImport } from './routes/app.database'
 import { Route as AppConnectedRouteImport } from './routes/app.connected'
 import { Route as AppCompetitorsRouteImport } from './routes/app.competitors'
 import { Route as AppCompetitorMovesRouteImport } from './routes/app.competitor-moves'
 import { Route as AppBestOutcomesRouteImport } from './routes/app.best-outcomes'
-import { Route as AppAnalysesRouteImport } from './routes/app.analyses'
 import { Route as AppDebugPageObjectsRouteImport } from './routes/app.debug.page-objects'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -80,16 +73,6 @@ const AppTrendsRoute = AppTrendsRouteImport.update({
   path: '/trends',
   getParentRoute: () => AppRoute,
 } as any)
-const AppTodosRoute = AppTodosRouteImport.update({
-  id: '/todos',
-  path: '/todos',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppSetupRoute = AppSetupRouteImport.update({
-  id: '/setup',
-  path: '/setup',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppSettingsRoute = AppSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -100,34 +83,14 @@ const AppPerformanceRoute = AppPerformanceRouteImport.update({
   path: '/performance',
   getParentRoute: () => AppRoute,
 } as any)
-const AppInsightsRoute = AppInsightsRouteImport.update({
-  id: '/insights',
-  path: '/insights',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppIdeasRoute = AppIdeasRouteImport.update({
-  id: '/ideas',
-  path: '/ideas',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppHypothesesRoute = AppHypothesesRouteImport.update({
   id: '/hypotheses',
   path: '/hypotheses',
   getParentRoute: () => AppRoute,
 } as any)
-const AppFormatsRoute = AppFormatsRouteImport.update({
-  id: '/formats',
-  path: '/formats',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppDynamicsRoute = AppDynamicsRouteImport.update({
   id: '/dynamics',
   path: '/dynamics',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppDatabaseRoute = AppDatabaseRouteImport.update({
-  id: '/database',
-  path: '/database',
   getParentRoute: () => AppRoute,
 } as any)
 const AppConnectedRoute = AppConnectedRouteImport.update({
@@ -150,11 +113,6 @@ const AppBestOutcomesRoute = AppBestOutcomesRouteImport.update({
   path: '/best-outcomes',
   getParentRoute: () => AppRoute,
 } as any)
-const AppAnalysesRoute = AppAnalysesRouteImport.update({
-  id: '/analyses',
-  path: '/analyses',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppDebugPageObjectsRoute = AppDebugPageObjectsRouteImport.update({
   id: '/debug/page-objects',
   path: '/debug/page-objects',
@@ -169,21 +127,14 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/app/analyses': typeof AppAnalysesRoute
   '/app/best-outcomes': typeof AppBestOutcomesRoute
   '/app/competitor-moves': typeof AppCompetitorMovesRoute
   '/app/competitors': typeof AppCompetitorsRoute
   '/app/connected': typeof AppConnectedRoute
-  '/app/database': typeof AppDatabaseRoute
   '/app/dynamics': typeof AppDynamicsRoute
-  '/app/formats': typeof AppFormatsRoute
   '/app/hypotheses': typeof AppHypothesesRoute
-  '/app/ideas': typeof AppIdeasRoute
-  '/app/insights': typeof AppInsightsRoute
   '/app/performance': typeof AppPerformanceRoute
   '/app/settings': typeof AppSettingsRoute
-  '/app/setup': typeof AppSetupRoute
-  '/app/todos': typeof AppTodosRoute
   '/app/trends': typeof AppTrendsRoute
   '/app/': typeof AppIndexRoute
   '/app/debug/page-objects': typeof AppDebugPageObjectsRoute
@@ -195,21 +146,14 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/app/analyses': typeof AppAnalysesRoute
   '/app/best-outcomes': typeof AppBestOutcomesRoute
   '/app/competitor-moves': typeof AppCompetitorMovesRoute
   '/app/competitors': typeof AppCompetitorsRoute
   '/app/connected': typeof AppConnectedRoute
-  '/app/database': typeof AppDatabaseRoute
   '/app/dynamics': typeof AppDynamicsRoute
-  '/app/formats': typeof AppFormatsRoute
   '/app/hypotheses': typeof AppHypothesesRoute
-  '/app/ideas': typeof AppIdeasRoute
-  '/app/insights': typeof AppInsightsRoute
   '/app/performance': typeof AppPerformanceRoute
   '/app/settings': typeof AppSettingsRoute
-  '/app/setup': typeof AppSetupRoute
-  '/app/todos': typeof AppTodosRoute
   '/app/trends': typeof AppTrendsRoute
   '/app': typeof AppIndexRoute
   '/app/debug/page-objects': typeof AppDebugPageObjectsRoute
@@ -223,21 +167,14 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/app/analyses': typeof AppAnalysesRoute
   '/app/best-outcomes': typeof AppBestOutcomesRoute
   '/app/competitor-moves': typeof AppCompetitorMovesRoute
   '/app/competitors': typeof AppCompetitorsRoute
   '/app/connected': typeof AppConnectedRoute
-  '/app/database': typeof AppDatabaseRoute
   '/app/dynamics': typeof AppDynamicsRoute
-  '/app/formats': typeof AppFormatsRoute
   '/app/hypotheses': typeof AppHypothesesRoute
-  '/app/ideas': typeof AppIdeasRoute
-  '/app/insights': typeof AppInsightsRoute
   '/app/performance': typeof AppPerformanceRoute
   '/app/settings': typeof AppSettingsRoute
-  '/app/setup': typeof AppSetupRoute
-  '/app/todos': typeof AppTodosRoute
   '/app/trends': typeof AppTrendsRoute
   '/app/': typeof AppIndexRoute
   '/app/debug/page-objects': typeof AppDebugPageObjectsRoute
@@ -252,21 +189,14 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/sitemap.xml'
-    | '/app/analyses'
     | '/app/best-outcomes'
     | '/app/competitor-moves'
     | '/app/competitors'
     | '/app/connected'
-    | '/app/database'
     | '/app/dynamics'
-    | '/app/formats'
     | '/app/hypotheses'
-    | '/app/ideas'
-    | '/app/insights'
     | '/app/performance'
     | '/app/settings'
-    | '/app/setup'
-    | '/app/todos'
     | '/app/trends'
     | '/app/'
     | '/app/debug/page-objects'
@@ -278,21 +208,14 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/sitemap.xml'
-    | '/app/analyses'
     | '/app/best-outcomes'
     | '/app/competitor-moves'
     | '/app/competitors'
     | '/app/connected'
-    | '/app/database'
     | '/app/dynamics'
-    | '/app/formats'
     | '/app/hypotheses'
-    | '/app/ideas'
-    | '/app/insights'
     | '/app/performance'
     | '/app/settings'
-    | '/app/setup'
-    | '/app/todos'
     | '/app/trends'
     | '/app'
     | '/app/debug/page-objects'
@@ -305,21 +228,14 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/sitemap.xml'
-    | '/app/analyses'
     | '/app/best-outcomes'
     | '/app/competitor-moves'
     | '/app/competitors'
     | '/app/connected'
-    | '/app/database'
     | '/app/dynamics'
-    | '/app/formats'
     | '/app/hypotheses'
-    | '/app/ideas'
-    | '/app/insights'
     | '/app/performance'
     | '/app/settings'
-    | '/app/setup'
-    | '/app/todos'
     | '/app/trends'
     | '/app/'
     | '/app/debug/page-objects'
@@ -400,20 +316,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTrendsRouteImport
       parentRoute: typeof AppRoute
     }
-    '/app/todos': {
-      id: '/app/todos'
-      path: '/todos'
-      fullPath: '/app/todos'
-      preLoaderRoute: typeof AppTodosRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/setup': {
-      id: '/app/setup'
-      path: '/setup'
-      fullPath: '/app/setup'
-      preLoaderRoute: typeof AppSetupRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/app/settings': {
       id: '/app/settings'
       path: '/settings'
@@ -428,20 +330,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPerformanceRouteImport
       parentRoute: typeof AppRoute
     }
-    '/app/insights': {
-      id: '/app/insights'
-      path: '/insights'
-      fullPath: '/app/insights'
-      preLoaderRoute: typeof AppInsightsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/ideas': {
-      id: '/app/ideas'
-      path: '/ideas'
-      fullPath: '/app/ideas'
-      preLoaderRoute: typeof AppIdeasRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/app/hypotheses': {
       id: '/app/hypotheses'
       path: '/hypotheses'
@@ -449,25 +337,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHypothesesRouteImport
       parentRoute: typeof AppRoute
     }
-    '/app/formats': {
-      id: '/app/formats'
-      path: '/formats'
-      fullPath: '/app/formats'
-      preLoaderRoute: typeof AppFormatsRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/app/dynamics': {
       id: '/app/dynamics'
       path: '/dynamics'
       fullPath: '/app/dynamics'
       preLoaderRoute: typeof AppDynamicsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/database': {
-      id: '/app/database'
-      path: '/database'
-      fullPath: '/app/database'
-      preLoaderRoute: typeof AppDatabaseRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/connected': {
@@ -498,13 +372,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppBestOutcomesRouteImport
       parentRoute: typeof AppRoute
     }
-    '/app/analyses': {
-      id: '/app/analyses'
-      path: '/analyses'
-      fullPath: '/app/analyses'
-      preLoaderRoute: typeof AppAnalysesRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/app/debug/page-objects': {
       id: '/app/debug/page-objects'
       path: '/debug/page-objects'
@@ -516,42 +383,28 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
-  AppAnalysesRoute: typeof AppAnalysesRoute
   AppBestOutcomesRoute: typeof AppBestOutcomesRoute
   AppCompetitorMovesRoute: typeof AppCompetitorMovesRoute
   AppCompetitorsRoute: typeof AppCompetitorsRoute
   AppConnectedRoute: typeof AppConnectedRoute
-  AppDatabaseRoute: typeof AppDatabaseRoute
   AppDynamicsRoute: typeof AppDynamicsRoute
-  AppFormatsRoute: typeof AppFormatsRoute
   AppHypothesesRoute: typeof AppHypothesesRoute
-  AppIdeasRoute: typeof AppIdeasRoute
-  AppInsightsRoute: typeof AppInsightsRoute
   AppPerformanceRoute: typeof AppPerformanceRoute
   AppSettingsRoute: typeof AppSettingsRoute
-  AppSetupRoute: typeof AppSetupRoute
-  AppTodosRoute: typeof AppTodosRoute
   AppTrendsRoute: typeof AppTrendsRoute
   AppIndexRoute: typeof AppIndexRoute
   AppDebugPageObjectsRoute: typeof AppDebugPageObjectsRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
-  AppAnalysesRoute: AppAnalysesRoute,
   AppBestOutcomesRoute: AppBestOutcomesRoute,
   AppCompetitorMovesRoute: AppCompetitorMovesRoute,
   AppCompetitorsRoute: AppCompetitorsRoute,
   AppConnectedRoute: AppConnectedRoute,
-  AppDatabaseRoute: AppDatabaseRoute,
   AppDynamicsRoute: AppDynamicsRoute,
-  AppFormatsRoute: AppFormatsRoute,
   AppHypothesesRoute: AppHypothesesRoute,
-  AppIdeasRoute: AppIdeasRoute,
-  AppInsightsRoute: AppInsightsRoute,
   AppPerformanceRoute: AppPerformanceRoute,
   AppSettingsRoute: AppSettingsRoute,
-  AppSetupRoute: AppSetupRoute,
-  AppTodosRoute: AppTodosRoute,
   AppTrendsRoute: AppTrendsRoute,
   AppIndexRoute: AppIndexRoute,
   AppDebugPageObjectsRoute: AppDebugPageObjectsRoute,

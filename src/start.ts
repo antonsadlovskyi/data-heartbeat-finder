@@ -10,10 +10,6 @@ if (import.meta.env.SSR) {
     "VITE_SUPABASE_PUBLISHABLE_KEY",
     "N8N_WF01_WEBHOOK_URL",
     "N8N_WF01_SECRET",
-    "N8N_WF06_URL",
-    "N8N_WF06_SECRET",
-    "N8N_WF07_URL",
-    "N8N_WF07_SECRET",
   ] as const;
 
   for (const key of REQUIRED_ENV) {
@@ -32,8 +28,6 @@ if (import.meta.env.SSR) {
 import "@/lib/data/workspace.functions";
 import "@/lib/data/page-objects.functions";
 import "@/lib/data/onboarding.functions";
-import "@/lib/data/insights.functions";
-import "@/lib/data/todos.functions";
 
 const errorMiddleware = createMiddleware().server(async ({ next }) => {
   const { getRequest } = await import('@tanstack/react-start/server');
